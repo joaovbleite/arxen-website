@@ -1,0 +1,38 @@
+INSTRUCTIONS FOR MANUALLY FIXING THE CHATBOT.TSX FILE:
+
+1. Open the src/components/ChatBot.tsx file
+2. Look for the section labeled "// Custom Cabinetry" around line 1700
+3. The entries under this section incorrectly contain patterns for "whole home renovation", "home addition", and "basement finishing" which are duplicates of earlier entries
+4. Replace these entries with the following cabinetry-related entries:
+
+Replace:
+```
+  // Custom Cabinetry
+  {
+    patterns: ["whole home renovation", "complete house remodel", "full house renovation"],
+    response: "Our whole home renovation services transform your entire living space with a cohesive design approach."
+  },
+  {
+    patterns: ["home addition", "room addition", "house extension"],
+    response: "Our home addition services increase your living space while maintaining architectural harmony."
+  },
+  {
+    patterns: ["basement finishing", "basement remodel", "basement renovation"],
+    response: "Our basement finishing transforms underutilized space into valuable living areas."
+  }
+```
+
+With:
+```
+  // Custom Cabinetry
+  {
+    patterns: ["custom cabinets", "built-in cabinetry", "cabinet design"],
+    response: "Our custom cabinetry services provide tailored storage solutions for kitchens, bathrooms, offices, entertainment areas, and more. We design and build to your exact specifications with premium materials."
+  },
+  {
+    patterns: ["cabinet maker", "built-ins", "storage solutions"],
+    response: "Custom cabinetry transforms spaces with personalized organization systems. Our cabinet designs incorporate specialized storage features like pull-out organizers and divided drawers."
+  }
+```
+
+This will fix the duplicate entries and properly add conversation patterns for cabinetry services. 

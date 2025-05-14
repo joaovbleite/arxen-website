@@ -1,0 +1,13 @@
+# Arxen Construction robots.txt
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://arxenconstruction.com/sitemap.xml
+
+# Block access to specific areas (API, admin, etc.)
+Disallow: /admin/
+Disallow: /api/
+Disallow: /internal/
+Disallow: /404
+Disallow: /error 
