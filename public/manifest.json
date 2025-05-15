@@ -1,0 +1,33 @@
+{
+  "short_name": "Arxen Construction",
+  "name": "Arxen Construction | Remodeling and Construction Services",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#1e40af",
+  "background_color": "#ffffff",
+  "description": "Expert residential and commercial construction services in Marietta, GA",
+  "lang": "en-US",
+  "dir": "ltr",
+  "orientation": "portrait-primary",
+  "categories": ["business", "construction", "home improvement"],
+  "screenshots": [
+    {
+      "src": "https://images.unsplash.com/photo-1543286386-71314a40aac6?auto=format&fit=crop&q=80",
+      "sizes": "1280x720",
+      "type": "image/jpg",
+      "label": "Homepage of Arxen Construction"
+    }
+  ]
+} 
