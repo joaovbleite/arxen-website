@@ -1,0 +1,14 @@
+# Testing files
+test-*.js
+count-*.js
+
+# Development files
+.github
+.git
+.DS_Store
+README.md
+*.log
+
+# Build artifacts
+/dist
+/.bolt 
