@@ -2130,11 +2130,9 @@ const ChatBot: React.FC = () => {
   };
 
   const closeChat = () => {
-    // If showing feedback, don't close immediately
-    if (!showEndChatFeedback) {
-      setIsOpen(false);
-      localStorage.setItem(LOCAL_STORAGE_KEY, 'true');
-    }
+    // Always close the chat when this function is called
+    setIsOpen(false);
+    localStorage.setItem(LOCAL_STORAGE_KEY, 'true');
   };
 
   const handleOptionSelect = (action: string) => {
@@ -4460,9 +4458,11 @@ const ChatBot: React.FC = () => {
             <div className="p-3 bg-white rounded shadow-md border border-blue-100 mt-4">
               <ChatEndFeedback 
                 onClose={() => {
-                  // Reset the feedback state and close the chat
+                  // Reset the feedback state and force close the chat
                   setShowEndChatFeedback(false);
-                  closeChat();
+                  // Force close chatbot directly
+                  setIsOpen(false);
+                  localStorage.setItem(LOCAL_STORAGE_KEY, 'true');
                 }}
                 onFeedbackComplete={(rating: number) => {
                   // Store feedback data

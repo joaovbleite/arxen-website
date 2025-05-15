@@ -142,6 +142,7 @@ function App() {
   const [searchResults, setSearchResults] = useState<Service[]>([]);
   const sliderRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
+  const touchStartXRef = useRef<number | null>(null);
   
   // State for homepage quote form
   const [homeZip, setHomeZip] = useState('');
@@ -162,6 +163,12 @@ function App() {
   // State for services filter type
   const [serviceFilterType, setServiceFilterType] = useState<'all' | 'commercial' | 'residential'>('all');
   const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
+  
+  // State to track if user has swiped the services slider
+  const [hasSwipedServices, setHasSwipedServices] = useState(() => {
+    // Check localStorage on initial load
+    return localStorage.getItem('arxen_has_swiped_services') === 'true';
+  });
 
   useEffect(() => {
     setIsHomePage(location === '/');
@@ -1223,6 +1230,12 @@ function App() {
       const maxScrollLeft = scrollWidth - clientWidth;
       const scrollPercentage = (scrollLeft / maxScrollLeft) * (100 - thumbWidthPercentage);
       thumbRef.current.style.left = `${scrollPercentage}%`;
+      
+      // Mark as swiped if the user has scrolled more than 20px
+      if (!hasSwipedServices && scrollLeft > 20) {
+        setHasSwipedServices(true);
+        localStorage.setItem('arxen_has_swiped_services', 'true');
+      }
     }
   };
 
@@ -1819,7 +1832,7 @@ function App() {
         </div>
 
               {/* Services Category Slider Section - Subtle wave background */}
-              <div className="py-16 relative z-[2] overflow-hidden">
+              <div className="py-10 sm:py-12 md:py-16 relative z-[2] overflow-hidden">
                 {/* Dynamic wave-like background shapes */}
                 <div className="absolute inset-0 bg-white opacity-95 z-[-1]"></div>
                 <div className="absolute top-0 left-0 w-full h-full z-[-1]">
@@ -1827,19 +1840,52 @@ function App() {
                   <div className="absolute bottom-[20%] left-[10%] w-[30vw] h-[30vw] rounded-full bg-gradient-to-tr from-gray-100/30 to-blue-100/20 blur-3xl"></div>
                 </div>
                 
-        <div className="container mx-auto px-4">
-                <h2 className="text-3xl sm:text-4xl font-bold text-center mb-6 sm:mb-12">Explore Our Services</h2>
+        <div className="container mx-auto px-3 sm:px-4">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 sm:mb-6 md:mb-12">Explore Our Services</h2>
                 <div className="relative overflow-hidden group">
+                  {/* Scroll hint for mobile - only shown initially until user swipes */}
+                  {!hasSwipedServices && (
+                    <div className="relative z-20 mb-2 px-4 transition-opacity duration-300">
+                      <div className="flex items-center justify-start">
+                        <div className="flex items-center text-xs text-blue-600">
+                          <svg className="w-3.5 h-3.5 mr-1 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                          <span className="sm:inline">Swipe to explore</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
                   {/* Slider Track - Make this scrollable and hide default scrollbar */}
                   <div 
                     ref={sliderRef} // Add ref for scroll tracking
-                    className="flex overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide services-slider-track"
+                    className="flex overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide services-slider-track relative"
                     style={{ transform: `translateX(0%)` }} // Remove transform, rely on scroll
                     onScroll={handleScroll} // Add scroll handler
+                    onTouchStart={(e) => {
+                      touchStartXRef.current = e.touches[0].clientX;
+                    }}
+                    onTouchMove={(e) => {
+                      if (touchStartXRef.current !== null) {
+                        const touchDiff = touchStartXRef.current - e.touches[0].clientX;
+                        if (Math.abs(touchDiff) > 20 && !hasSwipedServices) {
+                          setHasSwipedServices(true);
+                          localStorage.setItem('arxen_has_swiped_services', 'true');
+                        }
+                      }
+                    }}
+                    onTouchEnd={() => {
+                      touchStartXRef.current = null;
+                    }}
                   >
                     {services.map((category, index) => (
-                      <div key={index} className="w-full md:w-[70%] lg:w-[40%] flex-shrink-0 px-2 snap-start">
-                        <div className="relative group block bg-black rounded-lg overflow-hidden shadow-lg h-[300px] md:h-[400px] hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
+                      <div key={index} className="w-[70%] sm:w-[60%] md:w-[70%] lg:w-[40%] flex-shrink-0 px-1.5 sm:px-2 snap-start first:pl-4 last:pr-8">
+                        <div className="relative group block bg-black rounded-2xl overflow-hidden shadow-lg h-[240px] sm:h-[280px] md:h-[400px] hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
+                          {/* Category index badge */}
+                          <div className="absolute top-3 left-3 z-10 bg-white/30 backdrop-blur-md text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border border-white/40">
+                            {index + 1}
+                          </div>
                           <img
                             alt={category.category}
                             src={category.category === "Wood Services" 
@@ -1848,23 +1894,27 @@ function App() {
                             className="absolute inset-0 h-full w-full object-cover opacity-60 group-hover:opacity-40 transition-opacity"
                           />
                           <div className="relative p-4 sm:p-6 lg:p-8 flex flex-col justify-end h-full">
-                            <div className="bg-black bg-opacity-70 p-4 rounded">
-                              <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{category.category}</h3>
+                            <div className="bg-black bg-opacity-70 p-3 sm:p-4 rounded">
+                              <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 sm:mb-2">{category.category}</h3>
                               {/* Optional: List first few services */}
-                              <ul className="text-gray-300 space-y-1 mb-3 hidden sm:block text-sm">
-                                {category.services.slice(0, 2).map((service, i) => (
+                              <ul className="text-gray-300 space-y-1 mb-2 sm:mb-3 text-xs sm:text-sm">
+                                {category.services.slice(0, 1).map((service, i) => (
                                   <li key={i} className="flex items-center">
-                                    <Check className="w-3 h-3 mr-2 text-blue-400 flex-shrink-0" />
-                                    {service.title}
+                                    <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1.5 sm:mr-2 text-blue-400 flex-shrink-0" />
+                                    <span className="line-clamp-1">{service.title}</span>
                                   </li>
                                 ))}
-                                {category.services.length > 2 && <li className="italic">...and more</li>}
+                                {category.services.length > 1 && (
+                                  <li className="italic text-xs text-blue-200">
+                                    +{category.services.length - 1} more services
+                                  </li>
+                                )}
                               </ul>
                               <Link 
                                 to={`/services/category/${category.category.toLowerCase().replace(/\s+/g, '-')}`}
-                                className="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-xs font-medium"
+                                className="inline-flex items-center px-2.5 sm:px-3 py-1 sm:py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-[10px] sm:text-xs font-medium"
                               >
-                                View Services <ArrowRight className="w-3 h-3 ml-1.5" />
+                                View Services <ArrowRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 ml-1 sm:ml-1.5" />
                               </Link>
                   </div>
                   </div>
@@ -1873,13 +1923,44 @@ function App() {
                     ))}
               </div>
                   
-                  {/* Custom Scrollbar */}
-                  <div className="mt-4 h-2 bg-gray-200 rounded-full w-full relative overflow-hidden">
-                    <div 
-                      ref={thumbRef} // Add ref for the thumb
-                      className="absolute top-0 left-0 h-full bg-blue-400 rounded-full cursor-grab" // Changed to blue, added cursor
-                      style={{ width: '0%', left: '0%' }} // Initial state controlled by JS
-                    ></div>
+                  {/* Scroll Indicators */}
+                  <div className="flex items-center justify-center mt-6 sm:mt-8 space-x-2">
+                    <button 
+                      onClick={() => {
+                        if (sliderRef.current) {
+                          sliderRef.current.scrollBy({ left: -sliderRef.current.offsetWidth * 0.7, behavior: 'smooth' });
+                        }
+                      }}
+                      className="w-8 h-8 rounded-full flex items-center justify-center bg-white shadow-md border border-gray-200 text-blue-600 hover:bg-blue-50 transition-colors"
+                      aria-label="Previous slide"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    
+                    {/* Custom Scrollbar */}
+                    <div className="h-2 bg-gray-200 rounded-full relative overflow-hidden flex-1 max-w-[120px] sm:max-w-[180px]">
+                      <div 
+                        ref={thumbRef} // Add ref for the thumb
+                        className="absolute top-0 left-0 h-full bg-blue-400 rounded-full cursor-grab" // Changed to blue, added cursor
+                        style={{ width: '30%', left: '0%' }} // Initial state controlled by JS
+                      ></div>
+                    </div>
+                    
+                    <button 
+                      onClick={() => {
+                        if (sliderRef.current) {
+                          sliderRef.current.scrollBy({ left: sliderRef.current.offsetWidth * 0.7, behavior: 'smooth' });
+                        }
+                      }}
+                      className="w-8 h-8 rounded-full flex items-center justify-center bg-white shadow-md border border-gray-200 text-blue-600 hover:bg-blue-50 transition-colors"
+                      aria-label="Next slide"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -2316,24 +2397,30 @@ Please enter your zip code to continue.
           {/* Building Type Selector - Enhanced with bolder colors */}
           <div className="mt-16 max-w-5xl mx-auto bg-blue-900/80 backdrop-blur-sm p-6 rounded-xl shadow-xl border-2 border-blue-600/50">
             <h3 className="text-xl font-semibold text-center mb-6 text-white">Find Solutions For Your Building Type</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-4">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4 mt-4">
               {[
-                { name: 'Office', icon: <Building2 className="w-5 h-5" />, buildingType: 'office-renovation' },
-                { name: 'Retail', icon: <ShoppingBag className="w-5 h-5" />, buildingType: 'retail-fit-out' },
-                { name: 'Industrial', icon: <Factory className="w-5 h-5" />, buildingType: 'warehouse-industrial' },
-                { name: 'Restaurant', icon: <UtensilsCrossed className="w-5 h-5" />, buildingType: 'restaurant-renovation' },
-                { name: 'Healthcare', icon: <Stethoscope className="w-5 h-5" />, buildingType: 'healthcare-facilities' },
-                { name: 'Custom', icon: <Settings className="w-5 h-5" />, buildingType: 'custom-services' }
+                { name: 'Office', icon: <Building2 className="w-4 h-4 sm:w-5 sm:h-5" />, buildingType: 'office-renovation' },
+                { name: 'Retail', icon: <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />, buildingType: 'retail-fit-out' },
+                { name: 'Industrial', icon: <Factory className="w-4 h-4 sm:w-5 sm:h-5" />, buildingType: 'warehouse-industrial' },
+                { name: 'Restaurant', icon: <UtensilsCrossed className="w-4 h-4 sm:w-5 sm:h-5" />, buildingType: 'restaurant-renovation' },
+                { name: 'Healthcare', icon: <Stethoscope className="w-4 h-4 sm:w-5 sm:h-5" />, buildingType: 'healthcare-facilities' },
+                { name: 'Education', icon: <FileText className="w-4 h-4 sm:w-5 sm:h-5" />, buildingType: 'education-facilities' },
+                { name: 'Hospitality', icon: <UtensilsCrossed className="w-4 h-4 sm:w-5 sm:h-5" />, buildingType: 'hospitality-renovation' },
+                { name: 'Office Park', icon: <Building2 className="w-4 h-4 sm:w-5 sm:h-5" />, buildingType: 'office-park' },
+                { name: 'Mall/Plaza', icon: <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />, buildingType: 'mall-plaza' },
+                { name: 'Warehouse', icon: <Package className="w-4 h-4 sm:w-5 sm:h-5" />, buildingType: 'warehouse-construction' },
+                { name: 'Data Center', icon: <Settings className="w-4 h-4 sm:w-5 sm:h-5" />, buildingType: 'data-center-construction' },
+                { name: 'Custom', icon: <Settings className="w-4 h-4 sm:w-5 sm:h-5" />, buildingType: 'custom-services' }
               ].map((type, index) => (
                 <Link
                   key={index}
                   to={`/free-estimate?projectType=commercial&buildingType=${type.buildingType}`}
-                  className="flex flex-col items-center justify-center p-4 rounded-lg hover:bg-blue-700 transition-colors group text-center"
+                  className="flex flex-col items-center justify-center p-2 sm:p-3 md:p-4 rounded-lg hover:bg-blue-700 transition-colors group text-center"
                 >
-                  <div className="bg-blue-800 p-3 rounded-full mb-2 text-blue-200 group-hover:bg-blue-300 group-hover:text-blue-900 transition-colors">
+                  <div className="bg-blue-800 p-2 sm:p-3 rounded-full mb-1 sm:mb-2 text-blue-200 group-hover:bg-blue-300 group-hover:text-blue-900 transition-colors">
                     {type.icon}
-            </div>
-                  <span className="text-sm font-medium text-gray-100">{type.name}</span>
+                  </div>
+                  <span className="text-xs sm:text-sm font-medium text-gray-100 whitespace-nowrap">{type.name}</span>
                 </Link>
               ))}
             </div>
@@ -2390,17 +2477,17 @@ Please enter your zip code to continue.
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
             {/* Removed the Residential & Commercial blue pill/button */}
-            <h2 className="text-5xl font-bold text-gray-800 mb-6 relative inline-block">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4 sm:mb-6 relative inline-block">
               Our Expertise
             </h2>
-            <div className="w-24 h-1.5 bg-blue-600 mx-auto mb-6 rounded-full"></div>
-            <p className="text-gray-600 text-lg max-w-3xl mx-auto">
+            <div className="w-16 sm:w-20 md:w-24 h-1 sm:h-1.5 bg-blue-600 mx-auto mb-4 sm:mb-6 rounded-full"></div>
+            <p className="text-gray-600 text-base sm:text-lg max-w-3xl mx-auto px-2 sm:px-0">
               Delivering exceptional quality and craftsmanship for both residential homes and commercial properties across the region.
             </p>
           </div>
 
           {/* Featured Services Grid (2 Residential, 2 Commercial) */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
             {[ // Array containing 2 residential and 2 commercial examples
               {
                 title: 'Kitchen Remodeling',
@@ -2440,28 +2527,28 @@ Please enter your zip code to continue.
                 to={service.path}
                 className="group relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col h-full bg-white border border-gray-200"
               >
-                <div className="h-48 relative overflow-hidden">
+                <div className="h-32 sm:h-40 md:h-48 relative overflow-hidden">
                   <img 
                     src={service.icon} 
                     alt={service.title} 
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className={`absolute top-3 right-3 px-2 py-0.5 rounded-full text-xs font-semibold text-white ${service.type === 'Residential' ? 'bg-blue-600' : 'bg-blue-800'}`}>
+                  <div className={`absolute top-2 sm:top-3 right-2 sm:right-3 px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-semibold text-white ${service.type === 'Residential' ? 'bg-blue-600' : 'bg-blue-800'}`}>
                      {service.type}
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-60"></div>
                 </div>
-                <div className={`p-5 ${service.bgColor} flex flex-col flex-grow text-white`}>
-                  <h3 className="text-lg font-bold mb-2 group-hover:text-blue-100 transition-colors">
+                <div className={`p-3 sm:p-4 md:p-5 ${service.bgColor} flex flex-col flex-grow text-white`}>
+                  <h3 className="text-sm sm:text-base md:text-lg font-bold mb-1 sm:mb-2 group-hover:text-blue-100 transition-colors">
                     {service.title}
                   </h3>
-                  <p className="text-blue-100 text-sm mb-4 flex-grow">
+                  <p className="text-blue-100 text-xs sm:text-sm mb-2 sm:mb-4 flex-grow">
                     {service.description}
                   </p>
-                  <div className="mt-auto pt-3 border-t border-blue-500/50 flex justify-between items-center">
-                    <span className="text-sm font-medium text-blue-200">Learn More</span>
-                    <div className="bg-blue-500 rounded-full p-1.5 shadow-lg transform translate-x-0 group-hover:translate-x-1 transition-transform">
-                      <ArrowRight className="w-4 h-4 text-white" />
+                  <div className="mt-auto pt-2 sm:pt-3 border-t border-blue-500/50 flex justify-between items-center">
+                    <span className="text-xs sm:text-sm font-medium text-blue-200">Learn More</span>
+                    <div className="bg-blue-500 rounded-full p-1 sm:p-1.5 shadow-lg transform translate-x-0 group-hover:translate-x-1 transition-transform">
+                      <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                     </div>
                   </div>
                 </div>
@@ -2470,16 +2557,16 @@ Please enter your zip code to continue.
           </div>
 
           {/* Combined CTA */}
-          <div className="mt-16 text-center flex flex-col sm:flex-row justify-center items-center gap-4">
+          <div className="mt-10 sm:mt-16 text-center flex flex-col sm:flex-row justify-center items-center gap-4">
             <Link 
               to="/residential" 
-              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-transform border border-blue-400"
+              className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-transform border border-blue-400 text-sm sm:text-base"
             >
               Explore Residential Services
             </Link>
              <Link 
               to="/commercial" 
-              className="inline-flex items-center px-6 py-3 bg-blue-800 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-transform border border-blue-700"
+              className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-blue-800 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-transform border border-blue-700 text-sm sm:text-base"
             >
               Explore Commercial Services
             </Link>
@@ -2640,7 +2727,8 @@ Please enter your zip code to continue.
                 <div className="absolute top-4 left-4 bg-blue-900 text-white text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-full z-10">
                   Featured Project
                 </div>
-                <div className="grid md:grid-cols-2 gap-4">
+                {/* Desktop layout (unchanged) - hidden on mobile/tablet */}
+                <div className="hidden md:grid md:grid-cols-2 gap-4">
                   {/* Before */}
                   <div className="relative">
                     <img 
@@ -2663,6 +2751,51 @@ Please enter your zip code to continue.
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
                       <span className="text-white font-bold inline-block bg-blue-600 px-3 py-1 rounded-full text-sm">AFTER</span>
                     </div>
+                  </div>
+                </div>
+                
+                {/* Mobile/Tablet layout (side by side) - hidden on desktop */}
+                <div className="md:hidden relative">
+                  <div className="flex overflow-x-hidden">
+                    {/* Before and After Container with hover effect */}
+                    <div className="flex flex-row w-full before-after-container touch-manipulation">
+                      {/* Before */}
+                      <div className="relative w-1/2 border-r border-white/20 z-10">
+                        <img 
+                          src="https://images.unsplash.com/photo-1560185007-5f0bb1866cab?auto=format&fit=crop&q=80" 
+                          alt="Before Kitchen Renovation" 
+                          className="w-full h-64 sm:h-80 object-cover before-image"
+                        />
+                        <div className="absolute top-0 left-0 bg-black/70 m-2 px-2 py-0.5 rounded-full z-20">
+                          <span className="text-white font-bold text-xs">BEFORE</span>
+                        </div>
+                      </div>
+                      
+                      {/* After */}
+                      <div className="relative w-1/2 border-l border-white/20 z-20">
+                        <img 
+                          src="https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&q=80" 
+                          alt="After Kitchen Renovation" 
+                          className="w-full h-64 sm:h-80 object-cover after-image"
+                        />
+                        <div className="absolute top-0 right-0 bg-blue-600 m-2 px-2 py-0.5 rounded-full z-20">
+                          <span className="text-white font-bold text-xs">AFTER</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Touch hint */}
+                  <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 bg-white/80 backdrop-blur-sm rounded-full px-3 py-1 text-[10px] text-gray-700 flex items-center shadow-sm">
+                    <span className="mr-1">Tap to compare</span>
+                    <svg className="w-3 h-3 text-blue-500 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11.5V14m0 0v2.5M7 14h2.5m4 0h2.5m-2.5 0v2.5m0-2.5V11.5M7 14h10" />
+                    </svg>
+                  </div>
+                  
+                  {/* Mobile-only title */}
+                  <div className="text-center py-4 px-3 bg-gray-50 border-t border-gray-200">
+                    <h3 className="text-lg font-bold text-gray-800">Modern Kitchen Transformation</h3>
                   </div>
                 </div>
                 
@@ -2702,7 +2835,7 @@ Please enter your zip code to continue.
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             {/* Bathroom Transformation */}
             <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow">
-              <div className="relative h-80 overflow-hidden">
+              <div className="relative h-64 sm:h-80 overflow-hidden">
                 {/* Slide effect on hover */}
                 <div className="absolute inset-0 transition-transform duration-700 ease-in-out group-hover:translate-x-full">
                   <img 
@@ -2710,7 +2843,16 @@ Please enter your zip code to continue.
                     alt="Before Bathroom Renovation" 
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                  <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center md:hidden">
+                    <span className="inline-block bg-black/60 px-2 py-0.5 rounded-full text-xs font-semibold text-white mb-1.5">BEFORE</span>
+                    <span className="text-white text-sm font-medium bg-blue-600/80 rounded-full py-1 px-3 shadow-sm flex items-center">
+                      <svg className="w-3.5 h-3.5 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 18L18 12L8 6V18Z" fill="white" />
+                      </svg>
+                      Tap to see after
+                    </span>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 hidden md:block">
                     <span className="text-white font-bold inline-block bg-black/60 px-2 py-0.5 rounded-full text-xs">BEFORE</span>
                   </div>
                 </div>
@@ -2725,8 +2867,8 @@ Please enter your zip code to continue.
                 </div>
               </div>
               
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-2">Luxury Bathroom Remodel</h3>
+              <div className="p-4 sm:p-6">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">Luxury Bathroom Remodel</h3>
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                   A complete transformation from outdated fixtures to a spa-like retreat with custom tilework, glass shower, and premium fixtures.
                 </p>
@@ -2742,7 +2884,7 @@ Please enter your zip code to continue.
             
             {/* Living Room Transformation */}
             <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow">
-              <div className="relative h-80 overflow-hidden">
+              <div className="relative h-64 sm:h-80 overflow-hidden">
                 {/* Slide effect on hover */}
                 <div className="absolute inset-0 transition-transform duration-700 ease-in-out group-hover:translate-x-full">
                   <img 
@@ -2750,7 +2892,16 @@ Please enter your zip code to continue.
                     alt="Before Living Room Renovation" 
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                  <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center md:hidden">
+                    <span className="inline-block bg-black/60 px-2 py-0.5 rounded-full text-xs font-semibold text-white mb-1.5">BEFORE</span>
+                    <span className="text-white text-sm font-medium bg-blue-600/80 rounded-full py-1 px-3 shadow-sm flex items-center">
+                      <svg className="w-3.5 h-3.5 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 18L18 12L8 6V18Z" fill="white" />
+                      </svg>
+                      Tap to see after
+                    </span>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 hidden md:block">
                     <span className="text-white font-bold inline-block bg-black/60 px-2 py-0.5 rounded-full text-xs">BEFORE</span>
                   </div>
                 </div>
@@ -2765,8 +2916,8 @@ Please enter your zip code to continue.
                 </div>
               </div>
               
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-2">Modern Living Space</h3>
+              <div className="p-4 sm:p-6">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">Modern Living Space</h3>
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                   This living room renovation included new hardwood floors, custom built-ins, fireplace redesign, and modern lighting.
                 </p>
@@ -2782,7 +2933,7 @@ Please enter your zip code to continue.
             
             {/* Commercial Office Transformation */}
             <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow">
-              <div className="relative h-80 overflow-hidden">
+              <div className="relative h-64 sm:h-80 overflow-hidden">
                 {/* Slide effect on hover */}
                 <div className="absolute inset-0 transition-transform duration-700 ease-in-out group-hover:translate-x-full">
                   <img 
@@ -2790,7 +2941,16 @@ Please enter your zip code to continue.
                     alt="Before Office Renovation" 
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                  <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center md:hidden">
+                    <span className="inline-block bg-black/60 px-2 py-0.5 rounded-full text-xs font-semibold text-white mb-1.5">BEFORE</span>
+                    <span className="text-white text-sm font-medium bg-blue-600/80 rounded-full py-1 px-3 shadow-sm flex items-center">
+                      <svg className="w-3.5 h-3.5 mr-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 18L18 12L8 6V18Z" fill="white" />
+                      </svg>
+                      Tap to see after
+                    </span>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 hidden md:block">
                     <span className="text-white font-bold inline-block bg-black/60 px-2 py-0.5 rounded-full text-xs">BEFORE</span>
                   </div>
                 </div>
@@ -2805,8 +2965,8 @@ Please enter your zip code to continue.
                 </div>
               </div>
               
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-2">Corporate Office Renovation</h3>
+              <div className="p-4 sm:p-6">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">Corporate Office Renovation</h3>
                 <p className="text-gray-600 text-sm mb-4 line-clamp-3">
                   Transformed an outdated office into a modern, collaborative workspace with improved lighting, ergonomic workstations, and tech integration.
                 </p>
@@ -2822,45 +2982,90 @@ Please enter your zip code to continue.
           </div>
           
           {/* CTA with Statistic */}
-          <div className="bg-blue-900 rounded-2xl shadow-2xl p-8 md:p-12 text-white flex flex-col md:flex-row items-center justify-between">
+          <div className="bg-gray-200/90 backdrop-blur-sm md:bg-blue-900 rounded-none md:rounded-2xl shadow-2xl mx-[-16px] md:mx-auto px-4 py-8 md:p-12 text-gray-800 md:text-white flex flex-col md:flex-row items-center justify-between">
+            {/* Mobile stats slider - moved to top */}
+            <div className="md:hidden w-full overflow-hidden mb-6">
+              <div className="stats-slider flex animate-stats-scroll py-3">
+                <div className="stats-slide flex space-x-4 mr-4">
+                  <div className="flex-shrink-0 w-[150px] p-3 text-center">
+                    <div className="text-2xl font-bold mb-1">2,500+</div>
+                    <div className="text-gray-700 text-xs">Completed Projects</div>
+                  </div>
+                  <div className="flex-shrink-0 w-[150px] p-3 text-center">
+                    <div className="text-2xl font-bold mb-1">98%</div>
+                    <div className="text-gray-700 text-xs">Satisfied Clients</div>
+                  </div>
+                  <div className="flex-shrink-0 w-[150px] p-3 text-center">
+                    <div className="text-2xl font-bold mb-1">20+</div>
+                    <div className="text-gray-700 text-xs">Years Experience</div>
+                  </div>
+                  <div className="flex-shrink-0 w-[150px] p-3 text-center">
+                    <div className="text-2xl font-bold mb-1">15+</div>
+                    <div className="text-gray-700 text-xs">Industry Awards</div>
+                  </div>
+                </div>
+                {/* Duplicate set for seamless scrolling */}
+                <div className="stats-slide flex space-x-4">
+                  <div className="flex-shrink-0 w-[150px] p-3 text-center">
+                    <div className="text-2xl font-bold mb-1">2,500+</div>
+                    <div className="text-gray-700 text-xs">Completed Projects</div>
+                  </div>
+                  <div className="flex-shrink-0 w-[150px] p-3 text-center">
+                    <div className="text-2xl font-bold mb-1">98%</div>
+                    <div className="text-gray-700 text-xs">Satisfied Clients</div>
+                  </div>
+                  <div className="flex-shrink-0 w-[150px] p-3 text-center">
+                    <div className="text-2xl font-bold mb-1">20+</div>
+                    <div className="text-gray-700 text-xs">Years Experience</div>
+                  </div>
+                  <div className="flex-shrink-0 w-[150px] p-3 text-center">
+                    <div className="text-2xl font-bold mb-1">15+</div>
+                    <div className="text-gray-700 text-xs">Industry Awards</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
             <div className="md:w-2/3 mb-6 md:mb-0">
               <h3 className="text-2xl md:text-3xl font-bold mb-3">Ready to Transform Your Space?</h3>
-              <p className="text-blue-100 text-lg mb-6">
+              <p className="text-gray-700 md:text-blue-100 text-lg mb-6">
                 Our award-winning team has completed over 2,500 successful projects across Georgia. Let's bring your vision to life.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link 
                   to="/free-estimate" 
-                  className="bg-white text-blue-900 hover:bg-blue-50 px-6 py-3 rounded-lg font-semibold transition-colors shadow-lg hover:shadow-xl inline-flex items-center gap-2"
+                  className="bg-blue-700 md:bg-white text-white md:text-blue-900 hover:bg-blue-800 md:hover:bg-blue-50 px-6 py-3 rounded-lg font-semibold transition-colors shadow-lg hover:shadow-xl inline-flex items-center gap-2"
                 >
                   Get a Free Estimate
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <Link 
                   to="/portfolio" 
-                  className="bg-blue-800 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors inline-flex items-center gap-2 border border-blue-700"
+                  className="bg-gray-300 md:bg-blue-800 text-blue-800 md:text-white hover:bg-gray-400 md:hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition-colors inline-flex items-center gap-2 border border-gray-400 md:border-blue-700"
                 >
                   View All Projects
                   <Camera className="w-4 h-4" />
                 </Link>
               </div>
             </div>
-            <div className="md:w-1/3 grid grid-cols-2 gap-4">
-              <div className="bg-blue-800/50 backdrop-blur-sm p-4 rounded-lg text-center">
+            
+            {/* Desktop stats grid - stays in the same position */}
+            <div className="md:w-1/3 md:grid md:grid-cols-2 md:gap-4 hidden md:block">
+              <div className="bg-white/80 md:bg-blue-800/50 backdrop-blur-sm p-4 rounded-lg text-center">
                 <div className="text-3xl font-bold mb-1">2,500+</div>
-                <div className="text-blue-200 text-sm">Completed Projects</div>
+                <div className="text-gray-700 md:text-blue-200 text-sm">Completed Projects</div>
               </div>
-              <div className="bg-blue-800/50 backdrop-blur-sm p-4 rounded-lg text-center">
+              <div className="bg-white/80 md:bg-blue-800/50 backdrop-blur-sm p-4 rounded-lg text-center">
                 <div className="text-3xl font-bold mb-1">98%</div>
-                <div className="text-blue-200 text-sm">Satisfied Clients</div>
+                <div className="text-gray-700 md:text-blue-200 text-sm">Satisfied Clients</div>
               </div>
-              <div className="bg-blue-800/50 backdrop-blur-sm p-4 rounded-lg text-center">
+              <div className="bg-white/80 md:bg-blue-800/50 backdrop-blur-sm p-4 rounded-lg text-center">
                 <div className="text-3xl font-bold mb-1">20+</div>
-                <div className="text-blue-200 text-sm">Years Experience</div>
+                <div className="text-gray-700 md:text-blue-200 text-sm">Years Experience</div>
               </div>
-              <div className="bg-blue-800/50 backdrop-blur-sm p-4 rounded-lg text-center">
+              <div className="bg-white/80 md:bg-blue-800/50 backdrop-blur-sm p-4 rounded-lg text-center">
                 <div className="text-3xl font-bold mb-1">15+</div>
-                <div className="text-blue-200 text-sm">Industry Awards</div>
+                <div className="text-gray-700 md:text-blue-200 text-sm">Industry Awards</div>
               </div>
             </div>
           </div>
@@ -3334,6 +3539,16 @@ const keyframes = {
         opacity: 0.3;
       }
     }
+  `,
+  statsScroll: `
+    @keyframes stats-scroll {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
   `
 };
 
@@ -3342,30 +3557,56 @@ const customScrollbarCSS = `
   .services-slider-track {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* Better touch scrolling on iOS */
   }
   .services-slider-track::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
   }
-  .services-slider-container {
-    position: relative;
+  
+  /* Enhanced visual improvements for services sliders */
+  .services-slider-track::after {
+    content: '';
+    flex: 0 0 8px; /* Add space after last item */
   }
-  .services-slider-container::before,
-  .services-slider-container::after {
+  
+  /* Left and right fade effect for slider */
+  .services-slider-track::before,
+  .services-slider-track::after {
     content: '';
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 50px; /* Adjust fade width */
-    z-index: 2; 
-    pointer-events: none; /* Allow clicks through the fade */
+    width: 20px;
+    z-index: 2;
+    pointer-events: none;
   }
-  .services-slider-container::before {
+  
+  .services-slider-track::before {
     left: 0;
     background: linear-gradient(to right, white, transparent);
   }
-  .services-slider-container::after {
+  
+  .services-slider-track::after {
     right: 0;
     background: linear-gradient(to left, white, transparent);
+  }
+  
+  /* Improved card styling */
+  @media (max-width: 640px) {
+    .services-slider-track > div:not(:first-child) {
+      position: relative;
+    }
+    .services-slider-track > div:not(:first-child)::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 50%;
+      height: 30px;
+      width: 1px;
+      background: rgba(219, 234, 254, 0.4);
+      transform: translateY(-50%);
+    }
   }
 `;
 
@@ -3377,12 +3618,54 @@ const customExtendedCSS = `
   .animation-delay-1000 {
     animation-delay: 1s;
   }
+  
+  /* Swipe hint animation */
+  @keyframes fade-out-slide {
+    0% { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(-10px); }
+  }
+  
+  .fade-out-slide {
+    animation: fade-out-slide 0.5s forwards;
+  }
+  
+  /* Before-After comparison hover effect for mobile */
+  @media (max-width: 768px) {
+    .before-after-container:hover .before-image,
+    .before-after-container:active .before-image {
+      opacity: 0.6;
+    }
+    
+    .before-after-container:hover .after-image,
+    .before-after-container:active .after-image {
+      opacity: 1;
+    }
+    
+    .before-image, .after-image {
+      transition: opacity 0.3s ease;
+    }
+    
+    .before-image {
+      opacity: 1;
+    }
+    
+    .after-image {
+      opacity: 0.6;
+    }
+  }
 `;
 
 // Add the keyframes and custom CSS to the document
 if (typeof document !== 'undefined') {
   const style = document.createElement('style');
-  style.innerHTML = Object.values(keyframes).join('\n') + customScrollbarCSS + customExtendedCSS;
+  style.innerHTML = Object.values(keyframes).join('\n') + customScrollbarCSS + customExtendedCSS + `
+    .animate-stats-scroll {
+      animation: stats-scroll 20s linear infinite;
+    }
+    .stats-slider:hover {
+      animation-play-state: paused;
+    }
+  `;
   document.head.appendChild(style);
 }
 

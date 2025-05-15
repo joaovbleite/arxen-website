@@ -56,7 +56,12 @@ const ChatEndFeedback = ({ onClose, onFeedbackComplete }) => {
       <p className="text-center text-xs text-blue-600 mt-2">Your feedback helps us improve</p>
       <div className="mt-3 text-center">
         <button 
-          onClick={() => onClose && onClose()}
+          onClick={() => {
+            // Directly close the chatbot instead of just closing the feedback UI
+            if (onClose) {
+              onClose();
+            }
+          }}
           className="text-xs text-gray-500 hover:underline"
         >
           Skip and close
