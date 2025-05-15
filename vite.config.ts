@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import reactSWC from '@vitejs/plugin-react-swc';
 import { VitePWA } from 'vite-plugin-pwa';
 import { visualizer } from 'rollup-plugin-visualizer';
 import compress from 'vite-plugin-compression';
@@ -7,10 +7,8 @@ import compress from 'vite-plugin-compression';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react({
-      // Use standard settings
-      jsxRuntime: 'automatic',
-    }),
+    // Use SWC instead of Babel for faster builds and better compatibility
+    reactSWC(),
     // PWA plugin for service worker and manifest
     VitePWA({
       registerType: 'autoUpdate',
