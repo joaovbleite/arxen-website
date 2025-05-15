@@ -120,5 +120,6 @@
   },
   "github": {
     "silent": true
-  }
+  },
+  "buildCommand": "echo 'Skipping build for now'"
 }
