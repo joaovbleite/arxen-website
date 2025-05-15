@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo, Suspense, lazy } from 'react';
 import { Hammer, CheckCircle, Phone, Mail, MapPin, Clock, Shield, ArrowRight, Star, ChevronRight, Check, Camera, Box, ClipboardList, ArrowLeft, Home, ChevronDown, DollarSign, Users, Clipboard, Building2, Settings, Search, X, FileText, ShoppingBag, Factory, UtensilsCrossed, Stethoscope, Package, Heart, MessageSquare, Award, Tag, Scan, Calendar } from 'lucide-react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
+// Import non-lazy-loaded components (used immediately)
 import TestimonialSlider from './components/TestimonialSlider';
 import Footer from './components/Footer';
 import CookieConsent from './components/CookieConsent';
@@ -10,9 +11,8 @@ import HomeSEO from './components/HomeSEO';
 import { allTestimonials } from './data/testimonials';
 import PropertyTypeProvider from './components/PropertyTypeContext';
 import ReviewForm from './components/ReviewForm';
-import PerformanceMonitor from './components/PerformanceMonitor';
 
-// Lazy load all page components for code splitting
+// Lazy load all page components to reduce initial load time
 const HardwoodService = lazy(() => import('./pages/HardwoodService'));
 const KitchenRemodeling = lazy(() => import('./pages/KitchenRemodeling'));
 const BathroomRemodeling = lazy(() => import('./pages/BathroomRemodeling'));
@@ -1393,8 +1393,6 @@ function App() {
   return (
     <Router>
       <PropertyTypeProvider>
-        {/* Performance Monitor - only visible in dev mode or when triggered with Ctrl+Alt+P */}
-        <PerformanceMonitor />
         <ScrollToTop />
         {/* Navigation Bar - With scroll behavior */}
         <div className={`border-b border-gray-200/70 bg-white/70 backdrop-blur-md sticky top-0 z-[1500] transition-transform duration-300 ${!visible && !isHomePage ? '-translate-y-full' : 'translate-y-0'}`}>
@@ -1810,82 +1808,88 @@ function App() {
         )}
 
         {/* Enhanced Loading Indicator Component */}
-        <div id="page-loading-indicator" className="fixed inset-0 z-[2000] flex items-center justify-center transition-all duration-500" style={{opacity: 0, pointerEvents: 'none', backdropFilter: 'blur(0px)'}}>
-          <div className="absolute inset-0 bg-white/80 transition-opacity duration-500"></div>
-          <div className="flex flex-col items-center relative z-10">
-            <div className="bg-white shadow-2xl rounded-xl p-6 flex flex-col items-center transform scale-95 transition-all duration-500">
-              <div className="relative w-16 h-16">
-                <svg className="w-16 h-16 animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <img 
-                    src="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" 
-                    alt="Arxen Logo" 
-                    className="w-8 h-8 object-contain"
-                  />
-                </div>
-              </div>
-              <p className="mt-4 text-lg font-medium text-gray-700">Loading your page...</p>
-              <div className="w-32 h-1.5 bg-gray-200 rounded-full mt-3 overflow-hidden">
-                <div className="h-full bg-blue-600 rounded-full w-0 transition-all duration-300" id="loading-progress-bar"></div>
-              </div>
+        <div id="page-loading-indicator" className="fixed inset-0 z-[2000] flex items-center justify-center bg-white transition-all duration-300" style={{opacity: 0, pointerEvents: 'none'}}>
+          <div className="flex flex-col items-center bg-white p-6 rounded-xl shadow-2xl max-w-sm mx-auto">
+            {/* ARXEN logo - replace with yours */}
+            <img 
+              src="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" 
+              alt="Arxen Construction Logo" 
+              className="h-12 w-auto mb-4 animate-pulse"
+            />
+            
+            {/* Animated loading bar */}
+            <div className="w-full bg-gray-200 rounded-full h-1.5 mb-4 overflow-hidden">
+              <div className="bg-blue-600 h-1.5 rounded-full animate-loadingBar"></div>
             </div>
+            
+            <div className="flex items-center gap-2">
+              <svg className="w-5 h-5 animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <p className="text-base font-medium text-gray-600">Loading your experience...</p>
+            </div>
+          </div>
+          
+          {/* Background decorative elements */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
+            <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-200 rounded-full animate-pulse-slow"></div>
+            <div className="absolute bottom-1/4 right-1/4 w-56 h-56 bg-blue-300 rounded-full animate-pulse-slow-delayed"></div>
           </div>
         </div>
 
-        {/* Enhanced Error Boundary for catching React errors */}
-        <div id="page-error-boundary" className="fixed inset-0 z-[2000] flex items-center justify-center" style={{display: 'none'}}>
-          <div className="absolute inset-0 bg-white/95 backdrop-blur-sm"></div>
-          <div className="relative z-10 max-w-md mx-auto">
-            <div className="bg-white border border-red-100 shadow-2xl rounded-xl p-8 text-center transform transition-all">
-              <div className="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Something went wrong</h3>
-              <p className="text-gray-600 mb-6">We encountered an issue while loading this page. This might be due to a temporary glitch or network issue.</p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <button 
-                  onClick={() => window.location.reload()} 
-                  className="px-5 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-                >
-                  Refresh Page
-                </button>
-                <button 
-                  onClick={() => window.history.back()} 
-                  className="px-5 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-all"
-                >
-                  Go Back
-                </button>
-              </div>
+        {/* Enhanced Error Boundary */}
+        <div id="page-error-boundary" className="fixed inset-0 z-[2000] items-center justify-center bg-white" style={{display: 'none'}}>
+          <div className="max-w-md mx-auto p-8 text-center bg-white shadow-2xl rounded-xl">
+            <img 
+              src="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" 
+              alt="Arxen Construction Logo" 
+              className="h-12 w-auto mx-auto mb-4"
+            />
+            <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">We encountered an issue</h3>
+            <p className="text-gray-600 mb-6">We're sorry, but something went wrong while loading this page. Please try refreshing.</p>
+            <div className="flex flex-col sm:flex-row justify-center gap-3">
+              <button 
+                onClick={() => window.location.reload()} 
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Refresh Page
+              </button>
+              <a 
+                href="/" 
+                className="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
+              >
+                Return Home
+              </a>
             </div>
           </div>
         </div>
-
-        {/* Simple Fallback for Route Suspense */}
-        <div id="route-loading-fallback" className="hidden">
-          <div className="flex justify-center items-center p-8">
-            <div className="animate-pulse flex space-x-4 items-center">
-              <div className="rounded-full bg-blue-700/20 h-12 w-12 flex items-center justify-center">
-                <div className="rounded-full bg-blue-600 h-6 w-6"></div>
-              </div>
-              <div className="flex-1 space-y-4 py-1">
-                <div className="h-4 bg-blue-700/20 rounded w-3/4"></div>
-                <div className="space-y-2">
-                  <div className="h-4 bg-blue-700/20 rounded"></div>
-                  <div className="h-4 bg-blue-700/20 rounded w-5/6"></div>
-                </div>
+        
+        {/* Suspense wrapper for all routes */}
+        <Suspense fallback={
+          <div className="flex items-center justify-center min-h-screen bg-gray-100">
+            <div className="bg-white p-6 rounded-xl shadow-md">
+              <img 
+                src="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" 
+                alt="Arxen Construction Logo" 
+                className="h-10 w-auto mx-auto mb-4"
+              />
+              <div className="flex items-center justify-center space-x-2">
+                <div className="w-3 h-3 bg-blue-600 rounded-full animate-bounce"></div>
+                <div className="w-3 h-3 bg-blue-600 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                <div className="w-3 h-3 bg-blue-600 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Routes for all pages with Suspense for code splitting */}
-        <Routes>
-          {/* Home Page Route - No Suspense needed for homepage for faster initial load */}
+        }>
+          {/* Routes for all pages */}
+          <Routes>
+          {/* Home Page Route */}
           <Route path="/" element={
             <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
               {/* Add HomeSEO component for improved search engine optimization */}
@@ -3466,32 +3470,32 @@ Please enter your zip code to continue.
       
           </div>
         } />
-        <Route path="/services/kitchen-remodeling" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><KitchenRemodeling /></Suspense>} />
-        <Route path="/services/bathroom-remodeling" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><BathroomRemodeling /></Suspense>} />
-        <Route path="/services/hardwood" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><HardwoodService /></Suspense>} />
-        <Route path="/services/custom-cabinetry" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><CustomCabinetryPage /></Suspense>} />
-        <Route path="/services/flooring" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><FlooringServicesPage /></Suspense>} />
-        <Route path="/financing" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Financing /></Suspense>} />
-        <Route path="/contact" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Contact /></Suspense>} />
-        <Route path="/quote" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><FreeEstimate /></Suspense>} />
-        <Route path="/commercial-quote" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><CommercialQuote /></Suspense>} />
-        <Route path="/residential-quote" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><ResidentialQuote /></Suspense>} />
-        <Route path="/testimonials" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Testimonials /></Suspense>} />
-        <Route path="/portfolio" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Portfolio /></Suspense>} />
-        <Route path="/blog" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Blog /></Suspense>} />
-        <Route path="/about" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><About /></Suspense>} />
-        <Route path="/residential" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Residential /></Suspense>} />
-        <Route path="/offers" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Offers /></Suspense>} />
-        {/* <Route path="/visualizer" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><VisualizeIt /></Suspense>} /> */}
-        {/* <Route path="/my-projects" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><MyProjects /></Suspense>} /> */}
-        <Route path="/free-estimate" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><FreeEstimate /></Suspense>} />
-        <Route path="/privacy-policy" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><PrivacyPolicy /></Suspense>} />
-        <Route path="/terms-of-service" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><TermsOfService /></Suspense>} />
-        <Route path="/sitemap" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Sitemap /></Suspense>} />
-        <Route path="/commercial" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><CommercialServicePage /></Suspense>} />
-        <Route path="/commercial-service" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><CommercialServicePage /></Suspense>} />
-        <Route path="/accessibility" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><AccessibilityStatement /></Suspense>} />
-        <Route path="/faq" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><FAQ /></Suspense>} />
+        <Route path="/services/kitchen-remodeling" element={<KitchenRemodeling />} />
+        <Route path="/services/bathroom-remodeling" element={<BathroomRemodeling />} />
+        <Route path="/services/hardwood" element={<HardwoodService />} />
+        <Route path="/services/custom-cabinetry" element={<CustomCabinetryPage />} />
+        <Route path="/services/flooring" element={<FlooringServicesPage />} />
+        <Route path="/financing" element={<Financing />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/quote" element={<FreeEstimate />} />
+        <Route path="/commercial-quote" element={<CommercialQuote />} />
+        <Route path="/residential-quote" element={<ResidentialQuote />} />
+        <Route path="/testimonials" element={<Testimonials />} />
+        <Route path="/portfolio" element={<Portfolio />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/residential" element={<Residential />} />
+        <Route path="/offers" element={<Offers />} />
+        {/* <Route path="/visualizer" element={<VisualizeIt />} /> */}
+        {/* <Route path="/my-projects" element={<MyProjects />} /> */}
+        <Route path="/free-estimate" element={<FreeEstimate />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/sitemap" element={<Sitemap />} />
+        <Route path="/commercial" element={<CommercialServicePage />} />
+        <Route path="/commercial-service" element={<CommercialServicePage />} />
+        <Route path="/accessibility" element={<AccessibilityStatement />} />
+        <Route path="/faq" element={<FAQ />} />
         
         {/* Project transformation specific routes */}
         <Route path="/portfolio/kitchen-transformation" element={<Portfolio />} />
@@ -3534,6 +3538,9 @@ Please enter your zip code to continue.
         <Route path="/quote" element={<FreeEstimate />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      
+      {/* Close Suspense wrapper */}
+      </Suspense>
       
       {/* Footer component - moved outside of Routes to appear on all pages */}
       <Footer />
@@ -3860,128 +3867,101 @@ if (typeof document !== 'undefined') {
     // Get references to our UI elements
     const loadingIndicator = document.getElementById('page-loading-indicator');
     const errorBoundary = document.getElementById('page-error-boundary');
-    const progressBar = document.getElementById('loading-progress-bar');
     
-    if (loadingIndicator && errorBoundary && progressBar) {
-      let loadingTimeout: number | undefined;
-      let progressInterval: number | undefined;
+    if (loadingIndicator && errorBoundary) {
+      let navigationTimeout: number | null = null;
+      let isNavigating = false;
       
-      // Function to animate progress bar
-      const animateProgress = () => {
-        let width = 0;
-        progressBar.style.width = '0%';
+      // Preload critical images for smoother transitions
+      const preloadImages = () => {
+        const imagesToPreload = [
+          "https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png",
+          "https://images.unsplash.com/photo-1543286386-71314a40aac6?auto=format&fit=crop&q=80"
+        ];
         
-        // Clear any existing intervals
-        if (progressInterval) clearInterval(progressInterval);
-        
-        // Animate progress from 0% to 90% over 4 seconds
-        progressInterval = setInterval(() => {
-          if (width >= 90) {
-            clearInterval(progressInterval);
-          } else {
-            // Gradually slow down the progress as it approaches 90%
-            const increment = Math.max(0.5, (90 - width) / 15);
-            width += increment;
-            progressBar.style.width = width + '%';
-          }
-        }, 100);
+        imagesToPreload.forEach(src => {
+          const img = new Image();
+          img.src = src;
+        });
       };
       
-      // Function to complete progress animation
-      const completeProgress = () => {
-        progressBar.style.width = '100%';
-        
-        // After progress reaches 100%, fade out the loading indicator
-        setTimeout(() => {
-          loadingIndicator.style.opacity = '0';
-          loadingIndicator.style.backdropFilter = 'blur(0px)';
-          loadingIndicator.style.pointerEvents = 'none';
-          
-          // Reset progress bar after animation completes
-          setTimeout(() => {
-            progressBar.style.width = '0%';
-          }, 500);
-        }, 200);
-      };
+      // Start preloading
+      preloadImages();
       
-      // Handle page navigation
-      const handlePageNavigation = () => {
-        // Clear any existing timeouts
-        if (loadingTimeout) clearTimeout(loadingTimeout);
+      // Handle page navigation start
+      const handlePageNavigationStart = () => {
+        if (isNavigating) return; // Prevent duplicate navigation states
         
-        // Reset and show loading indicator with nice transitions
+        isNavigating = true;
+        
+        // Show loading indicator
         loadingIndicator.style.opacity = '1';
-        loadingIndicator.style.backdropFilter = 'blur(5px)';
         loadingIndicator.style.pointerEvents = 'auto';
-        
-        // Make sure the loading indicator children are visible and properly scaled
-        const loadingBox = loadingIndicator.querySelector('div > div');
-        if (loadingBox) {
-          loadingBox.classList.remove('scale-95');
-          loadingBox.classList.add('scale-100');
-        }
-        
-        // Start progress animation
-        animateProgress();
         
         // Hide error boundary if visible
         errorBoundary.style.display = 'none';
         
-        // Set a timeout to hide loading if it gets stuck for some reason
-        loadingTimeout = setTimeout(() => {
-          completeProgress();
-        }, 7000);
-        
-        // Try to preload the next page if possible
-        if (window.performance && typeof window.performance.getEntriesByType === 'function') {
-          setTimeout(() => {
-            // Get all links on the page
-            const links = document.querySelectorAll('a[href^="/"]');
-            links.forEach(link => {
-              if (link instanceof HTMLAnchorElement && link.href) {
-                // Create a preload link for the page
-                const preloadLink = document.createElement('link');
-                preloadLink.rel = 'prefetch';
-                preloadLink.href = link.href;
-                document.head.appendChild(preloadLink);
-              }
-            });
-          }, 500);
+        // Reset the loading bar animation
+        const loadingBar = loadingIndicator.querySelector('.animate-loadingBar');
+        if (loadingBar && loadingBar instanceof HTMLElement) {
+          loadingBar.classList.remove('animate-loadingBar');
+          // Force reflow to restart animation
+          void loadingBar.offsetWidth;
+          loadingBar.classList.add('animate-loadingBar');
         }
+        
+        // Set a timeout to hide loading if it gets stuck for some reason
+        if (navigationTimeout) {
+          clearTimeout(navigationTimeout);
+        }
+        
+        navigationTimeout = window.setTimeout(() => {
+          handlePageNavigationComplete();
+        }, 8000); // 8 second timeout as a backup
       };
       
-      // Handle page load complete
-      const handlePageLoaded = () => {
-        // Clear any existing timeouts
-        if (loadingTimeout) clearTimeout(loadingTimeout);
+      // Handle page navigation complete
+      const handlePageNavigationComplete = () => {
+        if (!isNavigating) return;
         
-        // Complete the progress animation
-        completeProgress();
+        isNavigating = false;
+        
+        if (navigationTimeout) {
+          clearTimeout(navigationTimeout);
+          navigationTimeout = null;
+        }
+        
+        // Hide loading indicator with a slight delay for visual polish
+        setTimeout(() => {
+          loadingIndicator.style.opacity = '0';
+          loadingIndicator.style.pointerEvents = 'none';
+        }, 200);
       };
       
       // Handle errors
-      const handlePageError = () => {
-        // Clear any existing timeouts and intervals
-        if (loadingTimeout) clearTimeout(loadingTimeout);
-        if (progressInterval) clearInterval(progressInterval);
+      const handlePageError = (event: ErrorEvent) => {
+        console.error('Page error detected:', event);
         
-        // Hide loading indicator
-        loadingIndicator.style.opacity = '0';
-        loadingIndicator.style.backdropFilter = 'blur(0px)';
-        loadingIndicator.style.pointerEvents = 'none';
-        
-        // Show error boundary with animation
-        errorBoundary.style.display = 'flex';
-        const errorBox = errorBoundary.querySelector('div > div > div');
-        if (errorBox) {
-          // Add entry animation
-          errorBox.classList.add('scale-100');
-          errorBox.classList.remove('scale-95');
+        if (isNavigating) {
+          // Hide loading indicator
+          loadingIndicator.style.opacity = '0';
+          loadingIndicator.style.pointerEvents = 'none';
+          
+          // Show error boundary
+          errorBoundary.style.display = 'flex';
+          
+          // Reset navigation state
+          isNavigating = false;
+          
+          if (navigationTimeout) {
+            clearTimeout(navigationTimeout);
+            navigationTimeout = null;
+          }
         }
       };
       
       // Listen for page navigation events
-      window.addEventListener('popstate', handlePageNavigation);
+      window.addEventListener('popstate', handlePageNavigationStart);
       
       // For click navigation, we need to intercept link clicks
       document.body.addEventListener('click', (e) => {
@@ -3993,30 +3973,60 @@ if (typeof document !== 'undefined') {
         if (link && link instanceof HTMLAnchorElement && link.href && link.href.includes(window.location.origin)) {
           const path = link.href.substring(window.location.origin.length);
           if (path.startsWith('/') && path !== window.location.pathname) {
-            // Only trigger loading for new paths
-            handlePageNavigation();
+            handlePageNavigationStart();
           }
         }
       });
       
-      // Handle initial page load
-      window.addEventListener('load', handlePageLoaded);
+      // Handle initial page load and subsequent loads
+      const handlePageLoad = () => {
+        if (isNavigating) {
+          handlePageNavigationComplete();
+        }
+      };
+      
+      // Set up completion detection
+      window.addEventListener('load', handlePageLoad);
+      window.addEventListener('DOMContentLoaded', handlePageLoad);
+      
+      // More reliable page load detection for SPA
+      // This helps detect React route changes
+      const observer = new MutationObserver((mutations) => {
+        if (isNavigating) {
+          for (const mutation of mutations) {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+              // Check if significant content has been added
+              handlePageNavigationComplete();
+              break;
+            }
+          }
+        }
+      });
+      
+      // Start observing the document body for changes
+      observer.observe(document.body, { 
+        childList: true, 
+        subtree: true 
+      });
       
       // Handle errors
       window.addEventListener('error', handlePageError);
-      window.addEventListener('unhandledrejection', handlePageError);
       
-      // Handle route changes from React Router
-      const originalPushState = window.history.pushState;
-      window.history.pushState = function(data: any, unused: string, url?: string | URL | null) {
-        handlePageNavigation();
-        return originalPushState.call(this, data, unused, url);
-      };
+      // Handle network errors
+      window.addEventListener('unhandledrejection', (event) => {
+        console.error('Unhandled promise rejection:', event);
+        if (isNavigating) {
+          handlePageError(new ErrorEvent('error', { 
+            message: 'Network request failed',
+            error: new Error('Network request failed')
+          }));
+        }
+      });
     }
   });
 }
 
-// Add animations for the new stronger backgrounds and page transitions
+// Add animations for the new stronger backgrounds
 const strongBackgroundAnimations = `
   @keyframes slow-pulse {
     0% { transform: scale(1); opacity: 0.2; }
@@ -4030,6 +4040,22 @@ const strongBackgroundAnimations = `
     100% { transform: scale(1); opacity: 0.15; }
   }
   
+  @keyframes loadingBar {
+    0% { width: 0%; }
+    20% { width: 20%; }
+    25% { width: 25%; }
+    43% { width: 43%; }
+    56% { width: 56%; }
+    59% { width: 59%; }
+    76% { width: 76%; }
+    88% { width: 88%; }
+    100% { width: 100%; }
+  }
+  
+  .animate-loadingBar {
+    animation: loadingBar 1.5s ease-in-out forwards;
+  }
+  
   .animate-slow-pulse {
     animation: slow-pulse 8s ease-in-out infinite;
   }
@@ -4037,42 +4063,6 @@ const strongBackgroundAnimations = `
   .animate-slow-pulse-delayed {
     animation: slow-pulse-delayed 8s ease-in-out infinite;
     animation-delay: 2s;
-  }
-  
-  /* Page transition animations */
-  @keyframes page-fade-in {
-    0% { opacity: 0; transform: translateY(10px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
-  
-  @keyframes page-fade-out {
-    0% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(-10px); }
-  }
-  
-  .page-transition {
-    animation: page-fade-in 0.5s ease-out forwards;
-  }
-  
-  .page-exit {
-    animation: page-fade-out 0.3s ease-in forwards;
-  }
-  
-  /* Progress bar animations */
-  @keyframes progress-bar-shine {
-    0% { background-position: 200% center; }
-    100% { background-position: -200% center; }
-  }
-  
-  #loading-progress-bar {
-    background-image: linear-gradient(90deg, 
-      rgba(59, 130, 246, 1) 0%, 
-      rgba(37, 99, 235, 1) 25%, 
-      rgba(59, 130, 246, 1) 50%, 
-      rgba(37, 99, 235, 1) 75%, 
-      rgba(59, 130, 246, 1) 100%);
-    background-size: 200% auto;
-    animation: progress-bar-shine 2s linear infinite;
   }
 `;
 
