@@ -1807,33 +1807,59 @@ function App() {
           </div>
         )}
 
-        {/* Loading Indicator Component */}
-        <div id="page-loading-indicator" className="fixed inset-0 z-[2000] flex items-center justify-center bg-white transition-opacity duration-300" style={{opacity: 0, pointerEvents: 'none'}}>
-          <div className="flex flex-col items-center">
-            <svg className="w-12 h-12 animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <p className="mt-3 text-lg font-medium text-gray-700">Loading...</p>
+        {/* Enhanced Loading Indicator Component */}
+        <div id="page-loading-indicator" className="fixed inset-0 z-[2000] flex items-center justify-center transition-all duration-500" style={{opacity: 0, pointerEvents: 'none', backdropFilter: 'blur(0px)'}}>
+          <div className="absolute inset-0 bg-white/80 transition-opacity duration-500"></div>
+          <div className="flex flex-col items-center relative z-10">
+            <div className="bg-white shadow-2xl rounded-xl p-6 flex flex-col items-center transform scale-95 transition-all duration-500">
+              <div className="relative w-16 h-16">
+                <svg className="w-16 h-16 animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <img 
+                    src="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" 
+                    alt="Arxen Logo" 
+                    className="w-8 h-8 object-contain"
+                  />
+                </div>
+              </div>
+              <p className="mt-4 text-lg font-medium text-gray-700">Loading your page...</p>
+              <div className="w-32 h-1.5 bg-gray-200 rounded-full mt-3 overflow-hidden">
+                <div className="h-full bg-blue-600 rounded-full w-0 transition-all duration-300" id="loading-progress-bar"></div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Error Boundary for catching React errors */}
-        <div id="page-error-boundary" className="fixed inset-0 z-[2000] items-center justify-center bg-white" style={{display: 'none'}}>
-          <div className="max-w-md mx-auto p-6 text-center">
-            <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
+        {/* Enhanced Error Boundary for catching React errors */}
+        <div id="page-error-boundary" className="fixed inset-0 z-[2000] flex items-center justify-center" style={{display: 'none'}}>
+          <div className="absolute inset-0 bg-white/95 backdrop-blur-sm"></div>
+          <div className="relative z-10 max-w-md mx-auto">
+            <div className="bg-white border border-red-100 shadow-2xl rounded-xl p-8 text-center transform transition-all">
+              <div className="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Something went wrong</h3>
+              <p className="text-gray-600 mb-6">We encountered an issue while loading this page. This might be due to a temporary glitch or network issue.</p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button 
+                  onClick={() => window.location.reload()} 
+                  className="px-5 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                >
+                  Refresh Page
+                </button>
+                <button 
+                  onClick={() => window.history.back()} 
+                  className="px-5 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-all"
+                >
+                  Go Back
+                </button>
+              </div>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">Something went wrong</h3>
-            <p className="text-gray-600 mb-6">Please try refreshing the page</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Refresh Page
-            </button>
           </div>
         </div>
 
@@ -3809,40 +3835,129 @@ if (typeof document !== 'undefined') {
   enhancedStyle.innerHTML = Object.values(enhancedBackgroundKeyframes).join('\n') + enhancedBackgroundCSS;
   document.head.appendChild(enhancedStyle);
   
-  // Add page transition handling script
+  // Enhanced page transition handling script
   document.addEventListener('DOMContentLoaded', () => {
     // Get references to our UI elements
     const loadingIndicator = document.getElementById('page-loading-indicator');
     const errorBoundary = document.getElementById('page-error-boundary');
+    const progressBar = document.getElementById('loading-progress-bar');
     
-    if (loadingIndicator && errorBoundary) {
+    if (loadingIndicator && errorBoundary && progressBar) {
+      let loadingTimeout: number | undefined;
+      let progressInterval: number | undefined;
+      
+      // Function to animate progress bar
+      const animateProgress = () => {
+        let width = 0;
+        progressBar.style.width = '0%';
+        
+        // Clear any existing intervals
+        if (progressInterval) clearInterval(progressInterval);
+        
+        // Animate progress from 0% to 90% over 4 seconds
+        progressInterval = setInterval(() => {
+          if (width >= 90) {
+            clearInterval(progressInterval);
+          } else {
+            // Gradually slow down the progress as it approaches 90%
+            const increment = Math.max(0.5, (90 - width) / 15);
+            width += increment;
+            progressBar.style.width = width + '%';
+          }
+        }, 100);
+      };
+      
+      // Function to complete progress animation
+      const completeProgress = () => {
+        progressBar.style.width = '100%';
+        
+        // After progress reaches 100%, fade out the loading indicator
+        setTimeout(() => {
+          loadingIndicator.style.opacity = '0';
+          loadingIndicator.style.backdropFilter = 'blur(0px)';
+          loadingIndicator.style.pointerEvents = 'none';
+          
+          // Reset progress bar after animation completes
+          setTimeout(() => {
+            progressBar.style.width = '0%';
+          }, 500);
+        }, 200);
+      };
+      
       // Handle page navigation
       const handlePageNavigation = () => {
-        // Show loading indicator
+        // Clear any existing timeouts
+        if (loadingTimeout) clearTimeout(loadingTimeout);
+        
+        // Reset and show loading indicator with nice transitions
         loadingIndicator.style.opacity = '1';
+        loadingIndicator.style.backdropFilter = 'blur(5px)';
         loadingIndicator.style.pointerEvents = 'auto';
+        
+        // Make sure the loading indicator children are visible and properly scaled
+        const loadingBox = loadingIndicator.querySelector('div > div');
+        if (loadingBox) {
+          loadingBox.classList.remove('scale-95');
+          loadingBox.classList.add('scale-100');
+        }
+        
+        // Start progress animation
+        animateProgress();
         
         // Hide error boundary if visible
         errorBoundary.style.display = 'none';
         
         // Set a timeout to hide loading if it gets stuck for some reason
-        setTimeout(() => {
-          loadingIndicator.style.opacity = '0';
-          loadingIndicator.style.pointerEvents = 'none';
-        }, 5000);
+        loadingTimeout = setTimeout(() => {
+          completeProgress();
+        }, 7000);
+        
+        // Try to preload the next page if possible
+        if (window.performance && typeof window.performance.getEntriesByType === 'function') {
+          setTimeout(() => {
+            // Get all links on the page
+            const links = document.querySelectorAll('a[href^="/"]');
+            links.forEach(link => {
+              if (link instanceof HTMLAnchorElement && link.href) {
+                // Create a preload link for the page
+                const preloadLink = document.createElement('link');
+                preloadLink.rel = 'prefetch';
+                preloadLink.href = link.href;
+                document.head.appendChild(preloadLink);
+              }
+            });
+          }, 500);
+        }
       };
       
       // Handle page load complete
       const handlePageLoaded = () => {
-        loadingIndicator.style.opacity = '0';
-        loadingIndicator.style.pointerEvents = 'none';
+        // Clear any existing timeouts
+        if (loadingTimeout) clearTimeout(loadingTimeout);
+        
+        // Complete the progress animation
+        completeProgress();
       };
       
       // Handle errors
       const handlePageError = () => {
+        // Clear any existing timeouts and intervals
+        if (loadingTimeout) clearTimeout(loadingTimeout);
+        if (progressInterval) clearInterval(progressInterval);
+        
+        // Hide loading indicator
         loadingIndicator.style.opacity = '0';
+        loadingIndicator.style.backdropFilter = 'blur(0px)';
         loadingIndicator.style.pointerEvents = 'none';
+        
+        // Show error boundary with animation
         errorBoundary.style.display = 'flex';
+        const errorBox = errorBoundary.querySelector('div > div > div');
+        if (errorBox) {
+          // Add entry animation
+          errorBox.classList.add('scale-100');
+          errorBox.classList.remove('scale-95');
+        }
       };
       
       // Listen for page navigation events
@@ -3857,7 +3972,8 @@ if (typeof document !== 'undefined') {
         const link = target.closest('a');
         if (link && link instanceof HTMLAnchorElement && link.href && link.href.includes(window.location.origin)) {
           const path = link.href.substring(window.location.origin.length);
-          if (path.startsWith('/')) {
+          if (path.startsWith('/') && path !== window.location.pathname) {
+            // Only trigger loading for new paths
             handlePageNavigation();
           }
         }
@@ -3868,11 +3984,19 @@ if (typeof document !== 'undefined') {
       
       // Handle errors
       window.addEventListener('error', handlePageError);
+      window.addEventListener('unhandledrejection', handlePageError);
+      
+      // Handle route changes from React Router
+      const originalPushState = window.history.pushState;
+      window.history.pushState = function(data: any, unused: string, url?: string | URL | null) {
+        handlePageNavigation();
+        return originalPushState.call(this, data, unused, url);
+      };
     }
   });
 }
 
-// Add animations for the new stronger backgrounds
+// Add animations for the new stronger backgrounds and page transitions
 const strongBackgroundAnimations = `
   @keyframes slow-pulse {
     0% { transform: scale(1); opacity: 0.2; }
@@ -3893,6 +4017,42 @@ const strongBackgroundAnimations = `
   .animate-slow-pulse-delayed {
     animation: slow-pulse-delayed 8s ease-in-out infinite;
     animation-delay: 2s;
+  }
+  
+  /* Page transition animations */
+  @keyframes page-fade-in {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes page-fade-out {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
+  }
+  
+  .page-transition {
+    animation: page-fade-in 0.5s ease-out forwards;
+  }
+  
+  .page-exit {
+    animation: page-fade-out 0.3s ease-in forwards;
+  }
+  
+  /* Progress bar animations */
+  @keyframes progress-bar-shine {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
+  }
+  
+  #loading-progress-bar {
+    background-image: linear-gradient(90deg, 
+      rgba(59, 130, 246, 1) 0%, 
+      rgba(37, 99, 235, 1) 25%, 
+      rgba(59, 130, 246, 1) 50%, 
+      rgba(37, 99, 235, 1) 75%, 
+      rgba(59, 130, 246, 1) 100%);
+    background-size: 200% auto;
+    animation: progress-bar-shine 2s linear infinite;
   }
 `;
 
