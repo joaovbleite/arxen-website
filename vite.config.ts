@@ -8,12 +8,7 @@ import compress from 'vite-plugin-compression';
 export default defineConfig({
   plugins: [
     react({
-      // Add React 19 compatibility settings
-      babel: {
-        plugins: [
-          ['@babel/plugin-transform-react-jsx', { runtime: 'automatic' }]
-        ]
-      },
+      // Use standard settings
       jsxRuntime: 'automatic',
     }),
     // PWA plugin for service worker and manifest
