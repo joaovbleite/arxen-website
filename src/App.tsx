@@ -1,45 +1,45 @@
 import React, { useState, useEffect, useRef, useMemo, Suspense, lazy } from 'react';
 import { Hammer, CheckCircle, Phone, Mail, MapPin, Clock, Shield, ArrowRight, Star, ChevronRight, Check, Camera, Box, ClipboardList, ArrowLeft, Home, ChevronDown, DollarSign, Users, Clipboard, Building2, Settings, Search, X, FileText, ShoppingBag, Factory, UtensilsCrossed, Stethoscope, Package, Heart, MessageSquare, Award, Tag, Scan, Calendar } from 'lucide-react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
-import HardwoodService from './pages/HardwoodService';
-import KitchenRemodeling from './pages/KitchenRemodeling';
-import BathroomRemodeling from './pages/BathroomRemodeling';
-import ServiceTemplate from './pages/ServiceTemplate';
-import Contact from './pages/Contact';
-import CommercialQuote from './pages/CommercialQuote';
-import ResidentialQuote from './pages/ResidentialQuote';
-// Remove imports that don't exist and clean up the code
-import Testimonials from './pages/Testimonials';
-import Portfolio from './pages/Portfolio';
 import TestimonialSlider from './components/TestimonialSlider';
-import Blog from './pages/Blog';
-import About from './pages/About';
-import Residential from './pages/Residential';
-import Offers from './pages/Offers';
-// import VisualizeIt from './pages/VisualizeIt'; // Already commented
-// import MyProjects from './pages/MyProjects'; // Commenting out MyProjects import
-import BlogPost from './pages/BlogPost';
-import BlogCategory from './pages/BlogCategory';
-import CategoryServices from './pages/CategoryServices';
-import CommercialServicePage from './pages/CommercialServicePage';
-import CustomCabinetryPage from './pages/CustomCabinetryPage';
-import FlooringServicesPage from './pages/FlooringServicesPage';
-import Financing from './pages/Financing';
-import FreeEstimate from './pages/FreeEstimate/FreeEstimate';
 import Footer from './components/Footer';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsOfService from './pages/TermsOfService';
-import Sitemap from './pages/Sitemap';
-import NotFound from './pages/NotFound';
 import CookieConsent from './components/CookieConsent';
 import PromoModal from './components/PromoModal';
 import ChatBot from './components/ChatBot';
 import HomeSEO from './components/HomeSEO';
 import { allTestimonials } from './data/testimonials';
-import AccessibilityStatement from './pages/AccessibilityStatement';
-import FAQ from './pages/FAQ';
 import PropertyTypeProvider from './components/PropertyTypeContext';
 import ReviewForm from './components/ReviewForm';
+import PerformanceMonitor from './components/PerformanceMonitor';
+
+// Lazy load all page components for code splitting
+const HardwoodService = lazy(() => import('./pages/HardwoodService'));
+const KitchenRemodeling = lazy(() => import('./pages/KitchenRemodeling'));
+const BathroomRemodeling = lazy(() => import('./pages/BathroomRemodeling'));
+const ServiceTemplate = lazy(() => import('./pages/ServiceTemplate'));
+const Contact = lazy(() => import('./pages/Contact'));
+const CommercialQuote = lazy(() => import('./pages/CommercialQuote'));
+const ResidentialQuote = lazy(() => import('./pages/ResidentialQuote'));
+const Testimonials = lazy(() => import('./pages/Testimonials'));
+const Portfolio = lazy(() => import('./pages/Portfolio'));
+const Blog = lazy(() => import('./pages/Blog'));
+const About = lazy(() => import('./pages/About'));
+const Residential = lazy(() => import('./pages/Residential'));
+const Offers = lazy(() => import('./pages/Offers'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
+const BlogCategory = lazy(() => import('./pages/BlogCategory'));
+const CategoryServices = lazy(() => import('./pages/CategoryServices'));
+const CommercialServicePage = lazy(() => import('./pages/CommercialServicePage'));
+const CustomCabinetryPage = lazy(() => import('./pages/CustomCabinetryPage'));
+const FlooringServicesPage = lazy(() => import('./pages/FlooringServicesPage'));
+const Financing = lazy(() => import('./pages/Financing'));
+const FreeEstimate = lazy(() => import('./pages/FreeEstimate/FreeEstimate'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const Sitemap = lazy(() => import('./pages/Sitemap'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const AccessibilityStatement = lazy(() => import('./pages/AccessibilityStatement'));
+const FAQ = lazy(() => import('./pages/FAQ'));
 // Define Service type locally based on usage
 interface Service {
   type?: 'category' | 'service' | 'page'; // Added 'page' to allowed types
@@ -1393,6 +1393,8 @@ function App() {
   return (
     <Router>
       <PropertyTypeProvider>
+        {/* Performance Monitor - only visible in dev mode or when triggered with Ctrl+Alt+P */}
+        <PerformanceMonitor />
         <ScrollToTop />
         {/* Navigation Bar - With scroll behavior */}
         <div className={`border-b border-gray-200/70 bg-white/70 backdrop-blur-md sticky top-0 z-[1500] transition-transform duration-300 ${!visible && !isHomePage ? '-translate-y-full' : 'translate-y-0'}`}>
@@ -1863,9 +1865,27 @@ function App() {
           </div>
         </div>
 
-        {/* Routes for all pages */}
+        {/* Simple Fallback for Route Suspense */}
+        <div id="route-loading-fallback" className="hidden">
+          <div className="flex justify-center items-center p-8">
+            <div className="animate-pulse flex space-x-4 items-center">
+              <div className="rounded-full bg-blue-700/20 h-12 w-12 flex items-center justify-center">
+                <div className="rounded-full bg-blue-600 h-6 w-6"></div>
+              </div>
+              <div className="flex-1 space-y-4 py-1">
+                <div className="h-4 bg-blue-700/20 rounded w-3/4"></div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-blue-700/20 rounded"></div>
+                  <div className="h-4 bg-blue-700/20 rounded w-5/6"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Routes for all pages with Suspense for code splitting */}
         <Routes>
-          {/* Home Page Route */}
+          {/* Home Page Route - No Suspense needed for homepage for faster initial load */}
           <Route path="/" element={
             <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
               {/* Add HomeSEO component for improved search engine optimization */}
@@ -3446,32 +3466,32 @@ Please enter your zip code to continue.
       
           </div>
         } />
-        <Route path="/services/kitchen-remodeling" element={<KitchenRemodeling />} />
-        <Route path="/services/bathroom-remodeling" element={<BathroomRemodeling />} />
-        <Route path="/services/hardwood" element={<HardwoodService />} />
-        <Route path="/services/custom-cabinetry" element={<CustomCabinetryPage />} />
-        <Route path="/services/flooring" element={<FlooringServicesPage />} />
-        <Route path="/financing" element={<Financing />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/quote" element={<FreeEstimate />} />
-        <Route path="/commercial-quote" element={<CommercialQuote />} />
-        <Route path="/residential-quote" element={<ResidentialQuote />} />
-        <Route path="/testimonials" element={<Testimonials />} />
-        <Route path="/portfolio" element={<Portfolio />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/residential" element={<Residential />} />
-        <Route path="/offers" element={<Offers />} />
-        {/* <Route path="/visualizer" element={<VisualizeIt />} /> */}
-        {/* <Route path="/my-projects" element={<MyProjects />} /> */}
-        <Route path="/free-estimate" element={<FreeEstimate />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/terms-of-service" element={<TermsOfService />} />
-        <Route path="/sitemap" element={<Sitemap />} />
-        <Route path="/commercial" element={<CommercialServicePage />} />
-        <Route path="/commercial-service" element={<CommercialServicePage />} />
-        <Route path="/accessibility" element={<AccessibilityStatement />} />
-        <Route path="/faq" element={<FAQ />} />
+        <Route path="/services/kitchen-remodeling" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><KitchenRemodeling /></Suspense>} />
+        <Route path="/services/bathroom-remodeling" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><BathroomRemodeling /></Suspense>} />
+        <Route path="/services/hardwood" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><HardwoodService /></Suspense>} />
+        <Route path="/services/custom-cabinetry" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><CustomCabinetryPage /></Suspense>} />
+        <Route path="/services/flooring" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><FlooringServicesPage /></Suspense>} />
+        <Route path="/financing" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Financing /></Suspense>} />
+        <Route path="/contact" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Contact /></Suspense>} />
+        <Route path="/quote" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><FreeEstimate /></Suspense>} />
+        <Route path="/commercial-quote" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><CommercialQuote /></Suspense>} />
+        <Route path="/residential-quote" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><ResidentialQuote /></Suspense>} />
+        <Route path="/testimonials" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Testimonials /></Suspense>} />
+        <Route path="/portfolio" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Portfolio /></Suspense>} />
+        <Route path="/blog" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Blog /></Suspense>} />
+        <Route path="/about" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><About /></Suspense>} />
+        <Route path="/residential" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Residential /></Suspense>} />
+        <Route path="/offers" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Offers /></Suspense>} />
+        {/* <Route path="/visualizer" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><VisualizeIt /></Suspense>} /> */}
+        {/* <Route path="/my-projects" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><MyProjects /></Suspense>} /> */}
+        <Route path="/free-estimate" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><FreeEstimate /></Suspense>} />
+        <Route path="/privacy-policy" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><PrivacyPolicy /></Suspense>} />
+        <Route path="/terms-of-service" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><TermsOfService /></Suspense>} />
+        <Route path="/sitemap" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><Sitemap /></Suspense>} />
+        <Route path="/commercial" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><CommercialServicePage /></Suspense>} />
+        <Route path="/commercial-service" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><CommercialServicePage /></Suspense>} />
+        <Route path="/accessibility" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><AccessibilityStatement /></Suspense>} />
+        <Route path="/faq" element={<Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">Loading...</div></div>}><FAQ /></Suspense>} />
         
         {/* Project transformation specific routes */}
         <Route path="/portfolio/kitchen-transformation" element={<Portfolio />} />
