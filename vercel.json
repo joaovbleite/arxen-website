@@ -4,7 +4,7 @@
   ],
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "installCommand": "npm install --legacy-peer-deps",
+  "installCommand": "node vercel-install.js",
   "framework": "vite",
   "headers": [
     {
