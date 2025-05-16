@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "4.4.1",
     "@jridgewell/sourcemap-codec": "^1.5.0",
     "@react-three/drei": "^10.0.6",
     "@react-three/fiber": "^9.1.2",
@@ -56,7 +57,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "@react-leaflet/core": {
-      "react": "19.1.0", 
+      "react": "19.1.0",
       "react-dom": "19.1.0"
     },
     "@react-three/drei": {

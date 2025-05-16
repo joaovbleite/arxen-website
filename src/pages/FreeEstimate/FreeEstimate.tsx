@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, CheckCircle, Download, Save, Book, MessageCircle, Building2, Award, ShieldCheck, Clock } from 'lucide-react';
 import { ServiceSelection, ProjectDetails, ContactInfo, ReviewSubmit } from '../../components/FreeEstimate';
 import { jsPDF } from 'jspdf';
+import { sendEstimateEmail } from '../../utils/emailService';
 
 // Types for form data
 export interface FormData {
@@ -492,43 +493,41 @@ const FreeEstimate: React.FC = () => {
     }, 500);
   };
 
-  // Submit the form - Updated to combine guided description before submission
+  // Submit the form - Updated to use our email service
   const handleSubmit = async () => {
     setIsSubmitting(true);
     
-    // Combine guided description fields before submitting
-    // This assumes the guidedDesc state is accessible or passed back up somehow.
-    // **IMPORTANT**: This logic needs refinement. The guidedDesc state lives in ProjectDetails.
-    // We either need to:
-    // 1. Lift the guidedDesc state up to FreeEstimate.
-    // 2. Pass a function down to ProjectDetails that updates a temporary holding state here.
-    // 3. Have ProjectDetails update a structured field in formData (e.g., formData.projectDetails.guidedFields)
-    //    and combine it here.
-    // For now, we'll *assume* option 3 was implemented implicitly in ProjectDetails (which it wasn't).
-    // This section requires further implementation based on chosen state management strategy.
-    
-    // Placeholder combining logic (assuming projectDetails somehow contains the guided fields)
-    let finalDescription = formData.projectDetails.description; // Default to existing
-    // if (formData.projectDetails.guidedFields) { // Check if structured fields exist
-    //   const { goal, style, mustHaves, additionalNotes } = formData.projectDetails.guidedFields;
-    //   finalDescription = '';
-    //   if (goal) finalDescription += `Primary Goal:\n${goal}\n\n`;
-    //   if (style) finalDescription += `Desired Style/Feel:\n${style}\n\n`;
-    //   if (mustHaves) finalDescription += `Must-Haves/Priorities:\n${mustHaves}\n\n`;
-    //   if (additionalNotes) finalDescription += `Additional Notes:\n${additionalNotes}`;
-    //   finalDescription = finalDescription.trim();
-    // }
-
+    // Prepare data to submit
     const dataToSubmit = {
       ...formData,
-      projectDetails: {
-        ...formData.projectDetails,
-        description: finalDescription // Use the combined description
-      }
+      referenceNumber,
+      submissionDate: new Date().toISOString()
+    };
+    
+    // Prepare email template parameters
+    const templateParams = {
+      from_name: formData.contactInfo.name,
+      from_email: formData.contactInfo.email,
+      phone: formData.contactInfo.phone || 'Not provided',
+      company: formData.contactInfo.company || 'Not provided',
+      reference_number: referenceNumber,
+      service_list: formData.services.map(s => serviceNames[s] || s).join(', '),
+      project_type: formData.projectType,
+      project_description: formData.projectDetails.description,
+      urgency: formData.projectDetails.urgency,
+      scope: formData.projectDetails.scope,
+      timeline: `${formData.timeline.value} ${formData.timeline.unit}`,
+      promo_code: formData.projectDetails.promoCode || 'None',
+      preferred_contact: formData.contactInfo.preferredContact,
+      to_name: 'ARXEN Construction Team',
+      form_source: 'Free Estimate Form'
     };
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Send email using our email service
+      const result = await sendEstimateEmail(templateParams);
+      
+      console.log('Free estimate form submitted successfully:', result.text);
       setSubmissionComplete(true);
       console.log('Form submitted:', dataToSubmit); // Log combined data
       if (savedFormKey) {
@@ -537,6 +536,7 @@ const FreeEstimate: React.FC = () => {
       }
     } catch (error) {
       console.error('Error submitting form:', error);
+      alert('There was a problem sending your estimate request. Please try again or contact us directly at teamarxen@gmail.com');
     } finally {
       setIsSubmitting(false);
     }

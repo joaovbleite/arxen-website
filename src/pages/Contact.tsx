@@ -4,6 +4,7 @@ import { Phone, Mail, MapPin, Clock, Calendar, Check, Star, ArrowRight, Loader2,
 import { Link } from 'react-router-dom';
 import TestimonialSlider from '../components/TestimonialSlider';
 import { getShuffledTestimonials } from '../data/testimonials';
+import { sendContactEmail } from '../utils/emailService';
 
 // Define FaqItem component for the accordion
 interface FaqItemProps {
@@ -228,14 +229,31 @@ const Contact: React.FC = () => {
     
     setIsSubmitting(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Contact Form submitted:', formData);
-      setIsSubmitting(false);
-      setSubmitted(true);
-      
-      // Reset form after delay
-      const resetData = {
+    // Prepare the email template parameters
+    const templateParams = {
+      from_name: formData.name,
+      from_email: formData.email,
+      phone: formData.phone || 'Not provided',
+      address: formData.address || 'Not provided',
+      inquiry_type: formData.inquiryType,
+      service_type: formData.serviceType || 'Not specified',
+      project_type: formData.projectType,
+      message: formData.description,
+      how_heard: formData.howDidYouHear || 'Not specified',
+      other_source: formData.otherSource || '',
+      other_service: formData.otherServiceType || '',
+      to_name: 'ARXEN Construction Team'
+    };
+    
+    // Send the email using our email service
+    sendContactEmail(templateParams)
+      .then((result) => {
+        console.log('Email sent successfully:', result.text);
+        setIsSubmitting(false);
+        setSubmitted(true);
+        
+        // Reset form after delay
+        const resetData = {
           name: '',
           email: '',
           phone: '',
@@ -244,15 +262,23 @@ const Contact: React.FC = () => {
           serviceType: '',
           projectType: 'residential',
           description: '',
-        howDidYouHear: '',
-        website: '',
-        otherSource: '',
-        otherServiceType: '',
-      };
-      setFormData({...resetData, website: ''});
-      setTouchedFields({});
-        setSubmitted(false);
-    }, 1500);
+          howDidYouHear: '',
+          website: '',
+          otherSource: '',
+          otherServiceType: '',
+        };
+        setFormData({...resetData, website: ''});
+        setTouchedFields({});
+        
+        // Keep success message for 5 seconds
+        setTimeout(() => setSubmitted(false), 5000);
+      })
+      .catch((error) => {
+        console.error('Failed to send email:', error);
+        setIsSubmitting(false);
+        // You can add error handling UI here
+        alert('There was an error sending your message. Please try again or contact us directly at teamarxen@gmail.com');
+      });
   };
 
   return (

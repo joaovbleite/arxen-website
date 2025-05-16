@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo, Suspense, lazy } from 'react';
 import { Hammer, CheckCircle, Phone, Mail, MapPin, Clock, Shield, ArrowRight, Star, ChevronRight, Check, Camera, Box, ClipboardList, ArrowLeft, Home, ChevronDown, DollarSign, Users, Clipboard, Building2, Settings, Search, X, FileText, ShoppingBag, Factory, UtensilsCrossed, Stethoscope, Package, Heart, MessageSquare, Award, Tag, Scan, Calendar } from 'lucide-react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { Loader2, ChevronsRight, Send } from 'lucide-react';
 import HardwoodService from './pages/HardwoodService';
 import KitchenRemodeling from './pages/KitchenRemodeling';
 import BathroomRemodeling from './pages/BathroomRemodeling';
@@ -41,6 +43,7 @@ import FAQ from './pages/FAQ';
 import PropertyTypeProvider from './components/PropertyTypeContext';
 import ReviewForm from './components/ReviewForm';
 import LoadingIndicator from './components/LoadingIndicator';
+import { sendContactEmail } from './utils/emailService';
 // Define Service type locally based on usage
 interface Service {
   type?: 'category' | 'service' | 'page'; // Added 'page' to allowed types
@@ -1352,24 +1355,39 @@ function App() {
   const handleHomeContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setHomeContactStatus('submitting');
-    console.log('Home Contact Submitted:', { name: homeContactName, email: homeContactEmail, message: homeContactMessage });
-
-    // Simulate API call
-    setTimeout(() => {
-      // Simulate success
-      setHomeContactStatus('success');
-    setHomeContactName('');
-    setHomeContactEmail('');
-    setHomeContactMessage('');
-      setFocusedField(null); // Reset focus state
-      // Reset to idle after a delay
-      setTimeout(() => setHomeContactStatus('idle'), 5000); 
-      
-      // TODO: Replace with actual API call logic
-      // Example error handling:
-      // setHomeContactStatus('error');
-
-    }, 1500); // Simulate network delay
+    
+    // Prepare template parameters
+    const templateParams = {
+      from_name: homeContactName,
+      from_email: homeContactEmail,
+      message: homeContactMessage,
+      to_name: 'ARXEN Construction Team',
+      form_source: 'Homepage Quick Contact'
+    };
+    
+    // Send the email using our email service
+    sendContactEmail(templateParams)
+      .then((result) => {
+        console.log('Homepage contact form submitted successfully:', result.text);
+        // Handle success
+        setHomeContactStatus('success');
+        setHomeContactName('');
+        setHomeContactEmail('');
+        setHomeContactMessage('');
+        setFocusedField(null); // Reset focus state
+        
+        // Reset to idle after a delay
+        setTimeout(() => setHomeContactStatus('idle'), 5000);
+      })
+      .catch((error) => {
+        console.error('Failed to send homepage contact form:', error);
+        // Handle error
+        setHomeContactStatus('error');
+        alert('There was a problem sending your message. Please try again or contact us directly at teamarxen@gmail.com');
+        
+        // Reset to idle after a delay
+        setTimeout(() => setHomeContactStatus('idle'), 5000);
+      });
   };
 
   // Filter services based on selected filter type
