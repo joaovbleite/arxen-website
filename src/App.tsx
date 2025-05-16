@@ -1,45 +1,45 @@
 import React, { useState, useEffect, useRef, useMemo, Suspense, lazy } from 'react';
 import { Hammer, CheckCircle, Phone, Mail, MapPin, Clock, Shield, ArrowRight, Star, ChevronRight, Check, Camera, Box, ClipboardList, ArrowLeft, Home, ChevronDown, DollarSign, Users, Clipboard, Building2, Settings, Search, X, FileText, ShoppingBag, Factory, UtensilsCrossed, Stethoscope, Package, Heart, MessageSquare, Award, Tag, Scan, Calendar } from 'lucide-react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
-// Import non-lazy-loaded components (used immediately)
+import HardwoodService from './pages/HardwoodService';
+import KitchenRemodeling from './pages/KitchenRemodeling';
+import BathroomRemodeling from './pages/BathroomRemodeling';
+import ServiceTemplate from './pages/ServiceTemplate';
+import Contact from './pages/Contact';
+import CommercialQuote from './pages/CommercialQuote';
+import ResidentialQuote from './pages/ResidentialQuote';
+// Remove imports that don't exist and clean up the code
+import Testimonials from './pages/Testimonials';
+import Portfolio from './pages/Portfolio';
 import TestimonialSlider from './components/TestimonialSlider';
+import Blog from './pages/Blog';
+import About from './pages/About';
+import Residential from './pages/Residential';
+import Offers from './pages/Offers';
+// import VisualizeIt from './pages/VisualizeIt'; // Already commented
+// import MyProjects from './pages/MyProjects'; // Commenting out MyProjects import
+import BlogPost from './pages/BlogPost';
+import BlogCategory from './pages/BlogCategory';
+import CategoryServices from './pages/CategoryServices';
+import CommercialServicePage from './pages/CommercialServicePage';
+import CustomCabinetryPage from './pages/CustomCabinetryPage';
+import FlooringServicesPage from './pages/FlooringServicesPage';
+import Financing from './pages/Financing';
+import FreeEstimate from './pages/FreeEstimate/FreeEstimate';
 import Footer from './components/Footer';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import Sitemap from './pages/Sitemap';
+import NotFound from './pages/NotFound';
 import CookieConsent from './components/CookieConsent';
 import PromoModal from './components/PromoModal';
 import ChatBot from './components/ChatBot';
 import HomeSEO from './components/HomeSEO';
 import { allTestimonials } from './data/testimonials';
+import AccessibilityStatement from './pages/AccessibilityStatement';
+import FAQ from './pages/FAQ';
 import PropertyTypeProvider from './components/PropertyTypeContext';
 import ReviewForm from './components/ReviewForm';
-
-// Lazy load all page components to reduce initial load time
-const HardwoodService = lazy(() => import('./pages/HardwoodService'));
-const KitchenRemodeling = lazy(() => import('./pages/KitchenRemodeling'));
-const BathroomRemodeling = lazy(() => import('./pages/BathroomRemodeling'));
-const ServiceTemplate = lazy(() => import('./pages/ServiceTemplate'));
-const Contact = lazy(() => import('./pages/Contact'));
-const CommercialQuote = lazy(() => import('./pages/CommercialQuote'));
-const ResidentialQuote = lazy(() => import('./pages/ResidentialQuote'));
-const Testimonials = lazy(() => import('./pages/Testimonials'));
-const Portfolio = lazy(() => import('./pages/Portfolio'));
-const Blog = lazy(() => import('./pages/Blog'));
-const About = lazy(() => import('./pages/About'));
-const Residential = lazy(() => import('./pages/Residential'));
-const Offers = lazy(() => import('./pages/Offers'));
-const BlogPost = lazy(() => import('./pages/BlogPost'));
-const BlogCategory = lazy(() => import('./pages/BlogCategory'));
-const CategoryServices = lazy(() => import('./pages/CategoryServices'));
-const CommercialServicePage = lazy(() => import('./pages/CommercialServicePage'));
-const CustomCabinetryPage = lazy(() => import('./pages/CustomCabinetryPage'));
-const FlooringServicesPage = lazy(() => import('./pages/FlooringServicesPage'));
-const Financing = lazy(() => import('./pages/Financing'));
-const FreeEstimate = lazy(() => import('./pages/FreeEstimate/FreeEstimate'));
-const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
-const TermsOfService = lazy(() => import('./pages/TermsOfService'));
-const Sitemap = lazy(() => import('./pages/Sitemap'));
-const NotFound = lazy(() => import('./pages/NotFound'));
-const AccessibilityStatement = lazy(() => import('./pages/AccessibilityStatement'));
-const FAQ = lazy(() => import('./pages/FAQ'));
 // Define Service type locally based on usage
 interface Service {
   type?: 'category' | 'service' | 'page'; // Added 'page' to allowed types
@@ -1807,88 +1807,48 @@ function App() {
           </div>
         )}
 
-        {/* Enhanced Loading Indicator Component */}
-        <div id="page-loading-indicator" className="fixed inset-0 z-[2000] flex items-center justify-center bg-white transition-all duration-300" style={{opacity: 0, pointerEvents: 'none'}}>
-          <div className="flex flex-col items-center bg-white p-6 rounded-xl shadow-2xl max-w-sm mx-auto">
-            {/* ARXEN logo - replace with yours */}
-            <img 
-              src="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" 
-              alt="Arxen Construction Logo" 
-              className="h-12 w-auto mb-4 animate-pulse"
-            />
-            
-            {/* Animated loading bar */}
-            <div className="w-full bg-gray-200 rounded-full h-1.5 mb-4 overflow-hidden">
-              <div className="bg-blue-600 h-1.5 rounded-full animate-loadingBar"></div>
+        {/* Loading Indicator Component */}
+        <div id="page-loading-indicator" className="fixed inset-0 z-[2000] flex flex-col items-center justify-center bg-white transition-opacity duration-300" style={{opacity: 0, pointerEvents: 'none'}}>
+          <div className="flex flex-col items-center justify-center">
+            {/* Arxen Logo */}
+            <div className="mb-6 animate-pulse transition-all">
+              <img 
+                src="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" 
+                alt="Arxen Construction Logo" 
+                className="h-40 w-auto"
+              />
             </div>
-            
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <p className="text-base font-medium text-gray-600">Loading your experience...</p>
+            {/* Loading animation circle */}
+            <div className="relative h-2 w-60 bg-gray-200 rounded-full overflow-hidden mb-4">
+              <div className="absolute h-full bg-blue-600 animate-loading-bar"></div>
             </div>
-          </div>
-          
-          {/* Background decorative elements */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-20">
-            <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-200 rounded-full animate-pulse-slow"></div>
-            <div className="absolute bottom-1/4 right-1/4 w-56 h-56 bg-blue-300 rounded-full animate-pulse-slow-delayed"></div>
+            <p className="text-lg font-medium text-blue-900">
+              Loading Your Experience...
+            </p>
           </div>
         </div>
 
-        {/* Enhanced Error Boundary */}
+        {/* Error Boundary for catching React errors */}
         <div id="page-error-boundary" className="fixed inset-0 z-[2000] items-center justify-center bg-white" style={{display: 'none'}}>
-          <div className="max-w-md mx-auto p-8 text-center bg-white shadow-2xl rounded-xl">
-            <img 
-              src="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" 
-              alt="Arxen Construction Logo" 
-              className="h-12 w-auto mx-auto mb-4"
-            />
+          <div className="max-w-md mx-auto p-6 text-center">
             <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">We encountered an issue</h3>
-            <p className="text-gray-600 mb-6">We're sorry, but something went wrong while loading this page. Please try refreshing.</p>
-            <div className="flex flex-col sm:flex-row justify-center gap-3">
-              <button 
-                onClick={() => window.location.reload()} 
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Refresh Page
-              </button>
-              <a 
-                href="/" 
-                className="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
-              >
-                Return Home
-              </a>
-            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Something went wrong</h3>
+            <p className="text-gray-600 mb-6">Please try refreshing the page</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Refresh Page
+            </button>
           </div>
         </div>
-        
-        {/* Suspense wrapper for all routes */}
-        <Suspense fallback={
-          <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <img 
-                src="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" 
-                alt="Arxen Construction Logo" 
-                className="h-10 w-auto mx-auto mb-4"
-              />
-              <div className="flex items-center justify-center space-x-2">
-                <div className="w-3 h-3 bg-blue-600 rounded-full animate-bounce"></div>
-                <div className="w-3 h-3 bg-blue-600 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                <div className="w-3 h-3 bg-blue-600 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-              </div>
-            </div>
-          </div>
-        }>
-          {/* Routes for all pages */}
-          <Routes>
+
+        {/* Routes for all pages */}
+        <Routes>
           {/* Home Page Route */}
           <Route path="/" element={
             <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
@@ -2018,14 +1978,14 @@ function App() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                       </svg>
                     </button>
-                    
-                    {/* Custom Scrollbar */}
+                  
+                  {/* Custom Scrollbar */}
                     <div className="h-2 bg-gray-200 rounded-full relative overflow-hidden flex-1 max-w-[120px] sm:max-w-[180px]">
-                      <div 
-                        ref={thumbRef} // Add ref for the thumb
-                        className="absolute top-0 left-0 h-full bg-blue-400 rounded-full cursor-grab" // Changed to blue, added cursor
+                    <div 
+                      ref={thumbRef} // Add ref for the thumb
+                      className="absolute top-0 left-0 h-full bg-blue-400 rounded-full cursor-grab" // Changed to blue, added cursor
                         style={{ width: '30%', left: '0%' }} // Initial state controlled by JS
-                      ></div>
+                    ></div>
                     </div>
                     
                     <button 
@@ -2499,7 +2459,7 @@ Please enter your zip code to continue.
                 >
                   <div className="bg-blue-800 p-2 sm:p-3 rounded-full mb-1 sm:mb-2 text-blue-200 group-hover:bg-blue-300 group-hover:text-blue-900 transition-colors">
                     {type.icon}
-                  </div>
+            </div>
                   <span className="text-xs sm:text-sm font-medium text-gray-100 whitespace-nowrap">{type.name}</span>
                 </Link>
               ))}
@@ -3539,9 +3499,6 @@ Please enter your zip code to continue.
         <Route path="*" element={<NotFound />} />
       </Routes>
       
-      {/* Close Suspense wrapper */}
-      </Suspense>
-      
       {/* Footer component - moved outside of Routes to appear on all pages */}
       <Footer />
       <CookieConsent />
@@ -3661,7 +3618,7 @@ const customScrollbarCSS = `
     top: 0;
     bottom: 0;
     width: 20px;
-    z-index: 2;
+    z-index: 2; 
     pointer-events: none;
   }
   
@@ -3862,106 +3819,52 @@ if (typeof document !== 'undefined') {
   enhancedStyle.innerHTML = Object.values(enhancedBackgroundKeyframes).join('\n') + enhancedBackgroundCSS;
   document.head.appendChild(enhancedStyle);
   
-  // Enhanced page transition handling script
+  // Add page transition handling script
   document.addEventListener('DOMContentLoaded', () => {
     // Get references to our UI elements
     const loadingIndicator = document.getElementById('page-loading-indicator');
     const errorBoundary = document.getElementById('page-error-boundary');
     
     if (loadingIndicator && errorBoundary) {
-      let navigationTimeout: number | null = null;
-      let isNavigating = false;
-      
-      // Preload critical images for smoother transitions
-      const preloadImages = () => {
-        const imagesToPreload = [
-          "https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png",
-          "https://images.unsplash.com/photo-1543286386-71314a40aac6?auto=format&fit=crop&q=80"
-        ];
-        
-        imagesToPreload.forEach(src => {
-          const img = new Image();
-          img.src = src;
-        });
-      };
-      
-      // Start preloading
-      preloadImages();
-      
-      // Handle page navigation start
-      const handlePageNavigationStart = () => {
-        if (isNavigating) return; // Prevent duplicate navigation states
-        
-        isNavigating = true;
-        
-        // Show loading indicator
+      // Handle page navigation
+      const handlePageNavigation = () => {
+        // Show loading indicator immediately
         loadingIndicator.style.opacity = '1';
         loadingIndicator.style.pointerEvents = 'auto';
         
         // Hide error boundary if visible
         errorBoundary.style.display = 'none';
         
-        // Reset the loading bar animation
-        const loadingBar = loadingIndicator.querySelector('.animate-loadingBar');
-        if (loadingBar && loadingBar instanceof HTMLElement) {
-          loadingBar.classList.remove('animate-loadingBar');
-          // Force reflow to restart animation
-          void loadingBar.offsetWidth;
-          loadingBar.classList.add('animate-loadingBar');
-        }
-        
-        // Set a timeout to hide loading if it gets stuck for some reason
-        if (navigationTimeout) {
-          clearTimeout(navigationTimeout);
-        }
-        
-        navigationTimeout = window.setTimeout(() => {
-          handlePageNavigationComplete();
-        }, 8000); // 8 second timeout as a backup
+        // Ensure the loading screen appears for at least 1000ms for better UX
+        // This prevents flash of loading screen for fast navigations
+        setTimeout(() => {
+          // Set a timeout to hide loading if it gets stuck
+          setTimeout(() => {
+            loadingIndicator.style.opacity = '0';
+            loadingIndicator.style.pointerEvents = 'none';
+          }, 5000);
+        }, 1000);
       };
       
-      // Handle page navigation complete
-      const handlePageNavigationComplete = () => {
-        if (!isNavigating) return;
-        
-        isNavigating = false;
-        
-        if (navigationTimeout) {
-          clearTimeout(navigationTimeout);
-          navigationTimeout = null;
-        }
-        
-        // Hide loading indicator with a slight delay for visual polish
+      // Handle page load complete
+      const handlePageLoaded = () => {
+        // Add a slight delay before hiding the loader to ensure content is rendered
         setTimeout(() => {
+          // Smooth transition to hide loader
           loadingIndicator.style.opacity = '0';
           loadingIndicator.style.pointerEvents = 'none';
-        }, 200);
+        }, 300);
       };
       
       // Handle errors
-      const handlePageError = (event: ErrorEvent) => {
-        console.error('Page error detected:', event);
-        
-        if (isNavigating) {
-          // Hide loading indicator
-          loadingIndicator.style.opacity = '0';
-          loadingIndicator.style.pointerEvents = 'none';
-          
-          // Show error boundary
-          errorBoundary.style.display = 'flex';
-          
-          // Reset navigation state
-          isNavigating = false;
-          
-          if (navigationTimeout) {
-            clearTimeout(navigationTimeout);
-            navigationTimeout = null;
-          }
-        }
+      const handlePageError = () => {
+        loadingIndicator.style.opacity = '0';
+        loadingIndicator.style.pointerEvents = 'none';
+        errorBoundary.style.display = 'flex';
       };
       
       // Listen for page navigation events
-      window.addEventListener('popstate', handlePageNavigationStart);
+      window.addEventListener('popstate', handlePageNavigation);
       
       // For click navigation, we need to intercept link clicks
       document.body.addEventListener('click', (e) => {
@@ -3972,56 +3875,17 @@ if (typeof document !== 'undefined') {
         const link = target.closest('a');
         if (link && link instanceof HTMLAnchorElement && link.href && link.href.includes(window.location.origin)) {
           const path = link.href.substring(window.location.origin.length);
-          if (path.startsWith('/') && path !== window.location.pathname) {
-            handlePageNavigationStart();
+          if (path.startsWith('/')) {
+            handlePageNavigation();
           }
         }
       });
       
-      // Handle initial page load and subsequent loads
-      const handlePageLoad = () => {
-        if (isNavigating) {
-          handlePageNavigationComplete();
-        }
-      };
-      
-      // Set up completion detection
-      window.addEventListener('load', handlePageLoad);
-      window.addEventListener('DOMContentLoaded', handlePageLoad);
-      
-      // More reliable page load detection for SPA
-      // This helps detect React route changes
-      const observer = new MutationObserver((mutations) => {
-        if (isNavigating) {
-          for (const mutation of mutations) {
-            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-              // Check if significant content has been added
-              handlePageNavigationComplete();
-              break;
-            }
-          }
-        }
-      });
-      
-      // Start observing the document body for changes
-      observer.observe(document.body, { 
-        childList: true, 
-        subtree: true 
-      });
+      // Handle initial page load
+      window.addEventListener('load', handlePageLoaded);
       
       // Handle errors
       window.addEventListener('error', handlePageError);
-      
-      // Handle network errors
-      window.addEventListener('unhandledrejection', (event) => {
-        console.error('Unhandled promise rejection:', event);
-        if (isNavigating) {
-          handlePageError(new ErrorEvent('error', { 
-            message: 'Network request failed',
-            error: new Error('Network request failed')
-          }));
-        }
-      });
     }
   });
 }
@@ -4040,22 +3904,6 @@ const strongBackgroundAnimations = `
     100% { transform: scale(1); opacity: 0.15; }
   }
   
-  @keyframes loadingBar {
-    0% { width: 0%; }
-    20% { width: 20%; }
-    25% { width: 25%; }
-    43% { width: 43%; }
-    56% { width: 56%; }
-    59% { width: 59%; }
-    76% { width: 76%; }
-    88% { width: 88%; }
-    100% { width: 100%; }
-  }
-  
-  .animate-loadingBar {
-    animation: loadingBar 1.5s ease-in-out forwards;
-  }
-  
   .animate-slow-pulse {
     animation: slow-pulse 8s ease-in-out infinite;
   }
@@ -4066,9 +3914,22 @@ const strongBackgroundAnimations = `
   }
 `;
 
+// Add loading bar animation keyframe
+const loadingBarAnimation = `
+  @keyframes loading-bar {
+    0% { width: 0; left: 0; }
+    50% { width: 70%; left: 15%; }
+    100% { width: 0; left: 100%; }
+  }
+  
+  .animate-loading-bar {
+    animation: loading-bar 2s ease-in-out infinite;
+  }
+`;
+
 // Apply the strong background animations
 if (typeof document !== 'undefined') {
   const strongBgStyle = document.createElement('style');
-  strongBgStyle.innerHTML = strongBackgroundAnimations;
+  strongBgStyle.innerHTML = strongBackgroundAnimations + loadingBarAnimation;
   document.head.appendChild(strongBgStyle);
 }
