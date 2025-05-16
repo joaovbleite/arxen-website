@@ -1847,7 +1847,10 @@ function App() {
           </div>
         </div>
 
-        {/* Routes for all pages */}
+        {/* Routes for all pages - wrapped in Suspense for better loading handling */}
+        <Suspense fallback={<div className="w-full h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+        </div>}>
         <Routes>
           {/* Home Page Route */}
           <Route path="/" element={
@@ -3498,6 +3501,7 @@ Please enter your zip code to continue.
         <Route path="/quote" element={<FreeEstimate />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
       
       {/* Footer component - moved outside of Routes to appear on all pages */}
       <Footer />
@@ -3813,6 +3817,13 @@ const enhancedBackgroundCSS = `
   }
 `;
 
+// Extend Window interface to include our custom properties
+declare global {
+  interface Window {
+    navigationTimer?: ReturnType<typeof setTimeout>;
+  }
+}
+
 // Add the enhanced animations to the document
 if (typeof document !== 'undefined') {
   const enhancedStyle = document.createElement('style');
@@ -3835,19 +3846,21 @@ if (typeof document !== 'undefined') {
         // Hide error boundary if visible
         errorBoundary.style.display = 'none';
         
-        // Ensure the loading screen appears for at least 1000ms for better UX
-        // This prevents flash of loading screen for fast navigations
-        setTimeout(() => {
-          // Set a timeout to hide loading if it gets stuck
-          setTimeout(() => {
-            loadingIndicator.style.opacity = '0';
-            loadingIndicator.style.pointerEvents = 'none';
-          }, 5000);
-        }, 1000);
+        // Safety timeout in case page load doesn't complete
+        window.navigationTimer = setTimeout(() => {
+          loadingIndicator.style.opacity = '0';
+          loadingIndicator.style.pointerEvents = 'none';
+        }, 8000);
       };
       
       // Handle page load complete
       const handlePageLoaded = () => {
+        // Clear any existing navigation timer
+        if (window.navigationTimer) {
+          clearTimeout(window.navigationTimer);
+          window.navigationTimer = undefined;
+        }
+        
         // Add a slight delay before hiding the loader to ensure content is rendered
         setTimeout(() => {
           // Smooth transition to hide loader
@@ -3866,6 +3879,23 @@ if (typeof document !== 'undefined') {
       // Listen for page navigation events
       window.addEventListener('popstate', handlePageNavigation);
       
+      // Listen for React Router navigation events using mutation observer
+      const routerObserver = new MutationObserver(() => {
+        if (window.location.pathname !== lastPathRef.current) {
+          lastPathRef.current = window.location.pathname;
+          handlePageNavigation();
+        }
+      });
+      
+      // Track the current path
+      const lastPathRef = { current: window.location.pathname };
+      
+      // Observe changes to the document title (often changes with React Router)
+      const titleElement = document.querySelector('title');
+      if (titleElement) {
+        routerObserver.observe(titleElement, { childList: true });
+      }
+      
       // For click navigation, we need to intercept link clicks
       document.body.addEventListener('click', (e) => {
         // Check if this is a link that should trigger navigation
@@ -3873,10 +3903,19 @@ if (typeof document !== 'undefined') {
         if (!target) return;
         
         const link = target.closest('a');
-        if (link && link instanceof HTMLAnchorElement && link.href && link.href.includes(window.location.origin)) {
-          const path = link.href.substring(window.location.origin.length);
-          if (path.startsWith('/')) {
-            handlePageNavigation();
+        if (link && link instanceof HTMLAnchorElement) {
+          // Check if it's an internal link and not an anchor link or external link
+          if (link.href && 
+              link.href.includes(window.location.origin) && 
+              !link.href.includes('#') && 
+              !link.target && 
+              !link.download && 
+              !link.getAttribute('rel')?.includes('external')) {
+            const path = link.href.substring(window.location.origin.length);
+            if (path.startsWith('/') && path !== window.location.pathname) {
+              // Only trigger for actual navigation to a different path
+              handlePageNavigation();
+            }
           }
         }
       });
@@ -3884,8 +3923,30 @@ if (typeof document !== 'undefined') {
       // Handle initial page load
       window.addEventListener('load', handlePageLoaded);
       
+      // DOMContentLoaded can be useful for SPA navigation
+      document.addEventListener('DOMContentLoaded', handlePageLoaded);
+      
+      // Listen for React's events through DOM updates - React often updates the body class
+      const bodyObserver = new MutationObserver(() => {
+        // This will trigger when React finishes rendering, which helps with SPA navigation
+        handlePageLoaded();
+      });
+      
+      // Start observing body for class changes which often happens on route changes
+      bodyObserver.observe(document.body, { 
+        attributes: true, 
+        attributeFilter: ['class'],
+        childList: false
+      });
+      
       // Handle errors
       window.addEventListener('error', handlePageError);
+      
+      // Clean up observers when page unloads
+      window.addEventListener('beforeunload', () => {
+        routerObserver.disconnect();
+        bodyObserver.disconnect();
+      });
     }
   });
 }
