@@ -4,7 +4,7 @@
   ],
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "installCommand": "node vercel-install.js",
+  "installCommand": "npm install --legacy-peer-deps --force && npm install react@19.1.0 react-dom@19.1.0 --save --force",
   "framework": "vite",
   "headers": [
     {

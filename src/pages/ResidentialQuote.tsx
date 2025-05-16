@@ -211,6 +211,7 @@ const ResidentialQuote: React.FC = () => {
                         Property Type
                       </label>
                       <select
+                        id="propertyType"
                         name="propertyType"
                         value={formData.propertyType}
                         onChange={handleInputChange}
@@ -232,6 +233,7 @@ const ResidentialQuote: React.FC = () => {
                       Service Type*
                     </label>
                     <select
+                      id="serviceType"
                       name="serviceType"
                       required
                       value={formData.serviceType}
@@ -256,6 +258,7 @@ const ResidentialQuote: React.FC = () => {
                     Project Description
                   </label>
                   <textarea
+                    id="description"
                     name="description"
                     rows={4}
                     value={formData.description}
@@ -272,6 +275,7 @@ const ResidentialQuote: React.FC = () => {
                       Project Timeframe
                     </label>
                     <select
+                      id="timeframe"
                       name="timeframe"
                       value={formData.timeframe}
                       onChange={handleInputChange}
@@ -289,6 +293,7 @@ const ResidentialQuote: React.FC = () => {
                       Preferred Contact Method
                     </label>
                     <select
+                      id="preferredContact"
                       name="preferredContact"
                       value={formData.preferredContact}
                       onChange={handleInputChange}
@@ -306,6 +311,7 @@ const ResidentialQuote: React.FC = () => {
                     Best Time to Contact
                   </label>
                   <select
+                    id="preferredTime"
                     name="preferredTime"
                     value={formData.preferredTime}
                     onChange={handleInputChange}

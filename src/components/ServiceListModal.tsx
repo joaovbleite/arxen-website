@@ -59,7 +59,7 @@ const ServiceListModal: React.FC<ServiceListModalProps> = ({
           </div>
           <button 
             onClick={onClose} 
-            className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-200 transition-colors"
+            className="text-gray-700 hover:text-gray-900 p-1 rounded-full hover:bg-gray-200 transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -86,7 +86,7 @@ const ServiceListModal: React.FC<ServiceListModalProps> = ({
                   <h3 className="font-medium mb-1 text-gray-800 group-hover:text-blue-700 transition-colors">{service.title}</h3>
                   <p className="text-gray-500 text-xs">{service.description}</p>
                 </div>
-                <div className="ml-2 text-gray-400 group-hover:text-blue-600 transition-colors transform group-hover:translate-x-1 duration-300 self-center">
+                <div className="ml-2 text-gray-700 group-hover:text-blue-600 transition-colors transform group-hover:translate-x-1 duration-300 self-center">
                    <ArrowRight size={16} />
                 </div>
               </Link>

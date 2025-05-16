@@ -40,6 +40,7 @@ import AccessibilityStatement from './pages/AccessibilityStatement';
 import FAQ from './pages/FAQ';
 import PropertyTypeProvider from './components/PropertyTypeContext';
 import ReviewForm from './components/ReviewForm';
+import LoadingIndicator from './components/LoadingIndicator';
 // Define Service type locally based on usage
 interface Service {
   type?: 'category' | 'service' | 'page'; // Added 'page' to allowed types
@@ -57,12 +58,25 @@ interface Service {
 // ScrollToTop component - scrolls to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
+  const [loading, setLoading] = useState(false);
   
   useEffect(() => {
+    // Set loading to true whenever pathname changes
+    setLoading(true);
+    
+    // Scroll to top
     window.scrollTo(0, 0);
+    
+    // Simulate page load completion
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 800); // Adjust timeout as needed
+    
+    return () => clearTimeout(timer);
   }, [pathname]);
   
-  return null;
+  // Return the LoadingIndicator component
+  return <LoadingIndicator isLoading={loading} />;
 }
 
 // Add CountdownTimer component
@@ -169,6 +183,9 @@ function App() {
     // Check localStorage on initial load
     return localStorage.getItem('arxen_has_swiped_services') === 'true';
   });
+
+  const [isPageLoading, setIsPageLoading] = useState(false);
+  const isInitialLoad = useRef(true);
 
   useEffect(() => {
     setIsHomePage(location === '/');
@@ -1390,10 +1407,67 @@ function App() {
     });
   }, [services, serviceFilterType]);
 
+  // Add navigation detection
+  useEffect(() => {
+    // Handle initial page load
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false;
+      const initialLoadTimer = setTimeout(() => {
+        setIsPageLoading(false);
+      }, 800);
+      
+      return () => clearTimeout(initialLoadTimer);
+    }
+    
+    // Navigation detection using mutation observer
+    const handleNavigationStart = () => {
+      setIsPageLoading(true);
+    };
+    
+    const handleNavigationEnd = () => {
+      // Use a short timeout to ensure any React updates have completed
+      setTimeout(() => {
+        setIsPageLoading(false);
+      }, 800);
+    };
+    
+         // Watch for clicks on link elements that might trigger navigation
+     const linkClickHandler = (e: MouseEvent) => {
+       const target = e.target as HTMLElement;
+       const link = target.closest('a');
+       if (link && link.getAttribute('href') && link.getAttribute('href')?.startsWith('/')) {
+         handleNavigationStart();
+       }
+     };
+    
+    document.addEventListener('click', linkClickHandler);
+    
+    // Create a fallback to reset loading state if it gets stuck
+    const loadingResetTimer = setInterval(() => {
+      if (isPageLoading) {
+        console.log('Loading indicator was stuck, resetting...');
+        setIsPageLoading(false);
+      }
+    }, 8000);
+    
+    // Listen for page transitions
+    window.addEventListener('popstate', handleNavigationStart);
+    document.addEventListener('DOMContentLoaded', handleNavigationEnd);
+    
+    return () => {
+      document.removeEventListener('click', linkClickHandler);
+      window.removeEventListener('popstate', handleNavigationStart);
+      document.removeEventListener('DOMContentLoaded', handleNavigationEnd);
+      clearInterval(loadingResetTimer);
+    };
+  }, [isPageLoading]);
+
   return (
     <Router>
       <PropertyTypeProvider>
         <ScrollToTop />
+        <LoadingIndicator isLoading={isPageLoading} />
+        
         {/* Navigation Bar - With scroll behavior */}
         <div className={`border-b border-gray-200/70 bg-white/70 backdrop-blur-md sticky top-0 z-[1500] transition-transform duration-300 ${!visible && !isHomePage ? '-translate-y-full' : 'translate-y-0'}`}>
           <div className="container mx-auto px-4">
@@ -1457,7 +1531,7 @@ function App() {
                                     className="flex items-center text-gray-700 hover:text-blue-900 hover:bg-gray-100 rounded py-1 px-2 transition-colors duration-150"
                                   >
                                     <span className="flex-grow text-sm">{service.title}</span>
-                                    <ChevronRight className="w-4 h-4 flex-shrink-0 text-gray-400" />
+                                    <ChevronRight className="w-4 h-4 flex-shrink-0 text-gray-700" />
                                   </Link>
             </div>
                               ))}
@@ -1561,7 +1635,7 @@ function App() {
             <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl animate-slide-in-up">
               <div className="p-4 border-b">
                 <form onSubmit={handleSearch} className="flex items-center">
-                  <Search className="w-5 h-5 text-gray-500 mr-2" />
+                  <Search className="w-5 h-5 text-gray-700 mr-2" />
                   <input
                     type="text"
                     value={searchTerm}
@@ -1624,7 +1698,7 @@ function App() {
                 ) : searchTerm.length > 0 ? (
                   <div className="text-center py-8 text-gray-500">
                     <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-4">
-                      <Search className="w-8 h-8 text-gray-400" />
+                      <Search className="w-8 h-8 text-gray-700" />
           </div>
                     <p>No results found for "{searchTerm}"</p>
                     <p className="text-sm mt-2">Try different keywords or check our services menu</p>
@@ -1848,9 +1922,7 @@ function App() {
         </div>
 
         {/* Routes for all pages - wrapped in Suspense for better loading handling */}
-        <Suspense fallback={<div className="w-full h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
-        </div>}>
+        <Suspense fallback={<LoadingIndicator isLoading={true} />}>
         <Routes>
           {/* Home Page Route */}
           <Route path="/" element={
@@ -2190,7 +2262,7 @@ function App() {
                                     onChange={(e) => setHomeZip(e.target.value)}
                                     className="w-full px-4 pl-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm transition-all"
                                   />
-                                  <MapPin className="absolute top-1/2 left-3 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                  <MapPin className="absolute top-1/2 left-3 -translate-y-1/2 w-5 h-5 text-gray-700" />
                                 </div>
                               </div>
                               
@@ -2214,7 +2286,7 @@ function App() {
                                     <option value="commercial">Commercial Service</option> 
                                     <option value="other">Other / Custom</option>
                                   </select>
-                                  <Hammer className="absolute top-1/2 left-3 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                  <Hammer className="absolute top-1/2 left-3 -translate-y-1/2 w-5 h-5 text-gray-700" />
                                   <ChevronDown className="absolute top-1/2 right-3 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
                                 </div>
                               </div>
@@ -2235,7 +2307,7 @@ function App() {
                                     <option value="3months">1-3 months</option>
                                     <option value="planning">Just planning</option>
                                   </select>
-                                  <Clock className="absolute top-1/2 left-3 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                  <Clock className="absolute top-1/2 left-3 -translate-y-1/2 w-5 h-5 text-gray-700" />
                                   <ChevronDown className="absolute top-1/2 right-3 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
                                 </div>
                               </div>
@@ -2252,7 +2324,7 @@ function App() {
                                     onChange={(e) => setHomeEmail(e.target.value)}
                                     className="w-full px-4 pl-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm transition-all"
                                   />
-                                  <Mail className="absolute top-1/2 left-3 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                  <Mail className="absolute top-1/2 left-3 -translate-y-1/2 w-5 h-5 text-gray-700" />
                                 </div>
                               </div>
                             </div>
@@ -3320,13 +3392,13 @@ Please enter your zip code to continue.
                             }`}
                           >
                             <input
-                              type="radio"
+                              type="checkbox"
                               id={option.id}
                               name="contactMethod"
                               value={option.value}
                               checked={homeContactPreferredMethod === option.value}
                               onChange={() => setHomeContactPreferredMethod(option.value)}
-                              className="sr-only"
+                              className="mt-1 bg-gray-800 border-gray-700 text-yellow-500 rounded focus:ring-yellow-500"
                             />
                             <div className="flex items-center">
                               {option.icon}
@@ -3793,7 +3865,7 @@ const enhancedBackgroundCSS = `
     position: absolute;
     width: 15px;
     height: 15px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23facc15' stroke='none'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23facc15' stroke='none'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.24l6.91-1.01L12 2z'/%3E%3C/svg%3E");
     background-size: contain;
     opacity: 0.2;
   }

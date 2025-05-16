@@ -312,7 +312,7 @@ const Contact: React.FC = () => {
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <User className="h-5 w-5 text-gray-400" />
+                        <User className="h-5 w-5 text-gray-700" />
                       </div>
                       <input
                         type="text"
@@ -343,7 +343,7 @@ const Contact: React.FC = () => {
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Mail className="h-5 w-5 text-gray-400" />
+                        <Mail className="h-5 w-5 text-gray-700" />
                       </div>
                       <input
                         type="email"
@@ -377,7 +377,7 @@ const Contact: React.FC = () => {
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Phone className="h-5 w-5 text-gray-400" />
+                        <Phone className="h-5 w-5 text-gray-700" />
                       </div>
                       <input
                         type="tel"
@@ -407,7 +407,7 @@ const Contact: React.FC = () => {
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Hammer className="h-5 w-5 text-gray-400" />
+                        <Hammer className="h-5 w-5 text-gray-700" />
                       </div>
                       <select
                         id="serviceType"
@@ -444,7 +444,7 @@ const Contact: React.FC = () => {
                         )}
                       </select>
                       <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                        <ChevronDown className="h-5 w-5 text-gray-400" />
+                        <ChevronDown className="h-5 w-5 text-gray-700" />
                       </div>
                     </div>
                   </div>
@@ -458,7 +458,7 @@ const Contact: React.FC = () => {
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Hammer className="h-5 w-5 text-gray-400" />
+                        <Hammer className="h-5 w-5 text-gray-700" />
                       </div>
                       <input
                         type="text"
@@ -525,7 +525,7 @@ const Contact: React.FC = () => {
                   </label>
                   <div className="relative">
                     <div className="absolute top-3 left-3 flex items-start pointer-events-none">
-                      <MessageSquare className="h-5 w-5 text-gray-400" />
+                      <MessageSquare className="h-5 w-5 text-gray-700" />
                     </div>
                     <textarea
                       id="description"
@@ -557,7 +557,7 @@ const Contact: React.FC = () => {
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Info className="h-5 w-5 text-gray-400" />
+                      <Info className="h-5 w-5 text-gray-700" />
                     </div>
                     <select
                       id="howDidYouHear"
@@ -574,7 +574,7 @@ const Contact: React.FC = () => {
                       <option value="Other">Other</option>
                     </select>
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <ChevronDown className="h-5 w-5 text-gray-400" />
+                      <ChevronDown className="h-5 w-5 text-gray-700" />
                     </div>
                   </div>
                 </div>
@@ -587,7 +587,7 @@ const Contact: React.FC = () => {
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Info className="h-5 w-5 text-gray-400" />
+                        <Info className="h-5 w-5 text-gray-700" />
                       </div>
                       <input
                         type="text"

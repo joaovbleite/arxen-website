@@ -415,16 +415,36 @@ const VisualizeIt = () => {
               
               <div className="flex space-x-2">
                 {/* Added title attributes */}
-                <button onClick={() => alert('Fullscreen mode triggered (Simulation)')} className="bg-white p-1.5 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors" title="Fullscreen">
+                <button 
+                  onClick={() => alert('Fullscreen mode triggered (Simulation)')} 
+                  className="bg-white p-1.5 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors" 
+                  title="Fullscreen"
+                  aria-label="Fullscreen mode"
+                >
                   <Monitor className="w-4 h-4" />
                 </button>
-                <button onClick={() => alert('Download 3D model (Simulation)')} className="bg-white p-1.5 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors" title="Download">
+                <button 
+                  onClick={() => alert('Download 3D model (Simulation)')} 
+                  className="bg-white p-1.5 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors" 
+                  title="Download"
+                  aria-label="Download 3D model"
+                >
                   <Download className="w-4 h-4" />
                 </button>
-                <button onClick={() => alert('Undo action (Simulation)')} className="bg-white p-1.5 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors" title="Undo">
+                <button 
+                  onClick={() => alert('Undo action (Simulation)')} 
+                  className="bg-white p-1.5 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors" 
+                  title="Undo"
+                  aria-label="Undo action"
+                >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
-                <button onClick={() => alert('Redo action (Simulation)')} className="bg-white p-1.5 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors" title="Redo">
+                <button 
+                  onClick={() => alert('Redo action (Simulation)')} 
+                  className="bg-white p-1.5 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors" 
+                  title="Redo"
+                  aria-label="Redo action"
+                >
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
@@ -452,13 +472,28 @@ const VisualizeIt = () => {
                 {/* Advanced controls overlay - Appear on hover */}
                 <div className="absolute top-4 left-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   {/* Added title attributes */}
-                  <button onClick={() => alert('Adjust lighting (Simulation)')} className="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-700 shadow-sm hover:bg-white transition-colors" title="Lighting Options">
+                  <button 
+                    onClick={() => alert('Adjust lighting (Simulation)')} 
+                    className="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-700 shadow-sm hover:bg-white transition-colors" 
+                    title="Lighting Options"
+                    aria-label="Adjust lighting options"
+                  >
                     <Zap className="w-5 h-5" />
                   </button>
-                  <button onClick={() => alert('Change view angle (Simulation)')} className="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-700 shadow-sm hover:bg-white transition-colors" title="View Angle">
+                  <button 
+                    onClick={() => alert('Change view angle (Simulation)')} 
+                    className="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-700 shadow-sm hover:bg-white transition-colors" 
+                    title="View Angle"
+                    aria-label="Change view angle"
+                  >
                     <Compass className="w-5 h-5" />
                   </button>
-                  <button onClick={() => alert('Toggle layers (Simulation)')} className="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-700 shadow-sm hover:bg-white transition-colors" title="Layers">
+                  <button 
+                    onClick={() => alert('Toggle layers (Simulation)')} 
+                    className="bg-white/90 backdrop-blur-sm p-2 rounded-full text-gray-700 shadow-sm hover:bg-white transition-colors" 
+                    title="Layers"
+                    aria-label="Toggle layers visibility"
+                  >
                     <Layers className="w-5 h-5" />
                   </button>
                 </div>
@@ -811,7 +846,13 @@ const VisualizeIt = () => {
               <div className="space-y-2">
                 {['Standard', 'High Resolution', 'Ultra Detailed'].map(quality => (
                   <label key={quality} className="flex items-center cursor-pointer">
-                    <input type="radio" name="scan-quality" className="mr-2 text-blue-600 focus:ring-blue-500" defaultChecked={quality === 'High Resolution'} />
+                    <input 
+                      type="radio" 
+                      name="scan-quality" 
+                      className="mr-2 text-blue-600 focus:ring-blue-500" 
+                      defaultChecked={quality === 'High Resolution'} 
+                      id={`scan-quality-${quality.toLowerCase().replace(/\s+/g, '-')}`}
+                    />
                     <span className="text-sm text-gray-700">{quality}</span>
                   </label>
                 ))}
@@ -823,7 +864,13 @@ const VisualizeIt = () => {
               <div className="space-y-2">
                 {['Room Size Only', 'Full Room Details', 'Complete 3D Model'].map(type => (
                   <label key={type} className="flex items-center cursor-pointer">
-                    <input type="radio" name="scan-type" className="mr-2 text-blue-600 focus:ring-blue-500" defaultChecked={type === 'Full Room Details'} />
+                    <input 
+                      type="radio" 
+                      name="scan-type" 
+                      className="mr-2 text-blue-600 focus:ring-blue-500" 
+                      defaultChecked={type === 'Full Room Details'} 
+                      id={`scan-type-${type.toLowerCase().replace(/\s+/g, '-')}`}
+                    />
                     <span className="text-sm text-gray-700">{type}</span>
                   </label>
                 ))}
@@ -835,7 +882,13 @@ const VisualizeIt = () => {
               <div className="space-y-2">
                 {['Basic Dimensions', '2D Floor Plan', 'Interactive 3D Model'].map(format => (
                   <label key={format} className="flex items-center cursor-pointer">
-                    <input type="checkbox" className="mr-2 text-blue-600 rounded focus:ring-blue-500" defaultChecked />
+                    <input 
+                      type="checkbox" 
+                      className="mr-2 text-blue-600 rounded focus:ring-blue-500" 
+                      defaultChecked 
+                      id={`include-format-${format.toLowerCase().replace(/\s+/g, '-')}`}
+                      name={`include-format-${format.toLowerCase().replace(/\s+/g, '-')}`}
+                    />
                     <span className="text-sm text-gray-700">{format}</span>
                   </label>
                 ))}

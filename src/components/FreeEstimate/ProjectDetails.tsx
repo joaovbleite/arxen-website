@@ -497,7 +497,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
                   onClick={() => handleUrgencyChange('rush')}
                   className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all group ${projectDetails.urgency === 'rush' ? 'border-red-500 bg-red-50 shadow-md' : 'border-gray-200 hover:border-red-300'}`}
                 >
-                   <Zap className={`w-6 h-6 mr-3 ${projectDetails.urgency === 'rush' ? 'text-red-600' : 'text-gray-400 group-hover:text-red-500'}`} />
+                   <Zap className={`w-6 h-6 mr-3 ${projectDetails.urgency === 'rush' ? 'text-red-600' : 'text-gray-700 group-hover:text-red-500'}`} />
                    <div>
                      <h4 className={`font-medium ${projectDetails.urgency === 'rush' ? 'text-red-700' : 'text-gray-800'}`}>ASAP / Urgent</h4>
                      <p className="text-xs text-gray-600">Need to start within ~2 weeks</p>
@@ -508,7 +508,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
                   onClick={() => handleUrgencyChange('standard')}
                   className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all group ${projectDetails.urgency === 'standard' ? 'border-blue-500 bg-blue-50 shadow-md' : 'border-gray-200 hover:border-blue-300'}`}
                 >
-                   <Clock className={`w-6 h-6 mr-3 ${projectDetails.urgency === 'standard' ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-500'}`} />
+                   <Clock className={`w-6 h-6 mr-3 ${projectDetails.urgency === 'standard' ? 'text-blue-600' : 'text-gray-700 group-hover:text-blue-500'}`} />
                    <div>
                      <h4 className={`font-medium ${projectDetails.urgency === 'standard' ? 'text-blue-700' : 'text-gray-800'}`}>Standard</h4>
                      <p className="text-xs text-gray-600">Flexible, typical 4-8 weeks lead time</p>
@@ -587,12 +587,12 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
                 className={`border-2 border-dashed rounded-lg p-6 text-center flex flex-col items-center justify-center h-full ${dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'} transition-all duration-200`}
                 onDragEnter={handleDrag} onDragOver={handleDrag} onDragLeave={handleDrag} onDrop={handleDrop}
               >
-                <Upload className="w-10 h-10 text-gray-400 mb-3" />
+                <Upload className="w-10 h-10 text-gray-700 mb-3" />
                 <p className="text-gray-700 font-medium mb-1 text-sm">
                   Drag & drop files or <button type="button" className="text-blue-600 hover:underline focus:outline-none" onClick={() => fileInputRef.current?.click()}>browse</button>
                 </p>
                 <p className="text-gray-500 text-xs">Photos, plans, etc. (Max 10MB each)</p>
-                <input ref={fileInputRef} type="file" multiple onChange={handleFileChange} className="hidden" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" />
+                <input ref={fileInputRef} type="file" multiple onChange={handleFileChange} className="hidden" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" id="project-files" name="project-files" />
               </div>
               
              {/* 3D Scanner CTA Card - HIDDEN */}
@@ -631,7 +631,12 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
                               <span className="text-gray-800 font-medium truncate mr-2">{file.name}</span>
                               <span className="text-gray-500 text-xs flex-shrink-0">({formatBytes(file.size)})</span>
                             </div>
-                            <button type="button" onClick={() => removeFile(index)} className="text-gray-400 hover:text-red-500 focus:outline-none flex-shrink-0">
+                            <button 
+                              type="button" 
+                              onClick={() => removeFile(index)} 
+                              className="text-gray-700 hover:text-red-500 focus:outline-none flex-shrink-0"
+                              aria-label={`Remove file ${file.name}`}
+                            >
                               <X className="w-4 h-4" />
                             </button>
                         </div>
@@ -644,12 +649,28 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
              {/* Promo Code */}
              <div>
                <label className="block text-sm font-medium text-gray-700 mb-1">Promotional Code</label>
-               <input type="text" className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500" placeholder="Optional code" value={projectDetails.promoCode || ''} onChange={(e) => updateFormData({ projectDetails: { ...projectDetails, promoCode: e.target.value }})} />
+               <input 
+                 type="text" 
+                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500" 
+                 placeholder="Optional code" 
+                 value={projectDetails.promoCode || ''} 
+                 onChange={(e) => updateFormData({ projectDetails: { ...projectDetails, promoCode: e.target.value }})}
+                 id="promo-code"
+                 name="promoCode"
+               />
              </div>
              {/* Referred By */}
              <div>
                <label className="block text-sm font-medium text-gray-700 mb-1">Referred By (Optional)</label>
-               <input type="text" className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500" placeholder="Optional referral name" value={projectDetails.referredBy || ''} onChange={(e) => updateFormData({ projectDetails: { ...projectDetails, referredBy: e.target.value }})} />
+               <input 
+                 type="text" 
+                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500" 
+                 placeholder="Optional referral name" 
+                 value={projectDetails.referredBy || ''} 
+                 onChange={(e) => updateFormData({ projectDetails: { ...projectDetails, referredBy: e.target.value }})}
+                 id="referred-by"
+                 name="referredBy"
+               />
              </div>
            </div>
         </div>

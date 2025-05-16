@@ -932,36 +932,29 @@ const About = () => {
 
                  <div>
                     <label htmlFor="collab-expertise" className="block text-sm font-medium text-gray-700 mb-1">Primary Area of Expertise*</label>
-                     <select 
-                      id="collab-expertise" 
-                      name="expertise" 
-                      required 
-                      value={collabForm.expertise} 
+                     <select
+                      id="expertise"
+                      name="expertise"
+                      value={collabForm.expertise}
                       onChange={handleCollabChange}
                       onBlur={handleCollabBlur}
-                      className={`w-full px-4 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 appearance-none bg-white ${
-                        collabTouched.expertise && collabErrors.expertise ? 'border-red-500 bg-red-50' : 
-                        (collabForm.expertise ? 'border-gray-300 text-gray-900' : 'border-gray-300 text-gray-500')
+                      className={`w-full px-4 py-2 border rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500 ${
+                        collabErrors.expertise ? 'border-red-500 bg-red-50' : 'border-gray-300'
                       }`}
-                      aria-invalid={collabTouched.expertise && collabErrors.expertise ? "true" : "false"}
-                      aria-describedby={collabTouched.expertise && collabErrors.expertise ? "collab-expertise-error" : undefined}
+                      aria-invalid={collabErrors.expertise ? "true" : "false"}
+                      aria-describedby={collabErrors.expertise ? "expertise-error" : undefined}
                       >
                          <option value="" disabled>Select your trade...</option>
-                         <option value="carpentry">Carpentry (Framing, Finish)</option>
-                         <option value="painting">Painting (Interior, Exterior)</option>
-                         <option value="electrical">Electrical</option>
-                         <option value="plumbing">Plumbing</option>
-                         <option value="hvac">HVAC</option>
-                         <option value="drywall">Drywall & Finishing</option>
-                         <option value="flooring">Flooring Installation (Tile, Wood, etc.)</option>
-                         <option value="cabinetry">Cabinet Installation</option>
-                         <option value="countertops">Countertop Fabrication/Installation</option>
-                         <option value="roofing">Roofing</option>
-                         <option value="siding">Siding</option>
-                         <option value="windows_doors">Window & Door Installation</option>
-                         <option value="landscaping">Landscaping/Hardscaping</option>
-                         <option value="demolition">Demolition</option>
-                         <option value="other">Other (Specify Below)</option>
+                         <option value="Carpentry">Carpentry</option>
+                         <option value="Electrical">Electrical</option>
+                         <option value="Plumbing">Plumbing</option>
+                         <option value="HVAC">HVAC</option>
+                         <option value="Painting">Painting</option>
+                         <option value="Flooring">Flooring</option>
+                         <option value="Tile Work">Tile Work</option>
+                         <option value="Interior Design">Interior Design</option>
+                         <option value="Architecture">Architecture</option>
+                         <option value="Other">Other</option>
                      </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700" style={{top: '-2.5rem', right: '0.5rem'}}> 
                        {/* ChevronDown positioned manually if needed, or rely on default select arrow */}
