@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 // Updated icons for header and sidebar
-import { Hammer, ArrowRight, CheckCircle, Home, PaintBucket, Grid, Star, Zap, ShieldCheck, Tag, Clock, Phone, Award, List, ListMinus, Building, Building2, Users, CarFront, Warehouse as ShedIcon, User, MessageCircle, Mail, MapPin, X, ChevronDown, Check } from 'lucide-react'; 
+import { Hammer, ArrowRight, CheckCircle, Home, PaintBucket, Grid, Star, Zap, ShieldCheck, Tag, Clock, Phone, Award, List, ListMinus, Building, Building2, Users, CarFront, Warehouse as ShedIcon, User, MessageCircle, Mail, MapPin } from 'lucide-react'; 
 import ServiceListModal from '../components/ServiceListModal'; // Import the modal
 import TestimonialSlider from '../components/TestimonialSlider';
 import { getShuffledTestimonials } from '../data/testimonials';
@@ -27,13 +27,13 @@ interface Service {
   title: string;
   path: string;
   description: string;
-  icon?: IconElement; // Changed from ReactNode to IconElement
+  icon?: IconElement; // Match ServiceListModal's expected type
 }
 
 // Add interface for category structure used in residentialServices
 interface ServiceCategory {
   category: string;
-  icon: IconElement; // Changed from ReactNode to IconElement
+  icon: React.ReactElement<IconElementProps>; // Updated to match IconElement type
   services: Service[];
 }
 
@@ -41,7 +41,7 @@ interface ServiceCategory {
 interface PropertyType {
   id: string;
   name: string;
-  icon: IconElement;
+  icon: React.ReactNode;
 }
 
 // Enhance icon typing
@@ -68,7 +68,7 @@ const Residential: React.FC = () => {
   const residentialServices: ServiceCategory[] = [
     {
       category: "Remodeling",
-      icon: <Hammer className="w-6 h-6 text-blue-700" /> as IconElement,
+      icon: <Hammer className="w-6 h-6 text-blue-700" />,
       services: [
         { title: "Kitchen Remodeling", path: "/services/kitchen-remodeling", description: "Complete kitchen transformations" },
         { title: "Bathroom Remodeling", path: "/services/bathroom-remodeling", description: "Modern bathroom renovations" },
@@ -79,7 +79,7 @@ const Residential: React.FC = () => {
     },
     {
       category: "Interior Services",
-      icon: <PaintBucket className="w-6 h-6 text-blue-700" /> as IconElement,
+      icon: <PaintBucket className="w-6 h-6 text-blue-700" />,
       services: [
         { title: "Interior Painting", path: "/services/interior-painting", description: "Professional painting services" },
         { title: "Drywall Installation", path: "/services/drywall", description: "Expert drywall solutions" },
@@ -89,7 +89,7 @@ const Residential: React.FC = () => {
     },
     {
       category: "Flooring",
-      icon: <Grid className="w-6 h-6 text-blue-700" /> as IconElement,
+      icon: <Grid className="w-6 h-6 text-blue-700" />,
       services: [
         { title: "Hardwood", path: "/services/hardwood", description: "Premium wood flooring" },
         { title: "Tile Installation", path: "/services/tile", description: "Custom tile solutions" },
@@ -114,7 +114,11 @@ const Residential: React.FC = () => {
 
   // Function to open modal - Expect ServiceCategory type
   const openServiceModal = (category: ServiceCategory) => {
-    setModalContent({ title: category.category, services: category.services, icon: category.icon });
+    setModalContent({ 
+      title: category.category, 
+      services: category.services, 
+      icon: category.icon // This is now typed correctly
+    });
     setIsModalOpen(true);
   };
 
@@ -125,12 +129,12 @@ const Residential: React.FC = () => {
 
   // NEW Residential Property Types Data
   const residentialPropertyTypes: PropertyType[] = [
-    { id: 'single-family', name: 'Single-Family Home', icon: <Home size={24} /> as IconElement },
-    { id: 'townhouse', name: 'Townhouse', icon: <Building size={24} /> as IconElement }, // Using Building as proxy
-    { id: 'condo-apt', name: 'Condo / Apartment', icon: <Building2 size={24} /> as IconElement }, // Using Building2 as proxy
-    { id: 'multi-family', name: 'Multi-Family Home', icon: <Users size={24} /> as IconElement }, // Using Users as proxy
-    { id: 'garage', name: 'Garage', icon: <CarFront size={24} /> as IconElement },
-    { id: 'shed-barn', name: 'Shed / Barn', icon: <ShedIcon size={24} /> as IconElement }, // Using Warehouse icon renamed
+    { id: 'single-family', name: 'Single-Family Home', icon: <Home size={24} /> },
+    { id: 'townhouse', name: 'Townhouse', icon: <Building size={24} /> }, // Using Building as proxy
+    { id: 'condo-apt', name: 'Condo / Apartment', icon: <Building2 size={24} /> }, // Using Building2 as proxy
+    { id: 'multi-family', name: 'Multi-Family Home', icon: <Users size={24} /> }, // Using Users as proxy
+    { id: 'garage', name: 'Garage', icon: <CarFront size={24} /> },
+    { id: 'shed-barn', name: 'Shed / Barn', icon: <ShedIcon size={24} /> }, // Using Warehouse icon renamed
   ];
 
   // Update the property type handler to use the context
@@ -173,9 +177,6 @@ const Residential: React.FC = () => {
       </div>
     </Link>
   );
-
-  // State for dropdown
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
     <div className="bg-white">
@@ -234,10 +235,10 @@ const Residential: React.FC = () => {
           {/* Key benefits row - Residential Focused */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 pt-8 border-t border-blue-500/30">
             {[
-              {icon: <Home className="w-6 h-6 text-blue-300" /> as IconElement, text: "Personalized Designs"},
-              {icon: <Award className="w-6 h-6 text-blue-300" /> as IconElement, text: "Quality Craftsmanship"},
-              {icon: <ShieldCheck className="w-6 h-6 text-blue-300" /> as IconElement, text: "Stress-Free Process"},
-              {icon: <CheckCircle className="w-6 h-6 text-blue-300" /> as IconElement, text: "Increased Home Value"}
+              {icon: <Home className="w-6 h-6 text-blue-300" />, text: "Personalized Designs"},
+              {icon: <Award className="w-6 h-6 text-blue-300" />, text: "Quality Craftsmanship"},
+              {icon: <ShieldCheck className="w-6 h-6 text-blue-300" />, text: "Stress-Free Process"},
+              {icon: <CheckCircle className="w-6 h-6 text-blue-300" />, text: "Increased Home Value"}
             ].map((benefit, index) => (
               <div key={index} className="flex items-center">
                 <div className="mr-3">{benefit.icon}</div>
@@ -251,91 +252,28 @@ const Residential: React.FC = () => {
 
       {/* Property Type Selection */}
       <div className="container mx-auto px-4 pt-10 pb-8 border-b border-gray-100">
-        <div className="max-w-3xl mx-auto">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-800">Find solutions for your building type</h2>
-            
-            {propertyType && (
-              <button 
-                onClick={() => setPropertyType(null)} 
-                className="mt-2 sm:mt-0 text-blue-600 text-sm font-medium hover:text-blue-800 flex items-center"
+        <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">What type of property is this for?</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 justify-center">
+          {residentialPropertyTypes.map((type) => {
+            const isSelected = propertyType && propertyType.id === type.id;
+            return (
+              <div
+                key={type.id}
+                onClick={() => handlePropertyTypeSelect(type.id)}
+                className={`group flex flex-col items-center p-4 rounded-lg border cursor-pointer transition-all duration-200 min-h-[100px] justify-center ${isSelected ? 'border-blue-500 bg-blue-50 shadow-sm' : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'}`}
               >
-                <X size={16} className="mr-1" /> Clear selection
-              </button>
-            )}
-          </div>
-          
-          <div className="relative w-full bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all">
-            <div 
-              className={`p-4 flex items-center justify-between cursor-pointer ${propertyType ? 'border-b border-gray-100' : ''}`}
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            >
-              <div className="flex items-center">
-                {propertyType ? (
-                  <>
-                    <div className="w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full text-blue-600 mr-3">
-                      {residentialPropertyTypes.find(type => type.id === propertyType.id)?.icon}
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-500">Selected Property Type</div>
-                      <div className="font-medium">{propertyType.name}</div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="font-medium text-gray-700">Select a property type</div>
-                )}
-              </div>
-              <ChevronDown 
-                size={20} 
-                className={`text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'transform rotate-180' : ''}`} 
-              />
-            </div>
-            
-            {/* Dropdown content */}
-            {isDropdownOpen && (
-              <div className="absolute top-full left-0 right-0 z-20 bg-white border border-gray-200 border-t-0 rounded-b-lg shadow-lg overflow-hidden mt-0">
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 p-3">
-                  {residentialPropertyTypes.map((type) => {
-                    const isSelected = propertyType && propertyType.id === type.id;
-                    return (
-                      <div
-                        key={type.id}
-                        onClick={() => {
-                          handlePropertyTypeSelect(type.id);
-                          setIsDropdownOpen(false);
-                        }}
-                        className={`flex items-center p-2 rounded-md cursor-pointer transition-all duration-200
-                          ${isSelected 
-                            ? 'bg-blue-50 border-blue-200 text-blue-700' 
-                            : 'hover:bg-gray-50 text-gray-700'
-                          }`}
-                      >
-                        <div className={`mr-3 ${isSelected ? 'text-blue-600' : 'text-gray-500'}`}>
-                          {type.icon}
-                        </div>
-                        <span className="text-sm font-medium">{type.name}</span>
-                        {isSelected && <Check size={16} className="ml-auto text-blue-600" />}
-                      </div>
-                    );
-                  })}
+                <div className={`mb-2 ${isSelected ? 'text-blue-600' : 'text-gray-500 group-hover:text-blue-500'} transition-colors`}>
+                  {type.icon}
                 </div>
+                <h3 className={`text-xs font-medium text-center ${isSelected ? 'text-blue-800' : 'text-gray-700'}`}>
+                  {type.name}
+                </h3>
               </div>
-            )}
-          </div>
-          
-          {/* Selected property benefits */}
-          {propertyType && (
-            <div className="mt-4 bg-blue-50 rounded-lg p-4 border border-blue-100 animate-fade-in-fast">
-              <h3 className="font-medium text-blue-800 mb-2">Services tailored for {propertyType.name}s</h3>
-              <p className="text-sm text-gray-700">
-                We'll customize our approaches and solutions specifically for your {propertyType.name.toLowerCase()} project, 
-                ensuring optimal results and compliance with relevant building codes and standards.
-              </p>
-            </div>
-          )}
+            );
+          })}
         </div>
       </div>
-      {/* --- END PROPERTY TYPE SELECTION --- */}
+      {/* --- END NEW SECTION --- */}
 
       {/* Main Content with Sidebar */}
       <div className="container mx-auto px-4 py-16">
@@ -391,11 +329,11 @@ const Residential: React.FC = () => {
                <h3 className="text-xl font-bold mb-4 text-gray-800">Why Choose Arxen?</h3>
                <ul className="space-y-3">
                  {[ 
-                   { text: "Quality Craftsmanship", icon: <Zap size={18} className="text-blue-600"/> as IconElement },
-                   { text: "Transparent Pricing", icon: <Tag size={18} className="text-blue-600"/> as IconElement },
-                   { text: "On-Time Completion", icon: <Clock size={18} className="text-blue-600"/> as IconElement },
-                   { text: "Licensed & Insured", icon: <ShieldCheck size={18} className="text-blue-600"/> as IconElement },
-                   { text: "Excellent Communication", icon: <Phone size={18} className="text-blue-600"/> as IconElement }
+                   { text: "Quality Craftsmanship", icon: <Zap size={18} className="text-blue-600"/> },
+                   { text: "Transparent Pricing", icon: <Tag size={18} className="text-blue-600"/> },
+                   { text: "On-Time Completion", icon: <Clock size={18} className="text-blue-600"/> },
+                   { text: "Licensed & Insured", icon: <ShieldCheck size={18} className="text-blue-600"/> },
+                   { text: "Excellent Communication", icon: <Phone size={18} className="text-blue-600"/> }
                  ].map((item, idx) => (
                    <li key={idx} className="flex items-center text-gray-700"><span className="mr-3 flex-shrink-0">{item.icon}</span><span>{item.text}</span></li>
                  ))}
@@ -428,7 +366,7 @@ const Residential: React.FC = () => {
             {/* Feature 1: Personalized Approach */}
             <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-100">
               <div className="inline-block p-3 bg-blue-100 rounded-full mb-4">
-                {React.createElement(User, { className: "w-8 h-8 text-blue-600" }) as IconElement}
+                <User className="w-8 h-8 text-blue-600" /> {/* Added User icon */}
               </div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Personalized Approach</h3>
               <p className="text-sm text-gray-600">We listen to your needs and tailor every project to your specific vision, lifestyle, and budget.</p>
@@ -436,7 +374,7 @@ const Residential: React.FC = () => {
             {/* Feature 2: Quality & Durability */}
             <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-100">
               <div className="inline-block p-3 bg-green-100 rounded-full mb-4">
-                {React.createElement(ShieldCheck, { className: "w-8 h-8 text-green-600" }) as IconElement}
+                <ShieldCheck className="w-8 h-8 text-green-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Quality & Durability</h3>
               <p className="text-sm text-gray-600">Using only high-quality materials and proven techniques to ensure your renovation lasts for years.</p>
@@ -444,7 +382,7 @@ const Residential: React.FC = () => {
             {/* Feature 3: Clear Communication */}
             <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-100">
               <div className="inline-block p-3 bg-purple-100 rounded-full mb-4">
-                {React.createElement(MessageCircle, { className: "w-8 h-8 text-purple-600" }) as IconElement}
+                <MessageCircle className="w-8 h-8 text-purple-600" /> {/* Added MessageCircle icon */}
               </div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Clear Communication</h3>
               <p className="text-sm text-gray-600">Keeping you informed every step of the way with regular updates and responsive support.</p>
