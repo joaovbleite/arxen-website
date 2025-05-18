@@ -2028,10 +2028,7 @@ function App() {
                   >
                     {services.map((category, index) => (
                       <div key={index} className="w-[70%] sm:w-[60%] md:w-[70%] lg:w-[40%] flex-shrink-0 px-1.5 sm:px-2 snap-start first:pl-4 last:pr-8">
-                        <Link 
-                          to={`/services/category/${category.category.toLowerCase().replace(/\s+/g, '-')}`}
-                          className="relative group block bg-black rounded-2xl overflow-hidden shadow-lg h-[240px] sm:h-[280px] md:h-[400px] hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
-                        >
+                        <div className="relative group block bg-black rounded-2xl overflow-hidden shadow-lg h-[240px] sm:h-[280px] md:h-[400px] hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
                           {/* Category index badge */}
                           <div className="absolute top-3 left-3 z-10 bg-white/30 backdrop-blur-md text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border border-white/40">
                             {index + 1}
@@ -2060,14 +2057,15 @@ function App() {
                                   </li>
                                 )}
                               </ul>
-                              <div 
+                              <Link 
+                                to={`/services/category/${category.category.toLowerCase().replace(/\s+/g, '-')}`}
                                 className="inline-flex items-center px-2.5 sm:px-3 py-1 sm:py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-[10px] sm:text-xs font-medium"
                               >
                                 View Services <ArrowRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 ml-1 sm:ml-1.5" />
-                              </div>
-                            </div>
-                          </div>
-                        </Link>
+                              </Link>
+                  </div>
+                  </div>
+                </div>
                       </div>
                     ))}
               </div>
@@ -3730,122 +3728,7 @@ Please enter your zip code to continue.
       </Routes>
       </Suspense>
       
-      {/* Direct EmailJS Test Form - BEGIN */}
-      <div className="bg-yellow-50 py-10 border-t-4 border-b-4 border-yellow-400">
-        <div className="container mx-auto px-4">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto border-2 border-yellow-300">
-            <div className="text-center mb-6">
-              <h2 className="text-xl font-bold text-yellow-700">⚠️ Email Test Form ⚠️</h2>
-              <p className="text-gray-600 text-sm">This is a direct test form that bypasses the regular form handling.</p>
-            </div>
-            
-            <div id="direct-test-form" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="test-name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                  <input 
-                    type="text" 
-                    id="test-name" 
-                    name="test-name" 
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Your name"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="test-email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                  <input 
-                    type="email" 
-                    id="test-email" 
-                    name="test-email" 
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Your email"
-                  />
-                </div>
-              </div>
 
-              <div>
-                <label htmlFor="test-message" className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                <textarea 
-                  id="test-message" 
-                  name="test-message" 
-                  rows={4} 
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Your message"
-                ></textarea>
-              </div>
-
-              <div className="text-center">
-                <button 
-                  type="button" 
-                  id="test-submit-button"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-                  onClick={() => {
-                    // Get form values
-                    const name = (document.getElementById('test-name') as HTMLInputElement)?.value;
-                    const email = (document.getElementById('test-email') as HTMLInputElement)?.value;
-                    const message = (document.getElementById('test-message') as HTMLTextAreaElement)?.value;
-                    
-                    // Validate inputs
-                    if (!name || !email || !message) {
-                      alert('Please fill in all fields');
-                      return;
-                    }
-                    
-                    // Create template parameters
-                    const templateParams = {
-                      from_name: name,
-                      from_email: email,
-                      message: message,
-                      to_name: 'ARXEN Construction Team',
-                      to_email: 'sustenablet@gmail.com',
-                      form_source: 'Homepage Direct Test'
-                    };
-                    
-                    // Show loading state
-                    const button = document.getElementById('test-submit-button');
-                    if (button) {
-                      button.textContent = 'Sending...';
-                      button.setAttribute('disabled', 'true');
-                    }
-                    
-                                         // Send the email using EmailJS directly
-                     emailjs.send('service_yjnczmi', 'template_ta9fewp', templateParams)
-                       .then((response: { status: number; text: string }) => {
-                         console.log('SUCCESS!', response.status, response.text);
-                         alert('Email sent successfully! Check the console for details.');
-                         
-                         // Reset form
-                         (document.getElementById('test-name') as HTMLInputElement).value = '';
-                         (document.getElementById('test-email') as HTMLInputElement).value = '';
-                         (document.getElementById('test-message') as HTMLTextAreaElement).value = '';
-                       })
-                       .catch((error: unknown) => {
-                         console.error('FAILED...', error);
-                         alert('Failed to send email. Check the console for details.');
-                      })
-                      .finally(() => {
-                        // Reset button
-                        if (button) {
-                          button.textContent = 'Send Test Email';
-                          button.removeAttribute('disabled');
-                        }
-                      });
-                  }}
-                >
-                  Send Test Email
-                </button>
-              </div>
-              
-              <div id="test-result" className="mt-4 hidden">
-                <div className="bg-green-100 text-green-800 p-3 rounded-md">
-                  <p id="test-result-message"></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Direct EmailJS Test Form - END */}
       
       {/* Footer component - moved outside of Routes to appear on all pages */}
       <Footer />
