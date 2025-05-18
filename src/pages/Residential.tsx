@@ -150,16 +150,16 @@ const Residential: React.FC = () => {
     <Link 
       to={getServiceUrl(service.path)}
       key={service.title} 
-      className={`relative flex items-start p-4 rounded-lg border cursor-pointer transition-all duration-300 h-full bg-white border-gray-200 hover:border-blue-300 hover:shadow-sm group`}
+      className={`relative flex items-start p-4 rounded-lg border cursor-pointer transition-all duration-300 h-full bg-white border-gray-200 hover:border-blue-500 hover:shadow-md group`}
     >
       <div className="mr-4 flex-shrink-0 text-blue-600">
         {React.cloneElement(category.icon as React.ReactElement<IconProps>, { className: "w-6 h-6" })}
       </div>
       <div className="flex-grow">
-        <h3 className="font-medium mb-1 text-gray-800 group-hover:text-blue-700 transition-colors">{service.title}</h3>
+        <h3 className="font-medium mb-1 text-gray-800 group-hover:text-blue-800 transition-colors">{service.title}</h3>
         <p className="text-gray-500 text-xs">{service.description}</p>
       </div>
-      <div className="ml-2 text-gray-400 group-hover:text-blue-600 transition-colors transform group-hover:translate-x-1 duration-300">
+      <div className="ml-2 text-gray-400 group-hover:text-blue-700 transition-colors transform group-hover:translate-x-1 duration-300">
         <ArrowRight size={16} />
       </div>
     </Link>
@@ -179,13 +179,13 @@ const Residential: React.FC = () => {
         <div className="container mx-auto px-4 py-16 relative z-10">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="space-y-6">
-              <div className="inline-block py-1 px-3 bg-white bg-opacity-20 rounded-full text-blue-100 text-sm font-medium mb-2">
+              <div className="inline-block py-1 px-3 bg-white bg-opacity-20 rounded-full text-white text-sm font-medium mb-2">
                 YOUR TRUSTED HOME PARTNER
               </div>
               <h1 className="text-4xl md:text-5xl font-bold leading-tight">
                 Transform Your Home
               </h1>
-              <p className="text-xl text-blue-100 max-w-xl leading-relaxed">
+              <p className="text-xl text-white max-w-xl leading-relaxed">
                 Expert residential remodeling and construction services designed to bring your dream home vision to life with quality and care.
               </p>
               <div className="pt-4 flex flex-wrap gap-4">
@@ -229,7 +229,7 @@ const Residential: React.FC = () => {
             ].map((benefit, index) => (
               <div key={index} className="flex items-center">
                 <div className="mr-3">{benefit.icon}</div>
-                <p className="text-sm font-medium text-blue-100">{benefit.text}</p>
+                <p className="text-sm font-medium text-white">{benefit.text}</p>
               </div>
             ))}
           </div>
@@ -483,7 +483,7 @@ const Residential: React.FC = () => {
               <div className="md:w-2/3 p-8">
                 <TestimonialSlider testimonials={residentialTestimonials} />
                 <div className="text-center mt-8">
-                  <Link to="/testimonials" className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-400 transition-colors shadow-md hover:shadow-lg">
+                  <Link to="/testimonials" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg">
                     Read More Testimonials
                   </Link>
                 </div>
