@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 // Updated icons for header and sidebar
-import { Hammer, ArrowRight, CheckCircle, Home, PaintBucket, Grid, Star, Zap, ShieldCheck, Tag, Clock, Phone, Award, List, ListMinus, Building, Building2, Users, CarFront, Warehouse as ShedIcon, User, MessageCircle, Mail, MapPin } from 'lucide-react'; 
+import { Hammer, ArrowRight, CheckCircle, Home, PaintBucket, Grid, Star, Zap, ShieldCheck, Tag, Clock, Phone, Award, List, ListMinus, Building, Building2, Users, CarFront, Warehouse as ShedIcon, User, MessageCircle, Mail, MapPin, X, ChevronDown, Check } from 'lucide-react'; 
 import ServiceListModal from '../components/ServiceListModal'; // Import the modal
 import TestimonialSlider from '../components/TestimonialSlider';
 import { getShuffledTestimonials } from '../data/testimonials';
@@ -174,6 +174,9 @@ const Residential: React.FC = () => {
     </Link>
   );
 
+  // State for dropdown
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   return (
     <div className="bg-white">
       {/* --- REPLACED HEADER --- */}
@@ -248,28 +251,91 @@ const Residential: React.FC = () => {
 
       {/* Property Type Selection */}
       <div className="container mx-auto px-4 pt-10 pb-8 border-b border-gray-100">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">What type of property is this for?</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3 justify-center">
-          {residentialPropertyTypes.map((type) => {
-            const isSelected = propertyType && propertyType.id === type.id;
-            return (
-              <div
-                key={type.id}
-                onClick={() => handlePropertyTypeSelect(type.id)}
-                className={`group flex flex-col items-center p-4 rounded-lg border cursor-pointer transition-all duration-200 min-h-[100px] justify-center ${isSelected ? 'border-blue-500 bg-blue-50 shadow-sm' : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'}`}
+        <div className="max-w-3xl mx-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
+            <h2 className="text-xl font-semibold text-gray-800">Find solutions for your building type</h2>
+            
+            {propertyType && (
+              <button 
+                onClick={() => setPropertyType(null)} 
+                className="mt-2 sm:mt-0 text-blue-600 text-sm font-medium hover:text-blue-800 flex items-center"
               >
-                <div className={`mb-2 ${isSelected ? 'text-blue-600' : 'text-gray-500 group-hover:text-blue-500'} transition-colors`}>
-                  {type.icon}
-                </div>
-                <h3 className={`text-xs font-medium text-center ${isSelected ? 'text-blue-800' : 'text-gray-700'}`}>
-                  {type.name}
-                </h3>
+                <X size={16} className="mr-1" /> Clear selection
+              </button>
+            )}
+          </div>
+          
+          <div className="relative w-full bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all">
+            <div 
+              className={`p-4 flex items-center justify-between cursor-pointer ${propertyType ? 'border-b border-gray-100' : ''}`}
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
+              <div className="flex items-center">
+                {propertyType ? (
+                  <>
+                    <div className="w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full text-blue-600 mr-3">
+                      {residentialPropertyTypes.find(type => type.id === propertyType.id)?.icon}
+                    </div>
+                    <div>
+                      <div className="text-sm text-gray-500">Selected Property Type</div>
+                      <div className="font-medium">{propertyType.name}</div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="font-medium text-gray-700">Select a property type</div>
+                )}
               </div>
-            );
-          })}
+              <ChevronDown 
+                size={20} 
+                className={`text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'transform rotate-180' : ''}`} 
+              />
+            </div>
+            
+            {/* Dropdown content */}
+            {isDropdownOpen && (
+              <div className="absolute top-full left-0 right-0 z-20 bg-white border border-gray-200 border-t-0 rounded-b-lg shadow-lg overflow-hidden mt-0">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 p-3">
+                  {residentialPropertyTypes.map((type) => {
+                    const isSelected = propertyType && propertyType.id === type.id;
+                    return (
+                      <div
+                        key={type.id}
+                        onClick={() => {
+                          handlePropertyTypeSelect(type.id);
+                          setIsDropdownOpen(false);
+                        }}
+                        className={`flex items-center p-2 rounded-md cursor-pointer transition-all duration-200
+                          ${isSelected 
+                            ? 'bg-blue-50 border-blue-200 text-blue-700' 
+                            : 'hover:bg-gray-50 text-gray-700'
+                          }`}
+                      >
+                        <div className={`mr-3 ${isSelected ? 'text-blue-600' : 'text-gray-500'}`}>
+                          {type.icon}
+                        </div>
+                        <span className="text-sm font-medium">{type.name}</span>
+                        {isSelected && <Check size={16} className="ml-auto text-blue-600" />}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Selected property benefits */}
+          {propertyType && (
+            <div className="mt-4 bg-blue-50 rounded-lg p-4 border border-blue-100 animate-fade-in-fast">
+              <h3 className="font-medium text-blue-800 mb-2">Services tailored for {propertyType.name}s</h3>
+              <p className="text-sm text-gray-700">
+                We'll customize our approaches and solutions specifically for your {propertyType.name.toLowerCase()} project, 
+                ensuring optimal results and compliance with relevant building codes and standards.
+              </p>
+            </div>
+          )}
         </div>
       </div>
-      {/* --- END NEW SECTION --- */}
+      {/* --- END PROPERTY TYPE SELECTION --- */}
 
       {/* Main Content with Sidebar */}
       <div className="container mx-auto px-4 py-16">
