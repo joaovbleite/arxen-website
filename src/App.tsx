@@ -3250,11 +3250,11 @@ Please enter your zip code to continue.
                  </div>
                   <span className="group-hover:text-white transition-colors">Contact Us</span>
                 </Link>
-                <a href="mailto:teamarxen@gmail.com" className="flex items-center group text-sm">
+                <a href="mailto:sustenablet@gmail.com" className="flex items-center group text-sm">
                   <div className="bg-blue-700/50 p-1.5 rounded-full mr-2 group-hover:bg-blue-600 transition-colors">
                     <Mail className="w-3.5 h-3.5 text-blue-200 group-hover:text-white transition-colors" />
                  </div>
-                  <span className="group-hover:text-white transition-colors">teamarxen@gmail.com</span>
+                  <span className="group-hover:text-white transition-colors">sustenablet@gmail.com</span>
                 </a>
             </div>
               
@@ -3522,6 +3522,125 @@ Please enter your zip code to continue.
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* NEW TEST EMAIL FORM - ADDED DIRECTLY IN THE APP FOR TESTING */}
+      <div className="bg-white py-8 border-t border-gray-200">
+        <div className="container mx-auto px-4">
+          <div className="max-w-lg mx-auto bg-blue-50 p-6 rounded-lg border border-blue-100 shadow-md">
+            <h3 className="text-xl font-bold text-blue-800 mb-4 flex items-center">
+              <Mail className="w-5 h-5 mr-2" />
+              Test Email Form (Direct EmailJS)
+            </h3>
+            
+            <div className="text-sm text-blue-600 mb-4 p-3 bg-blue-100 rounded">
+              This is a test form that uses EmailJS directly to troubleshoot email delivery issues.
+            </div>
+            
+            <form id="test-email-form" className="space-y-4">
+              <div>
+                <label htmlFor="test-name" className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input 
+                  type="text" 
+                  id="test-name" 
+                  name="test-name" 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                  placeholder="Your name"
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="test-email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input 
+                  type="email" 
+                  id="test-email" 
+                  name="test-email" 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                  placeholder="Your email"
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="test-message" className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                <textarea 
+                  id="test-message" 
+                  name="test-message" 
+                  rows={3} 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" 
+                  placeholder="Test message"
+                ></textarea>
+              </div>
+              
+              <div>
+                <button 
+                  type="button"
+                  id="test-submit-btn"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors"
+                  onClick={() => {
+                    // Get values
+                    const name = (document.getElementById('test-name') as HTMLInputElement).value;
+                    const email = (document.getElementById('test-email') as HTMLInputElement).value;
+                    const message = (document.getElementById('test-message') as HTMLTextAreaElement).value;
+                    
+                    // Validation
+                    if (!name || !email || !message) {
+                      alert('Please fill in all fields');
+                      return;
+                    }
+                    
+                    // Update button state
+                    const button = document.getElementById('test-submit-btn') as HTMLButtonElement;
+                    const originalText = button.innerHTML;
+                    button.innerHTML = 'Sending...';
+                    button.disabled = true;
+                    
+                    // Set up EmailJS parameters
+                    const templateParams = {
+                      from_name: name,
+                      from_email: email,
+                      message: message,
+                      to_name: 'ARXEN Construction Team',
+                      to_email: 'sustenablet@gmail.com',
+                      form_source: 'Direct Test Form'
+                    };
+                    
+                    // Import and initialize EmailJS directly
+                    import('@emailjs/browser').then((emailjs) => {
+                      emailjs.init('f6ICI0_vWkpGTL9DL');
+                      
+                      // Send the email
+                      emailjs.send('service_yjnczmi', 'template_ta9fewp', templateParams)
+                        .then((result) => {
+                          console.log('Direct test email sent successfully:', result.text);
+                          alert('Test email sent successfully! Check sustenablet@gmail.com inbox.');
+                          
+                          // Reset form
+                          (document.getElementById('test-name') as HTMLInputElement).value = '';
+                          (document.getElementById('test-email') as HTMLInputElement).value = '';
+                          (document.getElementById('test-message') as HTMLTextAreaElement).value = '';
+                        })
+                        .catch((error) => {
+                          console.error('Error sending direct test email:', error);
+                          alert('Error sending email. See console for details: ' + JSON.stringify(error));
+                        })
+                        .finally(() => {
+                          // Restore button state
+                          button.innerHTML = originalText;
+                          button.disabled = false;
+                        });
+                    });
+                  }}
+                >
+                  Send Test Email
+                </button>
+              </div>
+              
+              <div className="text-xs text-gray-500 mt-2 text-center">
+                Result will be shown in an alert and in the browser console
+              </div>
+            </form>
           </div>
         </div>
       </div>
