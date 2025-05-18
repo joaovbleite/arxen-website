@@ -1371,8 +1371,14 @@ function App() {
       form_source: 'Homepage Quick Contact'
     };
     
-    // Send the email using our email service
-    sendContactEmail(templateParams)
+    // Send the email using EmailJS directly
+    import('@emailjs/browser').then((emailjs) => {
+      emailjs.send(
+        'service_yjnczmi', // Service ID
+        'template_ta9fewp', // Template ID
+        templateParams, 
+        'f6ICI0_vWkpGTL9DL' // Public key
+      )
       .then((result) => {
         console.log('Homepage contact form submitted successfully:', result.text);
         // Handle success
@@ -1395,6 +1401,7 @@ function App() {
         // Reset to idle after a delay
         setTimeout(() => setHomeContactStatus('idle'), 5000);
       });
+    });
   };
 
   // Filter services based on selected filter type
