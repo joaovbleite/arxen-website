@@ -61,28 +61,17 @@ interface Service {
   galleryImages?: string[]; // Optional
 }
 
-// ScrollToTop component - scrolls to top on route change
+// ScrollToTop component - scrolls to top on route change without loading indicator
 function ScrollToTop() {
   const { pathname } = useLocation();
-  const [loading, setLoading] = useState(false);
   
   useEffect(() => {
-    // Set loading to true whenever pathname changes
-    setLoading(true);
-    
-    // Scroll to top
+    // Scroll to top when path changes
     window.scrollTo(0, 0);
-    
-    // Simulate page load completion
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 800); // Adjust timeout as needed
-    
-    return () => clearTimeout(timer);
   }, [pathname]);
   
-  // Return the LoadingIndicator component
-  return <LoadingIndicator isLoading={loading} />;
+  // Don't render anything, just handle scrolling
+  return null;
 }
 
 // Add CountdownTimer component
@@ -190,7 +179,7 @@ function App() {
     return localStorage.getItem('arxen_has_swiped_services') === 'true';
   });
 
-  const [isPageLoading, setIsPageLoading] = useState(false);
+  // Removed page loading state
   const isInitialLoad = useRef(true);
 
   useEffect(() => {
@@ -1439,66 +1428,12 @@ function App() {
     });
   }, [services, serviceFilterType]);
 
-  // Add navigation detection
-  useEffect(() => {
-    // Handle initial page load
-    if (isInitialLoad.current) {
-      isInitialLoad.current = false;
-      const initialLoadTimer = setTimeout(() => {
-        setIsPageLoading(false);
-      }, 800);
-      
-      return () => clearTimeout(initialLoadTimer);
-    }
-    
-    // Navigation detection using mutation observer
-    const handleNavigationStart = () => {
-      setIsPageLoading(true);
-    };
-    
-    const handleNavigationEnd = () => {
-      // Use a short timeout to ensure any React updates have completed
-      setTimeout(() => {
-        setIsPageLoading(false);
-      }, 800);
-    };
-    
-         // Watch for clicks on link elements that might trigger navigation
-     const linkClickHandler = (e: MouseEvent) => {
-       const target = e.target as HTMLElement;
-       const link = target.closest('a');
-       if (link && link.getAttribute('href') && link.getAttribute('href')?.startsWith('/')) {
-         handleNavigationStart();
-       }
-     };
-    
-    document.addEventListener('click', linkClickHandler);
-    
-    // Create a fallback to reset loading state if it gets stuck
-    const loadingResetTimer = setInterval(() => {
-      if (isPageLoading) {
-        console.log('Loading indicator was stuck, resetting...');
-        setIsPageLoading(false);
-      }
-    }, 8000);
-    
-    // Listen for page transitions
-    window.addEventListener('popstate', handleNavigationStart);
-    document.addEventListener('DOMContentLoaded', handleNavigationEnd);
-    
-    return () => {
-      document.removeEventListener('click', linkClickHandler);
-      window.removeEventListener('popstate', handleNavigationStart);
-      document.removeEventListener('DOMContentLoaded', handleNavigationEnd);
-      clearInterval(loadingResetTimer);
-    };
-  }, [isPageLoading]);
+  // Navigation detection removed (no more loading indicators)
 
   return (
     <Router>
       <PropertyTypeProvider>
         <ScrollToTop />
-        <LoadingIndicator isLoading={isPageLoading} />
         
         {/* Navigation Bar - With scroll behavior */}
         <div className={`border-b border-gray-200/70 bg-white/70 backdrop-blur-md sticky top-0 z-[1500] transition-transform duration-300 ${!visible && !isHomePage ? '-translate-y-full' : 'translate-y-0'}`}>
@@ -1913,26 +1848,7 @@ function App() {
           </div>
         )}
 
-        {/* Loading Indicator Component */}
-        <div id="page-loading-indicator" className="fixed inset-0 z-[2000] flex flex-col items-center justify-center bg-white transition-opacity duration-300" style={{opacity: 0, pointerEvents: 'none'}}>
-          <div className="flex flex-col items-center justify-center">
-            {/* Arxen Logo */}
-            <div className="mb-6 animate-pulse transition-all">
-              <img 
-                src="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" 
-                alt="Arxen Construction Logo" 
-                className="h-40 w-auto"
-              />
-            </div>
-            {/* Loading animation circle */}
-            <div className="relative h-2 w-60 bg-gray-200 rounded-full overflow-hidden mb-4">
-              <div className="absolute h-full bg-blue-600 animate-loading-bar"></div>
-            </div>
-            <p className="text-lg font-medium text-blue-900">
-              Loading Your Experience...
-            </p>
-          </div>
-        </div>
+        {/* Loading indicator removed */}
 
         {/* Error Boundary for catching React errors */}
         <div id="page-error-boundary" className="fixed inset-0 z-[2000] items-center justify-center bg-white" style={{display: 'none'}}>
@@ -1953,7 +1869,7 @@ function App() {
           </div>
         </div>
 
-        {/* Routes for all pages */}
+        {/* Routes for all pages - removed loading indicator */}
         <Routes>
           {/* Home Page Route */}
           <Route path="/" element={
@@ -3657,16 +3573,8 @@ Please enter your zip code to continue.
       
           </div>
         } />
-        <Route path="/services/kitchen-remodeling" element={
-            <Suspense fallback={<LoadingIndicator isLoading={true} />}>
-              <KitchenRemodeling />
-            </Suspense>
-          } />
-        <Route path="/services/bathroom-remodeling" element={
-            <Suspense fallback={<LoadingIndicator isLoading={true} />}>
-              <BathroomRemodeling />
-            </Suspense>
-          } />
+        <Route path="/services/kitchen-remodeling" element={<KitchenRemodeling />} />
+        <Route path="/services/bathroom-remodeling" element={<BathroomRemodeling />} />
         <Route path="/services/hardwood" element={<HardwoodService />} />
         <Route path="/services/custom-cabinetry" element={<CustomCabinetryPage />} />
         <Route path="/services/flooring" element={<FlooringServicesPage />} />
@@ -3679,11 +3587,7 @@ Please enter your zip code to continue.
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/about" element={<About />} />
-        <Route path="/residential" element={
-            <Suspense fallback={<LoadingIndicator isLoading={true} />}>
-              <Residential />
-            </Suspense>
-          } />
+        <Route path="/residential" element={<Residential />} />
         <Route path="/offers" element={<Offers />} />
         {/* <Route path="/visualizer" element={<VisualizeIt />} /> */}
         {/* <Route path="/my-projects" element={<MyProjects />} /> */}
@@ -3691,11 +3595,7 @@ Please enter your zip code to continue.
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/sitemap" element={<Sitemap />} />
-        <Route path="/commercial" element={
-            <Suspense fallback={<LoadingIndicator isLoading={true} />}>
-              <CommercialServicePage />
-            </Suspense>
-          } />
+        <Route path="/commercial" element={<CommercialServicePage />} />
         <Route path="/commercial-service" element={<CommercialServicePage />} />
         <Route path="/accessibility" element={<AccessibilityStatement />} />
         <Route path="/faq" element={<FAQ />} />
@@ -3733,11 +3633,7 @@ Please enter your zip code to continue.
         <Route path="/blog/recent-post-3" element={<BlogPost />} />
         <Route path="/blog/post/:postId" element={<BlogPost />} />
         <Route path="/blog/category/:categoryName" element={<BlogCategory />} />
-        <Route path="/services/category/:categoryName" element={
-            <Suspense fallback={<LoadingIndicator isLoading={true} />}>
-              <CategoryServices services={services} />
-            </Suspense>
-          } />
+        <Route path="/services/category/:categoryName" element={<CategoryServices services={services} />} />
         {/* Commenting out conflicting commercial routes - covered by ServiceTemplate now */}
         {/* <Route path="/commercial/office-renovations" element={<CommercialServicePage title="Office Renovations" />} /> */}
         {/* <Route path="/commercial/retail-fit-outs" element={<CommercialServicePage title="Retail Fit-Outs" />} /> */}

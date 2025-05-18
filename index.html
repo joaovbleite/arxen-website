@@ -17,7 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     
     <!-- Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.emailjs.com https://*.emailjs.com; connect-src 'self' https://*.emailjs.com https://api.emailjs.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.unsplash.com https://i.postimg.cc https://images.unsplash.com https://*.cloudfront.net;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.emailjs.com https://cdn.vercel-insights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://images.unsplash.com https://i.postimg.cc https://images.pexels.com; font-src 'self' data: https://fonts.gstatic.com; connect-src 'self' https://api.emailjs.com https://vercel.com https://vercel-insights.com; frame-src 'self'; object-src 'none';">
     
     <!-- Advanced Performance Optimizations -->
     <!-- Preload critical resources -->
@@ -230,36 +230,62 @@
         ]
       }
     </script>
+
+    <!-- Preload critical fonts to prevent layout shifts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'" />
+    
+    <!-- Preload critical images to prevent CLS -->
+    <link rel="preload" href="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" as="image" />
+    <link rel="preload" href="https://images.unsplash.com/photo-1543286386-71314a40aac6?auto=format&fit=crop&q=80" as="image" />
+    
+    <!-- Font display swap to prevent FOUT -->
+    <style>
+      @font-face {
+        font-family: 'Inter';
+        font-style: normal;
+        font-weight: 400 700;
+        font-display: swap;
+        src: local('Inter'), url(https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2) format('woff2');
+      }
+      
+      /* Pre-allocate space for dynamic elements to prevent shifts */
+      .hero-section {
+        min-height: 60vh;
+        position: relative;
+      }
+      
+      .image-container {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        aspect-ratio: 16/9; /* Set a default aspect ratio */
+      }
+      
+      .image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
+      /* Prevent CLS from loading indicator */
+      #page-loading-indicator {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+      }
+    </style>
   </head>
   <body>
-    <!-- Initial page loader, shown before JS loads -->
-    <div id="root-loading-indicator">
-      <img src="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" alt="Arxen Construction" width="120" height="60" style="margin-bottom: 20px;">
-      <div class="spinner"></div>
-      <div class="loading-progress">
-        <div class="loading-bar"></div>
-      </div>
-      <div style="margin-top: 16px; font-size: 14px; color: #666;">
-        Loading your experience...
-      </div>
-    </div>
-
     <div id="root"></div>
-    
-    <script>
-      // Hide the initial loading indicator once the app has loaded
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          var initialLoader = document.getElementById('root-loading-indicator');
-          if (initialLoader) {
-            initialLoader.style.opacity = '0';
-            setTimeout(function() {
-              initialLoader.style.display = 'none';
-            }, 300);
-          }
-        }, 500); // Small delay to ensure React has rendered
-      });
-    </script>
     <!-- Service worker registration for offline capabilities -->
     <script src="/sw-register.js" defer></script>
     <script type="module" src="/src/main.tsx"></script>
