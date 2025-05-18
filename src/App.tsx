@@ -44,6 +44,7 @@ import PropertyTypeProvider from './components/PropertyTypeContext';
 import ReviewForm from './components/ReviewForm';
 import LoadingIndicator from './components/LoadingIndicator';
 import { sendContactEmail } from './utils/emailService';
+import { SpeedInsights } from "@vercel/speed-insights/react";
 // Define Service type locally based on usage
 interface Service {
   type?: 'category' | 'service' | 'page'; // Added 'page' to allowed types
@@ -3602,6 +3603,7 @@ Please enter your zip code to continue.
         isOpen={isReviewFormOpen} 
         onClose={() => setIsReviewFormOpen(false)} 
       />
+      <SpeedInsights />
     </PropertyTypeProvider>
   </Router>
 );
