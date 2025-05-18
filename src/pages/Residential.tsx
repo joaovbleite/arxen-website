@@ -13,18 +13,27 @@ import { usePropertyType } from '../components/PropertyTypeContext';
 // Add LucideIcon type for better typing
 import { LucideIcon } from 'lucide-react';
 
+// Define a type for SVG and HTML elements that can accept className
+type IconElementProps = {
+  className?: string;
+  [key: string]: any;
+};
+
+// Element type that can be cloned and accept className
+type IconElement = React.ReactElement<IconElementProps>;
+
 // Add Service interface definition
 interface Service {
   title: string;
   path: string;
   description: string;
-  icon?: React.ReactNode;
+  icon?: IconElement;
 }
 
 // Add interface for category structure used in residentialServices
 interface ServiceCategory {
   category: string;
-  icon: React.ReactNode;
+  icon: IconElement;
   services: Service[];
 }
 
@@ -32,7 +41,7 @@ interface ServiceCategory {
 interface PropertyType {
   id: string;
   name: string;
-  icon: React.ReactNode;
+  icon: IconElement;
 }
 
 // Enhance icon typing
@@ -59,7 +68,7 @@ const Residential: React.FC = () => {
   const residentialServices: ServiceCategory[] = [
     {
       category: "Remodeling",
-      icon: <Hammer className="w-6 h-6 text-blue-700" />,
+      icon: <Hammer className="w-6 h-6 text-blue-700" /> as IconElement,
       services: [
         { title: "Kitchen Remodeling", path: "/services/kitchen-remodeling", description: "Complete kitchen transformations" },
         { title: "Bathroom Remodeling", path: "/services/bathroom-remodeling", description: "Modern bathroom renovations" },
@@ -70,7 +79,7 @@ const Residential: React.FC = () => {
     },
     {
       category: "Interior Services",
-      icon: <PaintBucket className="w-6 h-6 text-blue-700" />,
+      icon: <PaintBucket className="w-6 h-6 text-blue-700" /> as IconElement,
       services: [
         { title: "Interior Painting", path: "/services/interior-painting", description: "Professional painting services" },
         { title: "Drywall Installation", path: "/services/drywall", description: "Expert drywall solutions" },
@@ -80,7 +89,7 @@ const Residential: React.FC = () => {
     },
     {
       category: "Flooring",
-      icon: <Grid className="w-6 h-6 text-blue-700" />,
+      icon: <Grid className="w-6 h-6 text-blue-700" /> as IconElement,
       services: [
         { title: "Hardwood", path: "/services/hardwood", description: "Premium wood flooring" },
         { title: "Tile Installation", path: "/services/tile", description: "Custom tile solutions" },
@@ -96,16 +105,20 @@ const Residential: React.FC = () => {
 
   // State for modal
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState<{ title: string; services: Service[]; icon?: React.ReactNode }>({ title: '', services: [], icon: undefined });
+  const [modalContent, setModalContent] = useState<{ title: string; services: Service[]; icon?: IconElement }>({ title: '', services: [], icon: undefined });
   // Restore state for expanded categories (even if not visually used for expansion now)
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({}); 
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});  
 
   // Use the property type context instead of local state
   const { propertyType, setPropertyType } = usePropertyType();
 
   // Function to open modal - Expect ServiceCategory type
   const openServiceModal = (category: ServiceCategory) => {
-    setModalContent({ title: category.category, services: category.services, icon: category.icon });
+    setModalContent({ 
+      title: category.category, 
+      services: category.services, 
+      icon: category.icon as IconElement 
+    });
     setIsModalOpen(true);
   };
 
@@ -116,12 +129,12 @@ const Residential: React.FC = () => {
 
   // NEW Residential Property Types Data
   const residentialPropertyTypes: PropertyType[] = [
-    { id: 'single-family', name: 'Single-Family Home', icon: <Home size={24} /> },
-    { id: 'townhouse', name: 'Townhouse', icon: <Building size={24} /> }, // Using Building as proxy
-    { id: 'condo-apt', name: 'Condo / Apartment', icon: <Building2 size={24} /> }, // Using Building2 as proxy
-    { id: 'multi-family', name: 'Multi-Family Home', icon: <Users size={24} /> }, // Using Users as proxy
-    { id: 'garage', name: 'Garage', icon: <CarFront size={24} /> },
-    { id: 'shed-barn', name: 'Shed / Barn', icon: <ShedIcon size={24} /> }, // Using Warehouse icon renamed
+    { id: 'single-family', name: 'Single-Family Home', icon: <Home size={24} /> as IconElement },
+    { id: 'townhouse', name: 'Townhouse', icon: <Building size={24} /> as IconElement }, // Using Building as proxy
+    { id: 'condo-apt', name: 'Condo / Apartment', icon: <Building2 size={24} /> as IconElement }, // Using Building2 as proxy
+    { id: 'multi-family', name: 'Multi-Family Home', icon: <Users size={24} /> as IconElement }, // Using Users as proxy
+    { id: 'garage', name: 'Garage', icon: <CarFront size={24} /> as IconElement },
+    { id: 'shed-barn', name: 'Shed / Barn', icon: <ShedIcon size={24} /> as IconElement }, // Using Warehouse icon renamed
   ];
 
   // Update the property type handler to use the context
