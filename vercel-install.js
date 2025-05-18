@@ -9,6 +9,40 @@ const path = require('path');
 
 console.log('Running custom install script for Vercel...');
 
+// Clear any cached files that might be causing issues
+try {
+  console.log('Clearing any existing build artifacts...');
+  
+  // Try to remove node_modules if it exists to force clean install
+  if (fs.existsSync('node_modules')) {
+    console.log('Removing node_modules to ensure clean install...');
+    if (process.platform === 'win32') {
+      execSync('rmdir /s /q node_modules', { stdio: 'inherit' });
+    } else {
+      execSync('rm -rf node_modules', { stdio: 'inherit' });
+    }
+  }
+  
+  // Clean any build artifacts
+  if (fs.existsSync('dist')) {
+    console.log('Removing previous build...');
+    if (process.platform === 'win32') {
+      execSync('rmdir /s /q dist', { stdio: 'inherit' });
+    } else {
+      execSync('rm -rf dist', { stdio: 'inherit' });
+    }
+  }
+  
+  // Clear cache
+  console.log('Clearing npm cache...');
+  execSync('npm cache clean --force', { stdio: 'inherit' });
+  
+  console.log('Build environment prepared successfully!');
+} catch (error) {
+  console.error('Error during pre-install cleanup:', error);
+  // Don't exit with error to allow the build to continue
+}
+
 // Add a specific npmrc file for the installation
 const npmrcContent = `
 legacy-peer-deps=true
@@ -65,4 +99,41 @@ try {
   // Continue anyway
 }
 
-console.log('Custom install completed successfully!'); 
+console.log('Custom install completed successfully!');
+
+// This file is used by Vercel to customize the build process
+// It runs before the install command specified in vercel.json
+
+// Clear any cached files that might be causing issues
+try {
+  console.log('Clearing any existing build artifacts...');
+  
+  // Try to remove node_modules if it exists to force clean install
+  if (fs.existsSync('node_modules')) {
+    console.log('Removing node_modules to ensure clean install...');
+    if (process.platform === 'win32') {
+      execSync('rmdir /s /q node_modules', { stdio: 'inherit' });
+    } else {
+      execSync('rm -rf node_modules', { stdio: 'inherit' });
+    }
+  }
+  
+  // Clean any build artifacts
+  if (fs.existsSync('dist')) {
+    console.log('Removing previous build...');
+    if (process.platform === 'win32') {
+      execSync('rmdir /s /q dist', { stdio: 'inherit' });
+    } else {
+      execSync('rm -rf dist', { stdio: 'inherit' });
+    }
+  }
+  
+  // Clear cache
+  console.log('Clearing npm cache...');
+  execSync('npm cache clean --force', { stdio: 'inherit' });
+  
+  console.log('Build environment prepared successfully!');
+} catch (error) {
+  console.error('Error during pre-install cleanup:', error);
+  // Don't exit with error to allow the build to continue
+} 
