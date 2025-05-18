@@ -1953,8 +1953,7 @@ function App() {
           </div>
         </div>
 
-        {/* Routes for all pages - wrapped in Suspense for better loading handling */}
-        <Suspense fallback={<LoadingIndicator isLoading={true} />}>
+        {/* Routes for all pages */}
         <Routes>
           {/* Home Page Route */}
           <Route path="/" element={
@@ -3658,8 +3657,16 @@ Please enter your zip code to continue.
       
           </div>
         } />
-        <Route path="/services/kitchen-remodeling" element={<KitchenRemodeling />} />
-        <Route path="/services/bathroom-remodeling" element={<BathroomRemodeling />} />
+        <Route path="/services/kitchen-remodeling" element={
+            <Suspense fallback={<LoadingIndicator isLoading={true} />}>
+              <KitchenRemodeling />
+            </Suspense>
+          } />
+        <Route path="/services/bathroom-remodeling" element={
+            <Suspense fallback={<LoadingIndicator isLoading={true} />}>
+              <BathroomRemodeling />
+            </Suspense>
+          } />
         <Route path="/services/hardwood" element={<HardwoodService />} />
         <Route path="/services/custom-cabinetry" element={<CustomCabinetryPage />} />
         <Route path="/services/flooring" element={<FlooringServicesPage />} />
@@ -3672,7 +3679,11 @@ Please enter your zip code to continue.
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/about" element={<About />} />
-        <Route path="/residential" element={<Residential />} />
+        <Route path="/residential" element={
+            <Suspense fallback={<LoadingIndicator isLoading={true} />}>
+              <Residential />
+            </Suspense>
+          } />
         <Route path="/offers" element={<Offers />} />
         {/* <Route path="/visualizer" element={<VisualizeIt />} /> */}
         {/* <Route path="/my-projects" element={<MyProjects />} /> */}
@@ -3680,7 +3691,11 @@ Please enter your zip code to continue.
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/sitemap" element={<Sitemap />} />
-        <Route path="/commercial" element={<CommercialServicePage />} />
+        <Route path="/commercial" element={
+            <Suspense fallback={<LoadingIndicator isLoading={true} />}>
+              <CommercialServicePage />
+            </Suspense>
+          } />
         <Route path="/commercial-service" element={<CommercialServicePage />} />
         <Route path="/accessibility" element={<AccessibilityStatement />} />
         <Route path="/faq" element={<FAQ />} />
@@ -3718,7 +3733,11 @@ Please enter your zip code to continue.
         <Route path="/blog/recent-post-3" element={<BlogPost />} />
         <Route path="/blog/post/:postId" element={<BlogPost />} />
         <Route path="/blog/category/:categoryName" element={<BlogCategory />} />
-        <Route path="/services/category/:categoryName" element={<CategoryServices services={services} />} />
+        <Route path="/services/category/:categoryName" element={
+            <Suspense fallback={<LoadingIndicator isLoading={true} />}>
+              <CategoryServices services={services} />
+            </Suspense>
+          } />
         {/* Commenting out conflicting commercial routes - covered by ServiceTemplate now */}
         {/* <Route path="/commercial/office-renovations" element={<CommercialServicePage title="Office Renovations" />} /> */}
         {/* <Route path="/commercial/retail-fit-outs" element={<CommercialServicePage title="Retail Fit-Outs" />} /> */}
@@ -3726,7 +3745,6 @@ Please enter your zip code to continue.
         <Route path="/quote" element={<FreeEstimate />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-      </Suspense>
       
       {/* Direct EmailJS Test Form - BEGIN */}
       <div className="bg-yellow-50 py-10 border-t-4 border-b-4 border-yellow-400">
