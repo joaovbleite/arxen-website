@@ -61,17 +61,28 @@ interface Service {
   galleryImages?: string[]; // Optional
 }
 
-// ScrollToTop component - scrolls to top on route change without loading indicator
+// ScrollToTop component - scrolls to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
+  const [loading, setLoading] = useState(false);
   
   useEffect(() => {
-    // Scroll to top when path changes
+    // Set loading to true whenever pathname changes
+    setLoading(true);
+    
+    // Scroll to top
     window.scrollTo(0, 0);
+    
+    // Simulate page load completion
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 800); // Adjust timeout as needed
+    
+    return () => clearTimeout(timer);
   }, [pathname]);
   
-  // Don't render anything, just handle scrolling
-  return null;
+  // Return the LoadingIndicator component
+  return <LoadingIndicator isLoading={loading} />;
 }
 
 // Add CountdownTimer component
@@ -179,7 +190,7 @@ function App() {
     return localStorage.getItem('arxen_has_swiped_services') === 'true';
   });
 
-  // Removed page loading state
+  const [isPageLoading, setIsPageLoading] = useState(false);
   const isInitialLoad = useRef(true);
 
   useEffect(() => {
@@ -1428,12 +1439,66 @@ function App() {
     });
   }, [services, serviceFilterType]);
 
-  // Navigation detection removed (no more loading indicators)
+  // Add navigation detection
+  useEffect(() => {
+    // Handle initial page load
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false;
+      const initialLoadTimer = setTimeout(() => {
+        setIsPageLoading(false);
+      }, 800);
+      
+      return () => clearTimeout(initialLoadTimer);
+    }
+    
+    // Navigation detection using mutation observer
+    const handleNavigationStart = () => {
+      setIsPageLoading(true);
+    };
+    
+    const handleNavigationEnd = () => {
+      // Use a short timeout to ensure any React updates have completed
+      setTimeout(() => {
+        setIsPageLoading(false);
+      }, 800);
+    };
+    
+         // Watch for clicks on link elements that might trigger navigation
+     const linkClickHandler = (e: MouseEvent) => {
+       const target = e.target as HTMLElement;
+       const link = target.closest('a');
+       if (link && link.getAttribute('href') && link.getAttribute('href')?.startsWith('/')) {
+         handleNavigationStart();
+       }
+     };
+    
+    document.addEventListener('click', linkClickHandler);
+    
+    // Create a fallback to reset loading state if it gets stuck
+    const loadingResetTimer = setInterval(() => {
+      if (isPageLoading) {
+        console.log('Loading indicator was stuck, resetting...');
+        setIsPageLoading(false);
+      }
+    }, 8000);
+    
+    // Listen for page transitions
+    window.addEventListener('popstate', handleNavigationStart);
+    document.addEventListener('DOMContentLoaded', handleNavigationEnd);
+    
+    return () => {
+      document.removeEventListener('click', linkClickHandler);
+      window.removeEventListener('popstate', handleNavigationStart);
+      document.removeEventListener('DOMContentLoaded', handleNavigationEnd);
+      clearInterval(loadingResetTimer);
+    };
+  }, [isPageLoading]);
 
   return (
     <Router>
       <PropertyTypeProvider>
         <ScrollToTop />
+        <LoadingIndicator isLoading={isPageLoading} />
         
         {/* Navigation Bar - With scroll behavior */}
         <div className={`border-b border-gray-200/70 bg-white/70 backdrop-blur-md sticky top-0 z-[1500] transition-transform duration-300 ${!visible && !isHomePage ? '-translate-y-full' : 'translate-y-0'}`}>
@@ -1848,7 +1913,26 @@ function App() {
           </div>
         )}
 
-        {/* Loading indicator removed */}
+        {/* Loading Indicator Component */}
+        <div id="page-loading-indicator" className="fixed inset-0 z-[2000] flex flex-col items-center justify-center bg-white transition-opacity duration-300" style={{opacity: 0, pointerEvents: 'none'}}>
+          <div className="flex flex-col items-center justify-center">
+            {/* Arxen Logo */}
+            <div className="mb-6 animate-pulse transition-all">
+              <img 
+                src="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" 
+                alt="Arxen Construction Logo" 
+                className="h-40 w-auto"
+              />
+            </div>
+            {/* Loading animation circle */}
+            <div className="relative h-2 w-60 bg-gray-200 rounded-full overflow-hidden mb-4">
+              <div className="absolute h-full bg-blue-600 animate-loading-bar"></div>
+            </div>
+            <p className="text-lg font-medium text-blue-900">
+              Loading Your Experience...
+            </p>
+          </div>
+        </div>
 
         {/* Error Boundary for catching React errors */}
         <div id="page-error-boundary" className="fixed inset-0 z-[2000] items-center justify-center bg-white" style={{display: 'none'}}>
@@ -1869,7 +1953,8 @@ function App() {
           </div>
         </div>
 
-        {/* Routes for all pages - removed loading indicator */}
+        {/* Routes for all pages - wrapped in Suspense for better loading handling */}
+        <Suspense fallback={<LoadingIndicator isLoading={true} />}>
         <Routes>
           {/* Home Page Route */}
           <Route path="/" element={
@@ -1943,7 +2028,10 @@ function App() {
                   >
                     {services.map((category, index) => (
                       <div key={index} className="w-[70%] sm:w-[60%] md:w-[70%] lg:w-[40%] flex-shrink-0 px-1.5 sm:px-2 snap-start first:pl-4 last:pr-8">
-                        <div className="relative group block bg-black rounded-2xl overflow-hidden shadow-lg h-[240px] sm:h-[280px] md:h-[400px] hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
+                        <Link 
+                          to={`/services/category/${category.category.toLowerCase().replace(/\s+/g, '-')}`}
+                          className="relative group block bg-black rounded-2xl overflow-hidden shadow-lg h-[240px] sm:h-[280px] md:h-[400px] hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                        >
                           {/* Category index badge */}
                           <div className="absolute top-3 left-3 z-10 bg-white/30 backdrop-blur-md text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border border-white/40">
                             {index + 1}
@@ -1972,15 +2060,14 @@ function App() {
                                   </li>
                                 )}
                               </ul>
-                              <Link 
-                                to={`/services/category/${category.category.toLowerCase().replace(/\s+/g, '-')}`}
+                              <div 
                                 className="inline-flex items-center px-2.5 sm:px-3 py-1 sm:py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-[10px] sm:text-xs font-medium"
                               >
                                 View Services <ArrowRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 ml-1 sm:ml-1.5" />
-                              </Link>
-                  </div>
-                  </div>
-                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
                       </div>
                     ))}
               </div>
@@ -3641,6 +3728,7 @@ Please enter your zip code to continue.
         <Route path="/quote" element={<FreeEstimate />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
       
       {/* Direct EmailJS Test Form - BEGIN */}
       <div className="bg-yellow-50 py-10 border-t-4 border-b-4 border-yellow-400">
