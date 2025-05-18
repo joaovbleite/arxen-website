@@ -2,15 +2,15 @@ import emailjs from '@emailjs/browser';
 
 // Initialize EmailJS with your public key
 export const initEmailJS = () => {
-  emailjs.init('YOUR_PUBLIC_KEY'); // Replace with your actual EmailJS public key
+  emailjs.init('f6ICI0_vWkpGTL9DL'); // Public key
 };
 
 // Email service configuration
 export const EMAIL_CONFIG = {
-  SERVICE_ID: 'YOUR_SERVICE_ID', // Replace with your actual EmailJS service ID
-  CONTACT_TEMPLATE_ID: 'YOUR_CONTACT_TEMPLATE_ID', // Replace with your contact form template ID
-  ESTIMATE_TEMPLATE_ID: 'YOUR_ESTIMATE_TEMPLATE_ID', // Replace with your estimate form template ID
-  PUBLIC_KEY: 'YOUR_PUBLIC_KEY' // Replace with your actual EmailJS public key
+  SERVICE_ID: 'service_yjnczmi', // Email service ID
+  CONTACT_TEMPLATE_ID: 'template_ta9fewp', // Contact form template ID
+  ESTIMATE_TEMPLATE_ID: 'template_9vdi7mp', // Estimate form template ID
+  PUBLIC_KEY: 'f6ICI0_vWkpGTL9DL' // Public key
 };
 
 // Helper function to send emails

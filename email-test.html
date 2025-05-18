@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmailJS Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        // Initialize EmailJS
+        (function() {
+            emailjs.init("f6ICI0_vWkpGTL9DL");
+        })();
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        .test-section {
+            flex: 1;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        button {
+            background-color: #4267B2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #365899;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <h1>EmailJS Integration Test</h1>
+    <p>This page tests the EmailJS integration for your ARXEN Construction website.</p>
+    
+    <div class="container">
+        <div class="test-section">
+            <h2>Contact Form Test</h2>
+            <p>Tests the Contact form email template.</p>
+            <button id="test-contact">Test Contact Form</button>
+            <div id="contact-result" class="result"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Estimate Form Test</h2>
+            <p>Tests the Free Estimate form email template.</p>
+            <button id="test-estimate">Test Estimate Form</button>
+            <div id="estimate-result" class="result"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Service and template IDs
+        const SERVICE_ID = 'service_yjnczmi';
+        const CONTACT_TEMPLATE_ID = 'template_ta9fewp';
+        const ESTIMATE_TEMPLATE_ID = 'template_9vdi7mp';
+        
+        // Contact form test data
+        const contactTestData = {
+            from_name: 'Test User',
+            from_email: 'test@example.com',
+            phone: '123-456-7890',
+            address: '123 Test St, Atlanta, GA',
+            inquiry_type: 'project',
+            service_type: 'Kitchen Remodeling',
+            project_type: 'residential',
+            message: 'This is a test message for the contact form.',
+            how_heard: 'Search Engine',
+            other_source: '',
+            other_service: '',
+            to_name: 'ARXEN Construction Team',
+            form_source: 'Contact Form Test'
+        };
+        
+        // Estimate form test data
+        const estimateTestData = {
+            from_name: 'Test User',
+            from_email: 'test@example.com',
+            phone: '123-456-7890',
+            company: 'Test Company',
+            reference_number: 'TEST-123456-789',
+            service_list: 'Kitchen Remodeling, Bathroom Renovation',
+            project_type: 'residential',
+            project_description: 'This is a test description for the estimate form.',
+            urgency: 'standard',
+            scope: 'medium',
+            timeline: '2 weeks',
+            promo_code: 'TESTCODE',
+            preferred_contact: 'email',
+            to_name: 'ARXEN Construction Team',
+            form_source: 'Free Estimate Form Test'
+        };
+        
+        // Test the contact form
+        document.getElementById('test-contact').addEventListener('click', function() {
+            const resultDiv = document.getElementById('contact-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = 'Sending test email...';
+            resultDiv.className = 'result';
+            
+            emailjs.send(SERVICE_ID, CONTACT_TEMPLATE_ID, contactTestData)
+                .then(function(response) {
+                    console.log('Contact form SUCCESS!', response.status, response.text);
+                    resultDiv.innerHTML = 'SUCCESS! Check your email inbox for the test message.';
+                    resultDiv.className = 'result success';
+                }, function(error) {
+                    console.log('Contact form FAILED...', error);
+                    resultDiv.innerHTML = 'FAILED! Error: ' + JSON.stringify(error);
+                    resultDiv.className = 'result error';
+                });
+        });
+        
+        // Test the estimate form
+        document.getElementById('test-estimate').addEventListener('click', function() {
+            const resultDiv = document.getElementById('estimate-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = 'Sending test email...';
+            resultDiv.className = 'result';
+            
+            emailjs.send(SERVICE_ID, ESTIMATE_TEMPLATE_ID, estimateTestData)
+                .then(function(response) {
+                    console.log('Estimate form SUCCESS!', response.status, response.text);
+                    resultDiv.innerHTML = 'SUCCESS! Check your email inbox for the test message.';
+                    resultDiv.className = 'result success';
+                }, function(error) {
+                    console.log('Estimate form FAILED...', error);
+                    resultDiv.innerHTML = 'FAILED! Error: ' + JSON.stringify(error);
+                    resultDiv.className = 'result error';
+                });
+        });
+    </script>
+</body>
+</html> 
