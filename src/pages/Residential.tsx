@@ -27,13 +27,13 @@ interface Service {
   title: string;
   path: string;
   description: string;
-  icon?: IconElement;
+  icon?: IconElement; // Changed from ReactNode to IconElement
 }
 
 // Add interface for category structure used in residentialServices
 interface ServiceCategory {
   category: string;
-  icon: IconElement;
+  icon: IconElement; // Changed from ReactNode to IconElement
   services: Service[];
 }
 
@@ -107,18 +107,14 @@ const Residential: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<{ title: string; services: Service[]; icon?: IconElement }>({ title: '', services: [], icon: undefined });
   // Restore state for expanded categories (even if not visually used for expansion now)
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});  
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({}); 
 
   // Use the property type context instead of local state
   const { propertyType, setPropertyType } = usePropertyType();
 
   // Function to open modal - Expect ServiceCategory type
   const openServiceModal = (category: ServiceCategory) => {
-    setModalContent({ 
-      title: category.category, 
-      services: category.services, 
-      icon: category.icon as IconElement 
-    });
+    setModalContent({ title: category.category, services: category.services, icon: category.icon });
     setIsModalOpen(true);
   };
 
@@ -163,16 +159,16 @@ const Residential: React.FC = () => {
     <Link 
       to={getServiceUrl(service.path)}
       key={service.title} 
-      className={`relative flex items-start p-4 rounded-lg border cursor-pointer transition-all duration-300 h-full bg-white border-gray-200 hover:border-blue-500 hover:shadow-md group`}
+      className={`relative flex items-start p-4 rounded-lg border cursor-pointer transition-all duration-300 h-full bg-white border-gray-200 hover:border-blue-300 hover:shadow-sm group`}
     >
       <div className="mr-4 flex-shrink-0 text-blue-600">
         {React.cloneElement(category.icon as React.ReactElement<IconProps>, { className: "w-6 h-6" })}
       </div>
       <div className="flex-grow">
-        <h3 className="font-medium mb-1 text-gray-800 group-hover:text-blue-800 transition-colors">{service.title}</h3>
+        <h3 className="font-medium mb-1 text-gray-800 group-hover:text-blue-700 transition-colors">{service.title}</h3>
         <p className="text-gray-500 text-xs">{service.description}</p>
       </div>
-      <div className="ml-2 text-gray-400 group-hover:text-blue-700 transition-colors transform group-hover:translate-x-1 duration-300">
+      <div className="ml-2 text-gray-400 group-hover:text-blue-600 transition-colors transform group-hover:translate-x-1 duration-300">
         <ArrowRight size={16} />
       </div>
     </Link>
@@ -192,13 +188,13 @@ const Residential: React.FC = () => {
         <div className="container mx-auto px-4 py-16 relative z-10">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="space-y-6">
-              <div className="inline-block py-1 px-3 bg-white bg-opacity-20 rounded-full text-white text-sm font-medium mb-2">
+              <div className="inline-block py-1 px-3 bg-white bg-opacity-20 rounded-full text-blue-100 text-sm font-medium mb-2">
                 YOUR TRUSTED HOME PARTNER
               </div>
               <h1 className="text-4xl md:text-5xl font-bold leading-tight">
                 Transform Your Home
               </h1>
-              <p className="text-xl text-white max-w-xl leading-relaxed">
+              <p className="text-xl text-blue-100 max-w-xl leading-relaxed">
                 Expert residential remodeling and construction services designed to bring your dream home vision to life with quality and care.
               </p>
               <div className="pt-4 flex flex-wrap gap-4">
@@ -235,14 +231,14 @@ const Residential: React.FC = () => {
           {/* Key benefits row - Residential Focused */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 pt-8 border-t border-blue-500/30">
             {[
-              {icon: <Home className="w-6 h-6 text-blue-300" />, text: "Personalized Designs"},
-              {icon: <Award className="w-6 h-6 text-blue-300" />, text: "Quality Craftsmanship"},
-              {icon: <ShieldCheck className="w-6 h-6 text-blue-300" />, text: "Stress-Free Process"},
-              {icon: <CheckCircle className="w-6 h-6 text-blue-300" />, text: "Increased Home Value"}
+              {icon: <Home className="w-6 h-6 text-blue-300" /> as IconElement, text: "Personalized Designs"},
+              {icon: <Award className="w-6 h-6 text-blue-300" /> as IconElement, text: "Quality Craftsmanship"},
+              {icon: <ShieldCheck className="w-6 h-6 text-blue-300" /> as IconElement, text: "Stress-Free Process"},
+              {icon: <CheckCircle className="w-6 h-6 text-blue-300" /> as IconElement, text: "Increased Home Value"}
             ].map((benefit, index) => (
               <div key={index} className="flex items-center">
                 <div className="mr-3">{benefit.icon}</div>
-                <p className="text-sm font-medium text-white">{benefit.text}</p>
+                <p className="text-sm font-medium text-blue-100">{benefit.text}</p>
               </div>
             ))}
           </div>
@@ -329,11 +325,11 @@ const Residential: React.FC = () => {
                <h3 className="text-xl font-bold mb-4 text-gray-800">Why Choose Arxen?</h3>
                <ul className="space-y-3">
                  {[ 
-                   { text: "Quality Craftsmanship", icon: <Zap size={18} className="text-blue-600"/> },
-                   { text: "Transparent Pricing", icon: <Tag size={18} className="text-blue-600"/> },
-                   { text: "On-Time Completion", icon: <Clock size={18} className="text-blue-600"/> },
-                   { text: "Licensed & Insured", icon: <ShieldCheck size={18} className="text-blue-600"/> },
-                   { text: "Excellent Communication", icon: <Phone size={18} className="text-blue-600"/> }
+                   { text: "Quality Craftsmanship", icon: <Zap size={18} className="text-blue-600"/> as IconElement },
+                   { text: "Transparent Pricing", icon: <Tag size={18} className="text-blue-600"/> as IconElement },
+                   { text: "On-Time Completion", icon: <Clock size={18} className="text-blue-600"/> as IconElement },
+                   { text: "Licensed & Insured", icon: <ShieldCheck size={18} className="text-blue-600"/> as IconElement },
+                   { text: "Excellent Communication", icon: <Phone size={18} className="text-blue-600"/> as IconElement }
                  ].map((item, idx) => (
                    <li key={idx} className="flex items-center text-gray-700"><span className="mr-3 flex-shrink-0">{item.icon}</span><span>{item.text}</span></li>
                  ))}
@@ -366,7 +362,7 @@ const Residential: React.FC = () => {
             {/* Feature 1: Personalized Approach */}
             <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-100">
               <div className="inline-block p-3 bg-blue-100 rounded-full mb-4">
-                <User className="w-8 h-8 text-blue-600" /> {/* Added User icon */}
+                {React.createElement(User, { className: "w-8 h-8 text-blue-600" }) as IconElement}
               </div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Personalized Approach</h3>
               <p className="text-sm text-gray-600">We listen to your needs and tailor every project to your specific vision, lifestyle, and budget.</p>
@@ -374,7 +370,7 @@ const Residential: React.FC = () => {
             {/* Feature 2: Quality & Durability */}
             <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-100">
               <div className="inline-block p-3 bg-green-100 rounded-full mb-4">
-                <ShieldCheck className="w-8 h-8 text-green-600" />
+                {React.createElement(ShieldCheck, { className: "w-8 h-8 text-green-600" }) as IconElement}
               </div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Quality & Durability</h3>
               <p className="text-sm text-gray-600">Using only high-quality materials and proven techniques to ensure your renovation lasts for years.</p>
@@ -382,7 +378,7 @@ const Residential: React.FC = () => {
             {/* Feature 3: Clear Communication */}
             <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-100">
               <div className="inline-block p-3 bg-purple-100 rounded-full mb-4">
-                <MessageCircle className="w-8 h-8 text-purple-600" /> {/* Added MessageCircle icon */}
+                {React.createElement(MessageCircle, { className: "w-8 h-8 text-purple-600" }) as IconElement}
               </div>
               <h3 className="text-lg font-semibold text-gray-800 mb-2">Clear Communication</h3>
               <p className="text-sm text-gray-600">Keeping you informed every step of the way with regular updates and responsive support.</p>
@@ -496,7 +492,7 @@ const Residential: React.FC = () => {
               <div className="md:w-2/3 p-8">
                 <TestimonialSlider testimonials={residentialTestimonials} />
                 <div className="text-center mt-8">
-                  <Link to="/testimonials" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg">
+                  <Link to="/testimonials" className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-400 transition-colors shadow-md hover:shadow-lg">
                     Read More Testimonials
                   </Link>
                 </div>
