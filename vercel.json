@@ -1,24 +1,7 @@
 {
   "rewrites": [
-    { "source": "/((?!static|api|public).*)", "destination": "/index.html" }
-  ],
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/index.html",
-      "status": 200,
-      "headers": {
-        "Cache-Control": "no-cache, no-store, must-revalidate"
-      }
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "status": 404,
-      "dest": "/public/index.html"
-    }
+    { "source": "/(.*)", "destination": "/index.html", "has": [{ "type": "header", "key": "Accept", "value": "*/*" }] },
+    { "source": "/(.*)", "destination": "/static.html" }
   ],
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
@@ -34,7 +17,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src * 'unsafe-inline' 'unsafe-eval' data:; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline'; font-src * data:;"
+          "value": "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;"
         }
       ]
     },
