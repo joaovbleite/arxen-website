@@ -242,7 +242,8 @@ const Contact: React.FC = () => {
       how_heard: formData.howDidYouHear || 'Not specified',
       other_source: formData.otherSource || '',
       other_service: formData.otherServiceType || '',
-      to_name: 'ARXEN Construction Team'
+      to_name: 'ARXEN Construction Team',
+      to_email: 'sustenablet@gmail.com'
     };
     
     // Send the email using our email service
@@ -277,7 +278,7 @@ const Contact: React.FC = () => {
         console.error('Failed to send email:', error);
         setIsSubmitting(false);
         // You can add error handling UI here
-        alert('There was an error sending your message. Please try again or contact us directly at teamarxen@gmail.com');
+        alert('There was an error sending your message. Please try again or contact us directly at sustenablet@gmail.com');
       });
   };
 
@@ -307,7 +308,7 @@ const Contact: React.FC = () => {
               </div>
               <div className="flex items-center bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full transition-all hover:bg-white/20">
                 <Mail className="w-4 h-4 text-blue-300 mr-2" />
-                <span className="text-white font-medium">teamarxen@gmail.com</span>
+                <span className="text-white font-medium">sustenablet@gmail.com</span>
               </div>
               <div className="flex items-center bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full transition-all hover:bg-white/20">
                 <Check className="w-4 h-4 text-green-400 mr-2" />
@@ -696,8 +697,8 @@ const Contact: React.FC = () => {
                     </div>
                     <div className="ml-4">
                       <p className="font-medium text-gray-700">Email</p>
-                      <a href="mailto:teamarxen@gmail.com" className="text-blue-700 hover:text-blue-900 transition-colors text-lg">
-                        teamarxen@gmail.com
+                      <a href="mailto:sustenablet@gmail.com" className="text-blue-700 hover:text-blue-900 transition-colors text-lg">
+                        sustenablet@gmail.com
                       </a>
                     </div>
                   </div>

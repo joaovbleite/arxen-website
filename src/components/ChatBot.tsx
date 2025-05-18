@@ -462,7 +462,7 @@ const additionalConversationalEntries: KnowledgeBaseEntry[] = [
     response: "Preparing for your project helps ensure a smooth process. We'll provide a detailed pre-construction checklist, including items to pack/protect, areas to clear, decisions to finalize, and timing considerations. For kitchen renovations, we help plan temporary cooking arrangements, while bathroom projects might require scheduling around alternative facilities."
   },
   {
-    patterns: ['do it myself', 'diy', 'partial diy', 'self install', 'save money diy'],
+    patterns: ['do it yourself', 'diy', 'partial diy', 'self install', 'save money diy'],
     response: "While some homeowners handle certain aspects themselves to reduce costs, we recommend professional installation for structural elements, plumbing, electrical, and complex finishes. If you're considering a partial DIY approach, we can discuss which elements are suitable for homeowner involvement and which require professional expertise for safety and quality."
   },
   {
@@ -826,16 +826,6 @@ const advancedSpecializedTopics: KnowledgeBaseEntry[] = [
     patterns: ['what costs more', 'save money on project', 'budget choices', 'splurge or save', 'maximize budget'],
     response: "Maximizing your renovation budget typically means investing in high-quality structural elements, plumbing, and electrical work which are difficult to change later, while finding strategic savings in finish materials where appropriate. We can suggest where higher investments deliver lasting value (like cabinetry construction quality) versus where more affordable options perform nearly as well with minimal compromise."
   },
-  
-  // COVID and health-related protocols
-  /* {
-    patterns: ['covid protocols', 'health precautions', 'clean worksite', 'safety measures', 'health safety'],
-    response: "Our health and safety protocols remain comprehensive and adaptable. These include regular cleaning and disinfection of worksites, proper ventilation practices, individual health screenings when appropriate, contactless communication options, and respect for any specific precautions your household requires. We continue to maintain the heightened cleanliness standards developed during the pandemic for the health of both our clients and team members."
-  },
-  {
-    patterns: ['air quality', 'ventilation', 'dust containment', 'construction health', 'clean air'],
-    response: "Maintaining healthy air quality during construction involves several important measures: advanced dust containment systems with negative air pressure, HEPA filtration, isolated HVAC protection, regular HEPA vacuuming of work areas, damp suppression methods for cutting operations, and careful site cleaning daily. These practices protect your family's health and prevent dust circulation throughout your home during the renovation process."
-  }, */
   
   // Contract and payment details
   {
@@ -1443,7 +1433,7 @@ const advancedSpecializedTopics: KnowledgeBaseEntry[] = [
   // Additional beginner bathroom questions
   {
     patterns: ['shower pan installation', 'building shower base', 'shower floor', 'custom shower pan', 'shower base options'],
-    response: "Shower pans (the waterproof base of your shower) come in two main types: pre-formed units and custom-built pans. Pre-formed pans are manufactured from acrylic, fiberglass, or composite materials in standard sizes and shapes, offering simple installation and reliable waterproofing. Custom pans are built on-site using traditional mortar bed methods or modern waterproofing systems like Schluter Kerdi or Wedi, allowing any size, shape, or tile design. The installation process includes proper slope creation for drainage (approximately 1/4 inch per foot), waterproofing that extends up walls 6-8 inches, and appropriate drain selection. Custom pans cost more but provide unlimited design flexibility for unique spaces."
+    response: "Shower pans (the waterproof base of your shower) come in two main types: pre-formed units and custom-built pans. Pre-formed pans are manufactured from acrylic, fiberglass, or composite materials in standard sizes and shapes, offering simple installation and reliable waterproofing. Custom pans are built on-site using traditional mortar bed methods or modern waterproofing systems like Schluter Kerdi, Wedi, or Laticrete Hydroban, allowing any size, shape, or tile design. The installation process includes proper slope creation for drainage (approximately 1/4 inch per foot), waterproofing that extends up walls 6-8 inches, and appropriate drain selection. Custom pans cost more but provide unlimited design flexibility for unique spaces."
   },
   {
     patterns: ['bathroom ventilation', 'bathroom fan', 'exhaust fan', 'steam removal', 'bathroom humidity'],
@@ -2254,7 +2244,7 @@ const ChatBot: React.FC = () => {
           type: 'contact',
           options: [
             { text: "Call Us: 404-934-9458", action: "tel:404-934-9458" },
-            { text: "Email: teamarxen@gmail.com", action: "mailto:teamarxen@gmail.com" },
+            { text: "Email: sustenablet@gmail.com", action: "mailto:sustenablet@gmail.com" },
             { text: "Contact Form", action: "/contact" }
           ]
         };
@@ -3050,7 +3040,7 @@ const ChatBot: React.FC = () => {
         type: 'contact',
         options: [
           { text: "Call: 404-934-9458", action: "tel:404-934-9458" },
-          { text: "Email: teamarxen@gmail.com", action: "mailto:teamarxen@gmail.com" },
+          { text: "Email: sustenablet@gmail.com", action: "mailto:sustenablet@gmail.com" },
           { text: "Contact Form", action: "/contact" }
         ]
       };
@@ -3820,7 +3810,7 @@ const ChatBot: React.FC = () => {
                 type: 'contact',
                 options: [
                   { text: "Call Now: 404-934-9458", action: "tel:404-934-9458" },
-                  { text: "Email Team", action: "mailto:info@arxenconstruction.com" },
+                  { text: "Email Team", action: "mailto:sustenablet@gmail.com" },
                   { text: "Schedule Consultation", action: "/free-estimate" }
                 ]
               };
@@ -4510,6 +4500,8 @@ const ChatBot: React.FC = () => {
             <input
               ref={inputRef}
               type="text"
+              id="chat-message"
+              name="chat-message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Type your message..."

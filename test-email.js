@@ -18,6 +18,7 @@ const contactTestData = {
   other_source: '',
   other_service: '',
   to_name: 'ARXEN Construction Team',
+  to_email: 'sustenablet@gmail.com',
   form_source: 'Contact Form Test'
 };
 
@@ -37,6 +38,7 @@ const estimateTestData = {
   promo_code: 'TESTCODE',
   preferred_contact: 'email',
   to_name: 'ARXEN Construction Team',
+  to_email: 'sustenablet@gmail.com',
   form_source: 'Free Estimate Form Test'
 };
 

@@ -82,6 +82,8 @@ const PromoModal: React.FC = () => {
             <form onSubmit={handleSubmit} className="space-y-2">
               <input
                 type="email"
+                id="promo-email"
+                name="promo-email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

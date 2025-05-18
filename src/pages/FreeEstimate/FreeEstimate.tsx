@@ -472,7 +472,7 @@ const FreeEstimate: React.FC = () => {
     pdf.setFontSize(10);
     pdf.setTextColor(128, 128, 128); // Gray
     pdf.text('Arxen Construction - Your Trusted Remodeling Partner', 20, 280);
-    pdf.text('Phone: 404-934-9458 | Email: teamarxen@gmail.com', 20, 285);
+    pdf.text('Phone: 404-934-9458 | Email: sustenablet@gmail.com', 20, 285);
     
     // Save the PDF
     pdf.save(`Arxen-Estimate-${referenceNumber}.pdf`);

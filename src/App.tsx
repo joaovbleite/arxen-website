@@ -1362,8 +1362,11 @@ function App() {
     const templateParams = {
       from_name: homeContactName,
       from_email: homeContactEmail,
+      phone: homeContactPhone,
+      preferred_contact: homeContactPreferredMethod,
       message: homeContactMessage,
       to_name: 'ARXEN Construction Team',
+      to_email: 'sustenablet@gmail.com',
       form_source: 'Homepage Quick Contact'
     };
     
@@ -1375,6 +1378,7 @@ function App() {
         setHomeContactStatus('success');
         setHomeContactName('');
         setHomeContactEmail('');
+        setHomeContactPhone('');
         setHomeContactMessage('');
         setFocusedField(null); // Reset focus state
         
@@ -1385,7 +1389,7 @@ function App() {
         console.error('Failed to send homepage contact form:', error);
         // Handle error
         setHomeContactStatus('error');
-        alert('There was a problem sending your message. Please try again or contact us directly at teamarxen@gmail.com');
+        alert('There was a problem sending your message. Please try again or contact us directly at sustenablet@gmail.com');
         
         // Reset to idle after a delay
         setTimeout(() => setHomeContactStatus('idle'), 5000);
@@ -2354,6 +2358,8 @@ function App() {
                               <label className="flex items-start gap-2 cursor-pointer group">
                                 <input 
                                   type="checkbox" 
+                                  id="home-keep-updated"
+                                  name="home-keep-updated"
                                   checked={homeKeepUpdated}
                                   onChange={(e) => setHomeKeepUpdated(e.target.checked)}
                                   className="mt-1 accent-blue-600 h-4 w-4 rounded transition-all cursor-pointer"

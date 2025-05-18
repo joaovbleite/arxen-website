@@ -16,10 +16,16 @@ export const EMAIL_CONFIG = {
 // Helper function to send emails
 export const sendContactEmail = async (templateParams: any) => {
   try {
+    // Ensure to_email parameter is used
+    const completeParams = {
+      ...templateParams,
+      to_email: templateParams.to_email || 'sustenablet@gmail.com' // Default to sustenablet@gmail.com if not provided
+    };
+    
     const result = await emailjs.send(
       EMAIL_CONFIG.SERVICE_ID,
       EMAIL_CONFIG.CONTACT_TEMPLATE_ID,
-      templateParams,
+      completeParams,
       EMAIL_CONFIG.PUBLIC_KEY
     );
     return result;
@@ -32,10 +38,16 @@ export const sendContactEmail = async (templateParams: any) => {
 // Helper function to send estimate emails
 export const sendEstimateEmail = async (templateParams: any) => {
   try {
+    // Ensure to_email parameter is used
+    const completeParams = {
+      ...templateParams,
+      to_email: templateParams.to_email || 'sustenablet@gmail.com' // Default to sustenablet@gmail.com if not provided
+    };
+    
     const result = await emailjs.send(
       EMAIL_CONFIG.SERVICE_ID,
       EMAIL_CONFIG.ESTIMATE_TEMPLATE_ID,
-      templateParams,
+      completeParams,
       EMAIL_CONFIG.PUBLIC_KEY
     );
     return result;
