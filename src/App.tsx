@@ -3599,7 +3599,6 @@ Please enter your zip code to continue.
         {/* <Route path="/commercial/office-renovations" element={<CommercialServicePage title="Office Renovations" />} /> */}
         {/* <Route path="/commercial/retail-fit-outs" element={<CommercialServicePage title="Retail Fit-Outs" />} /> */}
         {/* <Route path="/commercial/industrial-solutions" element={<CommercialServicePage title="Industrial Solutions" />} /> */}
-        <Route path="/quote" element={<FreeEstimate />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       </Suspense>

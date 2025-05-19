@@ -1,7 +1,7 @@
 {
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html", "has": [{ "type": "header", "key": "Accept", "value": "*/*" }] },
-    { "source": "/(.*)", "destination": "/static.html" }
+    { "source": "/(.*)\\.(.+)", "destination": "/$1.$2" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ],
   "buildCommand": "npm run build",
   "outputDirectory": "dist",

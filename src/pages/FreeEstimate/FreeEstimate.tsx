@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, CheckCircle, Download, Save, Book, MessageCircle, Building2, Award, ShieldCheck, Clock } from 'lucide-react';
 import { ServiceSelection, ProjectDetails, ContactInfo, ReviewSubmit } from '../../components/FreeEstimate';
 import { jsPDF } from 'jspdf';
-// Removed sendEstimateEmail import as we're using EmailJS directly
+import { sendEstimateEmail } from '../../utils/emailService';
 
 // Types for form data
 export interface FormData {
@@ -493,7 +493,7 @@ const FreeEstimate: React.FC = () => {
     }, 500);
   };
 
-  // Submit the form - Updated to use EmailJS directly
+  // Submit the form - Updated to use our email service
   const handleSubmit = async () => {
     setIsSubmitting(true);
     
@@ -520,39 +520,24 @@ const FreeEstimate: React.FC = () => {
       promo_code: formData.projectDetails.promoCode || 'None',
       preferred_contact: formData.contactInfo.preferredContact,
       to_name: 'ARXEN Construction Team',
-      to_email: 'sustenablet@gmail.com',
       form_source: 'Free Estimate Form'
     };
     
     try {
-      // Send the email using EmailJS directly
-      import('@emailjs/browser').then((emailjs) => {
-        emailjs.send(
-          'service_yjnczmi', // Service ID
-          'template_ta9fewp', // Template ID
-          templateParams,
-          'f6ICI0_vWkpGTL9DL' // Public key
-        )
-        .then((result) => {
-          console.log('Free estimate form submitted successfully:', result.text);
-          setSubmissionComplete(true);
-          console.log('Form submitted:', dataToSubmit); // Log combined data
-          if (savedFormKey) {
-            localStorage.removeItem(`arxen-estimate-${savedFormKey}`);
-            setSavedFormKey(null);
-          }
-        })
-        .catch((error) => {
-          console.error('Error submitting form:', error);
-          alert('There was a problem sending your estimate request. Please try again or contact us directly at sustenablet@gmail.com');
-        })
-        .finally(() => {
-          setIsSubmitting(false);
-        });
-      });
+      // Send email using our email service
+      const result = await sendEstimateEmail(templateParams);
+      
+      console.log('Free estimate form submitted successfully:', result.text);
+      setSubmissionComplete(true);
+      console.log('Form submitted:', dataToSubmit); // Log combined data
+      if (savedFormKey) {
+        localStorage.removeItem(`arxen-estimate-${savedFormKey}`);
+        setSavedFormKey(null);
+      }
     } catch (error) {
-      console.error('Error importing EmailJS:', error);
-      alert('There was a problem with the email service. Please try again or contact us directly at sustenablet@gmail.com');
+      console.error('Error submitting form:', error);
+      alert('There was a problem sending your estimate request. Please try again or contact us directly at teamarxen@gmail.com');
+    } finally {
       setIsSubmitting(false);
     }
   };

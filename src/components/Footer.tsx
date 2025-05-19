@@ -83,9 +83,6 @@ const Footer = () => {
               <Link to="/commercial" className="block text-blue-100 hover:text-white transition-colors py-1 transform hover:translate-x-1 duration-300 flex items-center">
                 <ArrowRight size={14} className="mr-2" /> Commercial
               </Link>
-              <Link to="/portfolio" className="block text-blue-100 hover:text-white transition-colors py-1 transform hover:translate-x-1 duration-300 flex items-center">
-                <ArrowRight size={14} className="mr-2" /> Portfolio
-              </Link>
               <Link to="/free-estimate" className="block text-blue-100 hover:text-white transition-colors py-1 transform hover:translate-x-1 duration-300 flex items-center">
                 <ArrowRight size={14} className="mr-2" /> Free Estimate
               </Link>

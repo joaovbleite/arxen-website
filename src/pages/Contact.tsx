@@ -4,7 +4,7 @@ import { Phone, Mail, MapPin, Clock, Calendar, Check, Star, ArrowRight, Loader2,
 import { Link } from 'react-router-dom';
 import TestimonialSlider from '../components/TestimonialSlider';
 import { getShuffledTestimonials } from '../data/testimonials';
-// We're using EmailJS directly, so no need to import the helper functions
+import { sendContactEmail } from '../utils/emailService';
 
 // Define FaqItem component for the accordion
 interface FaqItemProps {
@@ -246,14 +246,8 @@ const Contact: React.FC = () => {
       to_email: 'sustenablet@gmail.com'
     };
     
-    // Send the email using EmailJS directly
-    import('@emailjs/browser').then((emailjs) => {
-      emailjs.send(
-        'service_yjnczmi', // Service ID
-        'template_ta9fewp', // Template ID
-        templateParams,
-        'f6ICI0_vWkpGTL9DL' // Public key
-      )
+    // Send the email using our email service
+    sendContactEmail(templateParams)
       .then((result) => {
         console.log('Email sent successfully:', result.text);
         setIsSubmitting(false);
@@ -286,7 +280,6 @@ const Contact: React.FC = () => {
         // You can add error handling UI here
         alert('There was an error sending your message. Please try again or contact us directly at sustenablet@gmail.com');
       });
-    });
   };
 
   return (
