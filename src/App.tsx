@@ -1949,6 +1949,9 @@ function App() {
         {/* Routes for all pages - wrapped in Suspense for better loading handling */}
         <Suspense fallback={<LoadingIndicator isLoading={true} />}>
         <Routes>
+          {/* Redirect from /quote to /free-estimate for legacy links */}
+          <Route path="/quote" element={<Navigate to="/free-estimate" replace />} />
+          
           {/* Home Page Route */}
           <Route path="/" element={
             <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
@@ -1965,7 +1968,15 @@ function App() {
                 <div className="relative z-[10] text-white px-4">
                   <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold mb-3 md:mb-4">Build Your Dream</h1>
                   <p className="text-lg sm:text-xl md:text-2xl mb-6 md:mb-8 max-w-3xl mx-auto">Expert construction and remodeling services for residential and commercial properties.</p>
-                  <Link to="/free-estimate" className="bg-blue-900 text-white px-5 sm:px-8 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold hover:bg-blue-800 transition-colors">
+                  <Link 
+                    to="/free-estimate" 
+                    onClick={(e) => {
+                      // Use window.location.href for more reliable navigation that bypasses React Router
+                      window.location.href = '/free-estimate';
+                      e.preventDefault();
+                    }}
+                    className="bg-blue-900 text-white px-5 sm:px-8 py-3 sm:py-4 rounded-lg text-base sm:text-lg font-semibold hover:bg-blue-800 transition-colors"
+                  >
                     Get a Free Estimate
                   </Link>
           </div>
@@ -3541,7 +3552,7 @@ Please enter your zip code to continue.
         <Route path="/services/flooring" element={<FlooringServicesPage />} />
         <Route path="/financing" element={<Financing />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/quote" element={<FreeEstimate />} />
+        {/* Removed duplicate route - redirected in main Routes section */}
         <Route path="/commercial-quote" element={<CommercialQuote />} />
         <Route path="/residential-quote" element={<ResidentialQuote />} />
         <Route path="/testimonials" element={<Testimonials />} />
