@@ -1,6 +1,23 @@
 {
   "rewrites": [
     { "source": "/(.*)\\.(.+)", "destination": "/$1.$2" },
+    { "source": "/services", "destination": "/index.html" },
+    { "source": "/kitchens", "destination": "/services/kitchen-remodeling" },
+    { "source": "/bathrooms", "destination": "/services/bathroom-remodeling" },
+    { "source": "/flooring", "destination": "/services/flooring" },
+    { "source": "/hardwood", "destination": "/services/hardwood" },
+    { "source": "/cabinetry", "destination": "/services/custom-cabinetry" },
+    { "source": "/projects", "destination": "/portfolio" },
+    { "source": "/our-work", "destination": "/portfolio" },
+    { "source": "/projects/:projectId", "destination": "/portfolio/:projectId" },
+    { "source": "/free-consultation", "destination": "/free-estimate" },
+    { "source": "/quote", "destination": "/free-estimate" },
+    { "source": "/estimate", "destination": "/free-estimate" },
+    { "source": "/get-estimate", "destination": "/free-estimate" },
+    { "source": "/commercial-services", "destination": "/commercial" },
+    { "source": "/business-services", "destination": "/commercial" },
+    { "source": "/commercial-estimate", "destination": "/commercial-quote" },
+    { "source": "/home-services", "destination": "/residential" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "buildCommand": "npm run build",
