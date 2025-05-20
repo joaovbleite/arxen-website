@@ -47,6 +47,7 @@ import LoadingIndicator from './components/LoadingIndicator';
 import { sendContactEmail } from './utils/emailService';
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Analytics } from "@vercel/analytics/react";
+import { validateZipCode } from './utils/validation';
 // Define Service type locally based on usage
 interface Service {
   type?: 'category' | 'service' | 'page'; // Added 'page' to allowed types
@@ -166,6 +167,7 @@ function App() {
   
   // State for homepage quote form
   const [homeZip, setHomeZip] = useState('');
+  const [homeZipError, setHomeZipError] = useState<string | null>(null);
   const [homeService, setHomeService] = useState('');
   const [homeCustomService, setHomeCustomService] = useState('');
   const [homeTimeline, setHomeTimeline] = useState('');
@@ -1489,6 +1491,24 @@ function App() {
     };
   }, [isPageLoading]);
 
+  // Handle zip code input with real-time validation
+  const handleZipChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const zipValue = e.target.value;
+    
+    // Allow only numbers and hyphen, max 10 chars (12345-6789)
+    if (/^[0-9\-]{0,10}$/.test(zipValue)) {
+      setHomeZip(zipValue);
+      
+      // Only validate if there's input (don't show error when empty)
+      if (zipValue.trim()) {
+        const validation = validateZipCode(zipValue);
+        setHomeZipError(validation.isValid ? null : validation.message || null);
+      } else {
+        setHomeZipError(null);
+      }
+    }
+  };
+
   return (
     <Router>
       <PropertyTypeProvider>
@@ -2297,10 +2317,17 @@ function App() {
                                     type="text"
                                     placeholder="Enter your zip code"
                                     value={homeZip}
-                                    onChange={(e) => setHomeZip(e.target.value)}
-                                    className="w-full px-4 pl-10 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm transition-all"
+                                    onChange={handleZipChange}
+                                    className={`w-full px-4 pl-10 py-3 rounded-lg border ${
+                                      homeZipError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                                    } shadow-sm transition-all`}
                                   />
                                   <MapPin className="absolute top-1/2 left-3 -translate-y-1/2 w-5 h-5 text-gray-700" />
+                                  {homeZipError && (
+                                    <div className="text-red-500 text-sm mt-1 absolute">
+                                      {homeZipError}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                               

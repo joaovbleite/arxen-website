@@ -16,6 +16,7 @@ export interface FormData {
     promoCode?: string;
     referredBy?: string;
     referenceProject?: string; // Added to support portfolio requests
+    propertyZip?: string; // Add property zip code field
   };
   commercialDetails?: {
     buildingTypeId?: string;

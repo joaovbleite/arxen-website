@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User, Mail, Phone, Building, AlertCircle, MessageSquare, Clock, Calendar, Shield, Info } from 'lucide-react';
 import { FormData } from '../../pages/FreeEstimate/FreeEstimate';
+import { validatePhoneNumber, formatPhoneNumber } from '../../utils/validation';
 
 interface ContactInfoProps {
   contactInfo: FormData['contactInfo'];
@@ -9,6 +10,7 @@ interface ContactInfoProps {
 
 const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [phoneError, setPhoneError] = useState<string | null>(null);
 
   // Update contact info field
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -20,6 +22,29 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }
         [name]: value
       }
     });
+  };
+
+  // Handle phone number with real-time validation and formatting
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawInput = e.target.value;
+    
+    // Format the phone number as user types
+    const formattedPhone = formatPhoneNumber(rawInput);
+    
+    updateFormData({
+      contactInfo: {
+        ...contactInfo,
+        phone: formattedPhone
+      }
+    });
+    
+    // Validate the phone number
+    const validation = validatePhoneNumber(formattedPhone);
+    if (!validation.isValid && formattedPhone.trim()) {
+      setPhoneError(validation.message || null);
+    } else {
+      setPhoneError(null);
+    }
   };
 
   // Set preferred contact method
@@ -139,10 +164,17 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }
                   id="phone"
                   name="phone"
                   value={contactInfo.phone}
-                  onChange={handleChange}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  onChange={handlePhoneChange}
+                  className={`block w-full pl-10 pr-3 py-3 border ${
+                    phoneError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                  } rounded-lg`}
                   placeholder="(123) 456-7890"
                 />
+                {phoneError && (
+                  <div className="text-red-500 text-sm mt-1">
+                    {phoneError}
+                  </div>
+                )}
               </div>
             </div>
 

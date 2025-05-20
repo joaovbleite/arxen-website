@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { AlertCircle, Upload, X, Clock, FileText, Lightbulb, Check, Zap, Home, Building, Maximize, Info, Image } from 'lucide-react';
+import { AlertCircle, Upload, X, Clock, FileText, Lightbulb, Check, Zap, Home, Building, Maximize, Info, Image, MapPin } from 'lucide-react';
 import { FormData } from '../../pages/FreeEstimate/FreeEstimate';
+import { validateZipCode } from '../../utils/validation';
 
 interface ProjectDetailsProps {
   projectDetails: FormData['projectDetails'];
@@ -95,6 +96,8 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
   const [fileError, setFileError] = useState<string>('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState<AISuggestion[]>([]);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [zipError, setZipError] = useState<string | null>(null);
   
   // State for guided description fields - Initialize with potentially existing parts if structured
   const [guidedDesc, setGuidedDesc] = useState(() => {
@@ -337,8 +340,6 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
     setShowSuggestions(false);
   };
 
-
-
   // Get the display name for the building type ID
   const selectedBuildingTypeName = commercialDetails?.buildingTypeId 
     ? buildingTypeNames[commercialDetails.buildingTypeId] || commercialDetails.buildingTypeId 
@@ -358,6 +359,29 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
   ];
 
   const guidedQuestions = projectType === 'commercial' ? commercialQuestions : residentialQuestions;
+
+  // Add zip code validation function
+  const handleZipChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const zipValue = e.target.value;
+    
+    // Allow only numbers and hyphen, max 10 chars (12345-6789)
+    if (/^[0-9\-]{0,10}$/.test(zipValue)) {
+      updateFormData({
+        projectDetails: {
+          ...projectDetails,
+          propertyZip: zipValue
+        }
+      });
+      
+      // Only validate if there's input
+      if (zipValue.trim()) {
+        const validation = validateZipCode(zipValue);
+        setZipError(validation.isValid ? null : validation.message || null);
+      } else {
+        setZipError(null);
+      }
+    }
+  };
 
   return (
     <div className="py-4 relative">
@@ -402,8 +426,6 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
           </div>
         </div>
       )}
-
-
 
       <div className="mb-8">
         <h2 className="text-2xl font-semibold text-gray-800 mb-2">Project Details</h2>
@@ -682,6 +704,34 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
       <div className="text-sm text-gray-500 flex items-center">
         <AlertCircle className="w-4 h-4 mr-1 text-red-500" />
         Fields marked with <span className="text-red-500 mx-1">*</span> are required
+      </div>
+
+      {/* Zip Code Input */}
+      <div className="col-span-1">
+        <label htmlFor="property-zip" className="block font-medium text-gray-700 mb-1">
+          Zip Code <span className="text-red-500">*</span>
+        </label>
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <MapPin className="h-5 w-5 text-gray-700" />
+          </div>
+                 <input
+             type="text"
+             id="property-zip"
+             value={projectDetails.propertyZip || ''}
+             onChange={handleZipChange}
+             className={`block w-full pl-10 pr-3 py-3 border ${
+               zipError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+             } rounded-lg`}
+             placeholder="Enter zip code"
+             required
+           />
+          {zipError && (
+            <div className="text-red-500 text-sm mt-1">
+              {zipError}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
