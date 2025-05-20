@@ -799,12 +799,7 @@ const FreeEstimate: React.FC = () => {
           <div className="mb-8">
             <div className="text-center mb-3">
               <p className="text-sm text-gray-600">
-                Step {currentStep} of {totalSteps}: 
-                <span className="ml-1 font-medium text-blue-600">
-                  {currentStep === 1 ? 'Select Services' : 
-                   currentStep === 2 ? 'Project Details' : 
-                   currentStep === 3 ? 'Contact Info' : 'Review'}
-                </span>
+                Step {currentStep} of {totalSteps}
               </p>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-1.5">
