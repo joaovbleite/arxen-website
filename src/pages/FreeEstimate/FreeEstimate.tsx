@@ -194,6 +194,7 @@ const FreeEstimate: React.FC = () => {
   const [savedFormKey, setSavedFormKey] = useState<string | null>(null);
   const [showChatWidget, setShowChatWidget] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
+  const [otherServiceInput, setOtherServiceInput] = useState('');
 
   // Total number of steps
   const totalSteps = 4;
@@ -220,6 +221,7 @@ const FreeEstimate: React.FC = () => {
     const zipCode = searchParams.get('zip');
     const timelineParam = searchParams.get('initialTimeline');
     const emailParam = searchParams.get('email');
+    const customServiceParam = searchParams.get('customService');
     
     if (savedKey) {
       loadSavedForm(savedKey);
@@ -307,6 +309,23 @@ const FreeEstimate: React.FC = () => {
       if (mappedServices.length > 0) {
         initialUpdates.services = [...(initialUpdates.services || []), ...mappedServices];
       }
+      
+      // If it's "other" service and we have a custom service description, handle it
+      if (initialService === 'other' && customServiceParam) {
+        // Make sure "other" or "custom-services" is in the services array
+        if (!initialUpdates.services?.includes('other') && !initialUpdates.services?.includes('custom-services')) {
+          initialUpdates.services = [...(initialUpdates.services || []), 'other'];
+        }
+        
+        // Set the custom service input (will be picked up by the useEffect)
+        setOtherServiceInput(customServiceParam);
+        
+        // Update the project details description
+        initialUpdates.projectDetails = {
+          ...(initialUpdates.projectDetails || initialFormData.projectDetails),
+          description: `Custom Service: ${customServiceParam}\n\n${initialUpdates.projectDetails?.description || ''}`
+        };
+      }
     }
 
     // Add the handling for additional parameters from homepage form
@@ -374,6 +393,13 @@ const FreeEstimate: React.FC = () => {
       ...prev,
       ...stepData,
     }));
+    
+    // Reset other service input if the services array doesn't include "custom-services" or "other"
+    if (stepData.services && 
+       !stepData.services.includes('custom-services') && 
+       !stepData.services.includes('other')) {
+      setOtherServiceInput('');
+    }
   };
 
   // Navigate to next step
@@ -630,13 +656,50 @@ const FreeEstimate: React.FC = () => {
     try {
       switch (currentStep) {
         case 1:
-          return renderComponent(ServiceSelection, {
-            selectedServices: formData.services,
-            projectType: formData.projectType,
-            propertyType: formData.propertyType,
-            updateFormData: updateFormData,
-            commercialDetails: formData.commercialDetails
-          });
+          return (
+            <>
+              {renderComponent(ServiceSelection, {
+                selectedServices: formData.services,
+                projectType: formData.projectType,
+                propertyType: formData.propertyType,
+                updateFormData: updateFormData,
+                commercialDetails: formData.commercialDetails
+              })}
+              
+              {/* Add custom service input field when "custom-services" or "other" is selected */}
+              {formData.services.some(service => 
+                service === 'custom-services' || service === 'other' || service === 'Other'
+              ) && (
+                <div className="mt-6 p-5 bg-blue-50 rounded-lg border border-blue-100 animate-fade-in">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Custom Service Details</h3>
+                  <label htmlFor="otherService" className="block text-sm font-medium text-gray-700 mb-2">
+                    Please describe the specific service you need
+                  </label>
+                  <input
+                    type="text"
+                    id="otherService"
+                    value={otherServiceInput}
+                    onChange={(e) => {
+                      setOtherServiceInput(e.target.value);
+                      // Also update the project details description
+                      setFormData(prev => ({
+                        ...prev,
+                        projectDetails: {
+                          ...prev.projectDetails,
+                          description: `Custom Service: ${e.target.value}\n\n${prev.projectDetails.description.replace(/Custom Service:.*\n\n/g, '')}`
+                        }
+                      }));
+                    }}
+                    placeholder="Enter the specific service you're looking for"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                  <p className="mt-2 text-sm text-blue-600">
+                    Providing details helps us better understand your specific needs.
+                  </p>
+                </div>
+              )}
+            </>
+          );
         case 2:
           // Compute selected service names (assuming services are IDs of broad categories for commercial)
           const serviceNameMap = formData.projectType === 'commercial' 
@@ -755,34 +818,22 @@ const FreeEstimate: React.FC = () => {
           )}
         </div>
 
-        {/* Progress Bar */}
+        {/* Simple progress indicator - replaced circles with text for cleaner design */}
         {!submissionComplete && (
-          <div className="mb-10">
-            <div className="flex justify-between mb-2">
-              {Array.from({ length: totalSteps }).map((_, index) => (
-                <div 
-                  key={index}
-                  className={`flex flex-col items-center ${index + 1 <= currentStep ? 'text-blue-600' : 'text-gray-400'}`}
-                >
-                  <div 
-                    className={`w-8 h-8 rounded-full flex items-center justify-center font-semibold mb-1 
-                      ${index + 1 < currentStep ? 'bg-blue-600 text-white' : 
-                        index + 1 === currentStep ? 'border-2 border-blue-600 text-blue-600' : 
-                        'border-2 border-gray-300 text-gray-400'}`}
-                  >
-                    {index + 1 < currentStep ? <CheckCircle size={16} /> : index + 1}
-                  </div>
-                  <span className="text-sm hidden sm:block">
-                    {index === 0 ? 'Services' : 
-                     index === 1 ? 'Project Details' : 
-                     index === 2 ? 'Contact Info' : 'Review'}
-                  </span>
-                </div>
-              ))}
+          <div className="mb-8">
+            <div className="text-center mb-3">
+              <p className="text-sm text-gray-600">
+                Step {currentStep} of {totalSteps}: 
+                <span className="ml-1 font-medium text-blue-600">
+                  {currentStep === 1 ? 'Select Services' : 
+                   currentStep === 2 ? 'Project Details' : 
+                   currentStep === 3 ? 'Contact Info' : 'Review'}
+                </span>
+              </p>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div className="w-full bg-gray-200 rounded-full h-1.5">
               <div 
-                className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-in-out"
+                className="bg-blue-600 h-1.5 rounded-full transition-all duration-300 ease-in-out"
                 style={{ width: `${progressPercentage}%` }}
               ></div>
             </div>

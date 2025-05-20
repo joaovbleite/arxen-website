@@ -86,7 +86,7 @@ function ScrollToTop() {
 }
 
 // Add CountdownTimer component
-const CountdownTimer = () => {
+  const CountdownTimer = () => {
   // Set a dynamic end date for the promotion (7 days and 14 hours from now)
   const calculateEndDate = () => {
     const now = new Date();
@@ -167,6 +167,7 @@ function App() {
   // State for homepage quote form
   const [homeZip, setHomeZip] = useState('');
   const [homeService, setHomeService] = useState('');
+  const [homeCustomService, setHomeCustomService] = useState('');
   const [homeTimeline, setHomeTimeline] = useState('');
   const [homeEmail, setHomeEmail] = useState('');
   const [homeKeepUpdated, setHomeKeepUpdated] = useState(false);
@@ -1348,6 +1349,7 @@ function App() {
     const params = new URLSearchParams();
     if (homeZip) params.append('zip', homeZip);
     if (homeService) params.append('initialService', homeService);
+    if (homeCustomService && homeService === 'other') params.append('customService', homeCustomService);
     if (homeTimeline) params.append('initialTimeline', homeTimeline);
     if (homeEmail) params.append('email', homeEmail);
     // We won't pass the checkbox state via URL
@@ -2326,6 +2328,23 @@ function App() {
                                   <ChevronDown className="absolute top-1/2 right-3 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
                                 </div>
                               </div>
+                              
+                              {/* Custom Service Input - shown when "Other / Custom" is selected */}
+                              {homeService === 'other' && (
+                                <div className="mt-4 animate-fade-in bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                  <label htmlFor="home-custom-service" className="block text-sm font-medium text-gray-700 mb-1">
+                                    Please describe the specific service you need
+                                  </label>
+                                  <input 
+                                    type="text"
+                                    id="home-custom-service"
+                                    placeholder="Describe your service needs"
+                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    value={homeCustomService || ''}
+                                    onChange={(e) => setHomeCustomService(e.target.value)}
+                                  />
+                                </div>
+                              )}
 
                               {/* Timeline Select */}
                               <div className="relative">
@@ -2387,7 +2406,20 @@ function App() {
                           <Link 
                             to={freeEstimateLink()} // Use function to generate dynamic link
                             // Prevent navigation if zip code is missing
-                            onClick={(e) => { if (!homeZip.trim()) e.preventDefault(); }}
+                            onClick={(e) => { 
+                              if (!homeZip.trim()) {
+                                e.preventDefault();
+                                alert("Please enter your zip code to continue.");
+                              } else {
+                                // Log that we're passing data to the FreeEstimate page
+                                console.log("Passing data to FreeEstimate:", {
+                                  zip: homeZip,
+                                  initialService: homeService,
+                                  initialTimeline: homeTimeline,
+                                  email: homeEmail
+                                });
+                              }
+                            }}
                             className={`w-full font-bold py-4 rounded-lg shadow-lg transition-all duration-300 relative overflow-hidden group flex items-center justify-center ${!homeZip.trim() ? 'bg-gray-400 text-gray-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
                             aria-disabled={!homeZip.trim()}
                           >
