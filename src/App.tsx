@@ -74,10 +74,25 @@ function ScrollToTop() {
     // Scroll to top
     window.scrollTo(0, 0);
     
-    // Simulate page load completion
+    // Always ensure a minimum loading time for better user experience
+    const minLoadingTime = 800; // milliseconds
+    const startTime = Date.now();
+    
+    // Simulate page load completion with minimum time
     const timer = setTimeout(() => {
-      setLoading(false);
-    }, 800); // Adjust timeout as needed
+      // Calculate time elapsed
+      const elapsedTime = Date.now() - startTime;
+      
+      if (elapsedTime < minLoadingTime) {
+        // If less than minimum time has passed, wait for the remainder
+        setTimeout(() => {
+          setLoading(false);
+        }, minLoadingTime - elapsedTime);
+      } else {
+        // Minimum time already passed, hide immediately
+        setLoading(false);
+      }
+    }, 200); // Initial check after 200ms
     
     return () => clearTimeout(timer);
   }, [pathname]);
@@ -1436,58 +1451,134 @@ function App() {
     });
   }, [services, serviceFilterType]);
 
-  // Add navigation detection
+  // Extend Window interface to add our custom properties
+  interface Window {
+    navigationStartTime?: number;
+    navigationTimer?: ReturnType<typeof setTimeout>;
+  }
+  
+  // Add navigation detection with improved handling
   useEffect(() => {
     // Handle initial page load
     if (isInitialLoad.current) {
       isInitialLoad.current = false;
+      console.log('Initial load, showing loading indicator');
+      setIsPageLoading(true);
       const initialLoadTimer = setTimeout(() => {
+        console.log('Initial load complete');
         setIsPageLoading(false);
-      }, 800);
+      }, 1000); // Ensure loading shows for at least 1 second for better UX
       
       return () => clearTimeout(initialLoadTimer);
     }
     
     // Navigation detection using mutation observer
     const handleNavigationStart = () => {
+      console.log('Navigation started, showing loading indicator');
       setIsPageLoading(true);
+      
+      // Ensure body scrolls back to top
+      window.scrollTo(0, 0);
+      
+      // Store navigation start timestamp to ensure minimum display time
+      window.navigationStartTime = Date.now();
     };
     
     const handleNavigationEnd = () => {
-      // Use a short timeout to ensure any React updates have completed
-      setTimeout(() => {
+      console.log('Navigation completed');
+      // Ensure loading indicator stays visible for at least 800ms for better UX
+      const elapsedTime = Date.now() - (window.navigationStartTime || 0);
+      const minDisplayTime = 800;
+      
+      if (elapsedTime < minDisplayTime) {
+        setTimeout(() => {
+          setIsPageLoading(false);
+        }, minDisplayTime - elapsedTime);
+      } else {
         setIsPageLoading(false);
-      }, 800);
+      }
     };
     
-         // Watch for clicks on link elements that might trigger navigation
-     const linkClickHandler = (e: MouseEvent) => {
-       const target = e.target as HTMLElement;
-       const link = target.closest('a');
-       if (link && link.getAttribute('href') && link.getAttribute('href')?.startsWith('/')) {
-         handleNavigationStart();
-       }
-     };
+    // Handle errors during navigation
+    const handleNavigationError = () => {
+      console.error('Navigation error detected');
+      setIsPageLoading(false);
+    };
     
-    document.addEventListener('click', linkClickHandler);
+    // Improved link click handler with better event capturing
+    const linkClickHandler = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest('a');
+      if (link && 
+          link.getAttribute('href') && 
+          link.getAttribute('href')?.startsWith('/') && 
+          !link.getAttribute('href')?.startsWith('/#') &&
+          !link.hasAttribute('download') &&
+          !link.hasAttribute('target')) {
+        console.log('Link click detected:', link.getAttribute('href'));
+        handleNavigationStart();
+      }
+    };
+    
+    // Directly capture React Router navigation
+    const routeChangeHandler = () => {
+      const currentPath = window.location.pathname;
+      if (lastKnownPath !== currentPath) {
+        console.log('Route change detected:', currentPath);
+        lastKnownPath = currentPath;
+        handleNavigationStart();
+        // Set a timeout to ensure navigation end is called if something goes wrong
+        setTimeout(handleNavigationEnd, 5000);
+      }
+    };
+    
+    // Keep track of last known path
+    let lastKnownPath = window.location.pathname;
+    
+    // Apply all event listeners
+    document.addEventListener('click', linkClickHandler, { capture: true });
     
     // Create a fallback to reset loading state if it gets stuck
     const loadingResetTimer = setInterval(() => {
       if (isPageLoading) {
-        console.log('Loading indicator was stuck, resetting...');
+        console.warn('Loading indicator was stuck for 10s, forcing reset');
         setIsPageLoading(false);
       }
-    }, 8000);
+    }, 10000);
     
-    // Listen for page transitions
+    // Listen for various navigation events
     window.addEventListener('popstate', handleNavigationStart);
+    window.addEventListener('pushState', routeChangeHandler);
+    window.addEventListener('replaceState', routeChangeHandler);
+    window.addEventListener('load', handleNavigationEnd);
     document.addEventListener('DOMContentLoaded', handleNavigationEnd);
+    window.addEventListener('error', handleNavigationError);
+    
+    // Monitor for React Router updates using MutationObserver
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(() => {
+        routeChangeHandler();
+      });
+    });
+    
+    observer.observe(document.documentElement, {
+      childList: true,
+      subtree: true,
+      attributes: false,
+      characterData: false
+    });
     
     return () => {
-      document.removeEventListener('click', linkClickHandler);
+      // Clean up all event listeners
+      document.removeEventListener('click', linkClickHandler, { capture: true });
       window.removeEventListener('popstate', handleNavigationStart);
+      window.removeEventListener('pushState', routeChangeHandler);
+      window.removeEventListener('replaceState', routeChangeHandler);
+      window.removeEventListener('load', handleNavigationEnd);
       document.removeEventListener('DOMContentLoaded', handleNavigationEnd);
+      window.removeEventListener('error', handleNavigationError);
       clearInterval(loadingResetTimer);
+      observer.disconnect();
     };
   }, [isPageLoading]);
 
