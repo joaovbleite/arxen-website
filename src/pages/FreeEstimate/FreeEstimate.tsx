@@ -794,23 +794,6 @@ const FreeEstimate: React.FC = () => {
           )}
         </div>
 
-        {/* Simple progress indicator - replaced circles with text for cleaner design */}
-        {!submissionComplete && (
-          <div className="mb-8">
-            <div className="text-center mb-3">
-              <p className="text-sm text-gray-600">
-                Step {currentStep} of {totalSteps}
-              </p>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-1.5">
-              <div 
-                className="bg-blue-600 h-1.5 rounded-full transition-all duration-300 ease-in-out"
-                style={{ width: `${progressPercentage}%` }}
-              ></div>
-            </div>
-          </div>
-        )}
-
         {/* Form Container */}
         <div className="bg-white rounded-lg shadow-lg p-6 sm:p-10 mb-8">
           {submissionComplete ? (
