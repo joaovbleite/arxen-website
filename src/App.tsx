@@ -1451,9 +1451,11 @@ function App() {
     });
   }, [services, serviceFilterType]);
 
-  // We'll use a simpler approach without modifying the Window interface
-  const navigationStartTimeRef = React.useRef<number | null>(null);
-  const navigationTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Extend Window interface to add our custom properties
+  interface Window {
+    navigationStartTime?: number;
+    navigationTimer?: ReturnType<typeof setTimeout>;
+  }
   
   // Add navigation detection with improved handling
   useEffect(() => {
@@ -1479,13 +1481,13 @@ function App() {
       window.scrollTo(0, 0);
       
       // Store navigation start timestamp to ensure minimum display time
-      navigationStartTimeRef.current = Date.now();
+      window.navigationStartTime = Date.now();
     };
     
     const handleNavigationEnd = () => {
       console.log('Navigation completed');
       // Ensure loading indicator stays visible for at least 800ms for better UX
-      const elapsedTime = Date.now() - (navigationStartTimeRef.current || 0);
+      const elapsedTime = Date.now() - (window.navigationStartTime || 0);
       const minDisplayTime = 800;
       
       if (elapsedTime < minDisplayTime) {
@@ -2375,6 +2377,17 @@ function App() {
                         
                         {/* Replaced <form> with <div> */} 
                         <div className="space-y-6">
+                          {/* Progress Steps */} 
+                          <div className="flex justify-between mb-4 sm:mb-6">
+                            {['Contact Info', 'Project Details', 'Confirmation'].map((step, i) => (
+                              <div key={i} className="flex flex-col items-center">
+                                <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold mb-1 ${i === 0 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
+                                  {i + 1}
+                                </div>
+                                <span className={`text-xs ${i === 0 ? 'text-blue-600 font-medium' : 'text-gray-500'} text-center`}>{i === 0 ? step : step.split(' ')[0]}</span>
+                              </div>
+                            ))}
+                          </div>
 
                           <div className="bg-gray-50 p-6 rounded-xl">
                             <div className="grid gap-5 md:grid-cols-2">
@@ -4069,39 +4082,36 @@ if (typeof document !== 'undefined') {
   enhancedStyle.innerHTML = Object.values(enhancedBackgroundKeyframes).join('\n') + enhancedBackgroundCSS;
   document.head.appendChild(enhancedStyle);
   
-      // Add page transition handling script
-    document.addEventListener('DOMContentLoaded', () => {
-      // Get references to our UI elements
-      const loadingIndicator = document.getElementById('page-loading-indicator');
-      const errorBoundary = document.getElementById('page-error-boundary');
+  // Add page transition handling script
+  document.addEventListener('DOMContentLoaded', () => {
+    // Get references to our UI elements
+    const loadingIndicator = document.getElementById('page-loading-indicator');
+    const errorBoundary = document.getElementById('page-error-boundary');
+    
+    if (loadingIndicator && errorBoundary) {
+      // Handle page navigation
+      const handlePageNavigation = () => {
+        // Show loading indicator immediately
+        loadingIndicator.style.opacity = '1';
+        loadingIndicator.style.pointerEvents = 'auto';
+        
+        // Hide error boundary if visible
+        errorBoundary.style.display = 'none';
+        
+        // Safety timeout in case page load doesn't complete
+        window.navigationTimer = setTimeout(() => {
+          loadingIndicator.style.opacity = '0';
+          loadingIndicator.style.pointerEvents = 'none';
+        }, 8000);
+      };
       
-      if (loadingIndicator && errorBoundary) {
-        // Create refs that can be used in this scope
-        let navigationTimerVar: ReturnType<typeof setTimeout> | null = null;
-        
-        // Handle page navigation
-        const handlePageNavigation = () => {
-          // Show loading indicator immediately
-          loadingIndicator.style.opacity = '1';
-          loadingIndicator.style.pointerEvents = 'auto';
-          
-          // Hide error boundary if visible
-          errorBoundary.style.display = 'none';
-          
-          // Safety timeout in case page load doesn't complete
-          navigationTimerVar = setTimeout(() => {
-            loadingIndicator.style.opacity = '0';
-            loadingIndicator.style.pointerEvents = 'none';
-          }, 8000);
-        };
-        
-        // Handle page load complete
-        const handlePageLoaded = () => {
-          // Clear any existing navigation timer
-          if (navigationTimerVar) {
-            clearTimeout(navigationTimerVar);
-            navigationTimerVar = null;
-          }
+      // Handle page load complete
+      const handlePageLoaded = () => {
+        // Clear any existing navigation timer
+        if (window.navigationTimer) {
+          clearTimeout(window.navigationTimer);
+          window.navigationTimer = undefined;
+        }
         
         // Add a slight delay before hiding the loader to ensure content is rendered
         setTimeout(() => {

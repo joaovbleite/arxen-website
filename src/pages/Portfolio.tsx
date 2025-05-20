@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation, Link } from 'react-router-dom';
-import { Star, ArrowRight, Camera, Filter, Check, ChevronDown, Tag, Clock, MapPin, ArrowLeft } from 'lucide-react';
+import { Star, ArrowRight, Camera, Filter, Check, ChevronDown, Tag, Clock, MapPin, ArrowLeft, ArrowLeftRight } from 'lucide-react';
 
 const Portfolio = () => {
   const navigate = useNavigate();
@@ -10,6 +10,8 @@ const Portfolio = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
   const [currentCategory, setCurrentCategory] = useState<string>('all');
+  const [showBefore, setShowBefore] = useState(false);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   // Scroll to top when a project is selected
   useEffect(() => {
@@ -1227,8 +1229,11 @@ const Portfolio = () => {
           {/* Project Header with Before/After */}
           <div className="relative bg-blue-900 text-white">
             <div className="relative h-[60vh] overflow-hidden">
-              {/* Before/After Toggle */}
-              <div className="absolute inset-0 transition-opacity duration-700 opacity-0 hover:opacity-100 z-10 cursor-pointer">
+              {/* Before/After Toggle with more interactive controls */}
+              <div 
+                className={`absolute inset-0 transition-opacity duration-700 ${showBefore ? 'opacity-100' : 'opacity-0'} z-10 cursor-pointer`}
+                onClick={() => setShowBefore(false)}
+              >
                 <img
                   src={selectedProject.beforeImage}
                   alt={`Before: ${selectedProject.title}`}
@@ -1239,14 +1244,30 @@ const Portfolio = () => {
                 </div>
               </div>
               
-              <img
-                src={selectedProject.afterImage}
-                alt={`After: ${selectedProject.title}`}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                <span className="text-white font-bold inline-block bg-blue-600 px-3 py-1 rounded-full text-sm">AFTER</span>
-                <span className="text-white text-sm ml-3">(Hover to see before)</span>
+              <div 
+                className={`absolute inset-0 transition-opacity duration-700 ${!showBefore ? 'opacity-100' : 'opacity-0'} z-5`}
+                onClick={() => setShowBefore(true)}
+              >
+                <img
+                  src={selectedProject.afterImage}
+                  alt={`After: ${selectedProject.title}`}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                  <span className="text-white font-bold inline-block bg-blue-600 px-3 py-1 rounded-full text-sm">AFTER</span>
+                </div>
+              </div>
+              
+              {/* New Before/After Button Control */}
+              <div className="absolute top-4 right-4 z-20">
+                <button 
+                  className="bg-white/90 backdrop-blur-sm shadow-lg rounded-full p-2 flex items-center gap-2 text-sm font-medium text-gray-800 hover:bg-white transition-all"
+                  onClick={() => setShowBefore(!showBefore)}
+                  aria-label={showBefore ? "Show After" : "Show Before"}
+                >
+                  <ArrowLeftRight className="w-4 h-4" />
+                  <span className="mr-1">{showBefore ? "Show After" : "Show Before"}</span>
+                </button>
               </div>
             </div>
             
@@ -1480,8 +1501,8 @@ const Portfolio = () => {
       ) : (
         // Portfolio grid view
         <div>
-          {/* Portfolio Header */}
-          <div className="bg-blue-900 text-white py-16 relative overflow-hidden">
+          {/* Portfolio Header with improved styling */}
+          <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white py-16 relative overflow-hidden">
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-1/3 h-full opacity-20">
               <div className="absolute top-10 right-10 w-32 h-32 rounded-full border-4 border-white"></div>
@@ -1490,7 +1511,7 @@ const Portfolio = () => {
             
             <div className="container mx-auto px-4 relative z-10">
               <h1 className="text-5xl font-bold mb-4">Our Portfolio</h1>
-              <p className="text-xl text-blue-100 max-w-2xl">
+              <p className="text-xl text-white max-w-2xl">
                 Browse our collection of successful transformations and projects. 
                 See how we've helped our clients turn their vision into reality with quality craftsmanship and attention to detail.
               </p>
@@ -1498,123 +1519,253 @@ const Portfolio = () => {
           </div>
           
           <div className="container mx-auto px-4 py-12">
-            {/* Filter Controls */}
+            {/* Enhanced Filter Controls with View Toggle */}
             <div className="mb-10 flex flex-wrap justify-between items-center">
               <h2 className="text-3xl font-bold text-gray-800 mb-4 md:mb-0">
                 Explore Our Projects
               </h2>
               
-              <div className="relative">
-                <button 
-                  className="flex items-center bg-white border border-gray-300 rounded-lg px-4 py-2 shadow-sm hover:bg-gray-50 transition-colors"
-                  onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
-                >
-                  <Filter className="w-5 h-5 text-gray-500 mr-2" />
-                  <span className="text-gray-700 font-medium">
-                    Filter: {currentCategory === 'all' ? 'All Categories' : currentCategory}
-                  </span>
-                  <ChevronDown className={`w-5 h-5 text-gray-500 ml-2 transition-transform ${isFilterMenuOpen ? 'rotate-180' : ''}`} />
-                </button>
+              <div className="flex gap-3 items-center">
+                {/* View Toggle */}
+                <div className="bg-white border border-gray-300 rounded-lg flex overflow-hidden shadow-sm">
+                  <button 
+                    className={`flex items-center px-3 py-2 ${viewMode === 'grid' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-50'}`}
+                    onClick={() => setViewMode('grid')}
+                    aria-label="Grid View"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="7" height="7"></rect>
+                      <rect x="14" y="3" width="7" height="7"></rect>
+                      <rect x="3" y="14" width="7" height="7"></rect>
+                      <rect x="14" y="14" width="7" height="7"></rect>
+                    </svg>
+                  </button>
+                  <button 
+                    className={`flex items-center px-3 py-2 ${viewMode === 'list' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-50'}`}
+                    onClick={() => setViewMode('list')}
+                    aria-label="List View"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="8" y1="6" x2="21" y2="6"></line>
+                      <line x1="8" y1="12" x2="21" y2="12"></line>
+                      <line x1="8" y1="18" x2="21" y2="18"></line>
+                      <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                      <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                      <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
                 
-                {isFilterMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl z-20 border border-gray-200 py-2">
-                    {categories.map((category, index) => (
-                      <button
-                        key={index}
-                        className={`w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors ${currentCategory === category ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'}`}
-                        onClick={() => {
-                          setCurrentCategory(category);
-                          setIsFilterMenuOpen(false);
-                        }}
-                      >
-                        {category === 'all' ? 'All Categories' : category}
-                        {currentCategory === category && (
-                          <Check className="w-4 h-4 inline ml-2 text-blue-600" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                )}
+                {/* Category Filter */}
+                <div className="relative">
+                  <button 
+                    className="flex items-center bg-white border border-gray-300 rounded-lg px-4 py-2 shadow-sm hover:bg-gray-50 transition-colors"
+                    onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
+                    aria-expanded={isFilterMenuOpen}
+                    aria-haspopup="true"
+                  >
+                    <Filter className="w-5 h-5 text-gray-500 mr-2" />
+                    <span className="text-gray-700 font-medium">
+                      Filter: {currentCategory === 'all' ? 'All Categories' : currentCategory}
+                    </span>
+                    <ChevronDown className={`w-5 h-5 text-gray-500 ml-2 transition-transform ${isFilterMenuOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  
+                  {isFilterMenuOpen && (
+                    <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl z-20 border border-gray-200 py-2">
+                      {categories.map((category, index) => (
+                        <button
+                          key={index}
+                          className={`w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors ${currentCategory === category ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'}`}
+                          onClick={() => {
+                            setCurrentCategory(category);
+                            setIsFilterMenuOpen(false);
+                          }}
+                        >
+                          {category === 'all' ? 'All Categories' : category}
+                          {currentCategory === category && (
+                            <Check className="w-4 h-4 inline ml-2 text-blue-600" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             
-            {/* Project Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProjects.map((project, index) => (
-                <div 
-                  key={index}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
-                  onClick={() => {
-                    setSelectedProject(project);
-                    navigate(`/portfolio/${project.id}`);
-                  }}
-                >
-                  <div className="relative h-72 overflow-hidden">
-                    {/* Before/After Slide Effect */}
-                    <div className="absolute inset-0 transition-transform duration-700 ease-in-out group-hover:translate-x-full">
+            {/* Project Grid or List View Based on Selection */}
+            {viewMode === 'grid' ? (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredProjects.map((project, index) => (
+                  <div 
+                    key={index}
+                    className="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
+                    onClick={() => {
+                      setSelectedProject(project);
+                      navigate(`/portfolio/${project.id}`);
+                    }}
+                  >
+                    <div className="relative h-72 overflow-hidden">
+                      {/* Improved Before/After with touch/click support */}
+                      <div className="absolute inset-0 z-10 transition-transform duration-700 ease-in-out transform group-hover:translate-x-full">
+                        <img 
+                          src={project.beforeImage} 
+                          alt={`Before: ${project.title}`} 
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                          <span className="text-white font-bold inline-block bg-black/70 px-2.5 py-1 rounded-full text-xs">BEFORE</span>
+                        </div>
+                      </div>
+                      
                       <img 
-                        src={project.beforeImage} 
-                        alt={`Before: ${project.title}`} 
+                        src={project.afterImage} 
+                        alt={`After: ${project.title}`} 
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                        <span className="text-white font-bold inline-block bg-black/60 px-2 py-0.5 rounded-full text-xs">BEFORE</span>
+                        <span className="text-white font-bold inline-block bg-blue-700 px-2.5 py-1 rounded-full text-xs">AFTER</span>
+                      </div>
+                      
+                      {/* Visual cue for the before/after effect */}
+                      <div className="absolute top-3 right-3 text-white bg-black/60 backdrop-blur-sm rounded-full px-2.5 py-1 text-xs font-medium opacity-80 group-hover:opacity-0 transition-opacity z-20 shadow-md">
+                        <span className="flex items-center gap-1">
+                          <ArrowLeftRight className="w-3 h-3" />
+                          Hover to Compare
+                        </span>
                       </div>
                     </div>
                     
-                    <img 
-                      src={project.afterImage} 
-                      alt={`After: ${project.title}`} 
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                      <span className="text-white font-bold inline-block bg-blue-600 px-2 py-0.5 rounded-full text-xs">AFTER</span>
-                    </div>
-                  </div>
-                  
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-xl font-bold text-gray-800 group-hover:text-blue-600 transition-colors">{project.title}</h3>
-                      <span className="bg-gray-100 text-gray-600 text-xs font-medium px-2.5 py-0.5 rounded">
-                        {project.category}
-                      </span>
-                    </div>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">{project.description}</p>
-                    
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tags.slice(0, 2).map((tag, i) => (
-                        <span key={i} className="bg-blue-50 text-blue-700 text-xs px-2 py-0.5 rounded">
-                          {tag}
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-xl font-bold text-gray-800 group-hover:text-blue-700 transition-colors">{project.title}</h3>
+                        <span className="bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-0.5 rounded">
+                          {project.category}
                         </span>
-                      ))}
-                      {project.tags.length > 2 && (
-                        <span className="text-gray-500 text-xs">+{project.tags.length - 2} more</span>
-                      )}
-                    </div>
-                    
-                    <div className="flex justify-between items-center pt-2 border-t border-gray-100">
-                      <span className="text-gray-500 text-sm flex items-center">
-                        <MapPin className="w-3.5 h-3.5 mr-1" />
-                        {project.location}
-                      </span>
+                      </div>
+                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">{project.description}</p>
                       
-                      <span className="text-blue-600 group-hover:text-blue-800 transition-colors flex items-center text-sm font-medium">
-                        View Details
-                        <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </span>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {project.tags.slice(0, 2).map((tag, i) => (
+                          <span key={i} className="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded">
+                            {tag}
+                          </span>
+                        ))}
+                        {project.tags.length > 2 && (
+                          <span className="text-gray-500 text-xs">+{project.tags.length - 2} more</span>
+                        )}
+                      </div>
+                      
+                      <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                        <span className="text-gray-500 text-sm flex items-center">
+                          <MapPin className="w-3.5 h-3.5 mr-1" />
+                          {project.location}
+                        </span>
+                        
+                        <span className="text-blue-700 group-hover:text-blue-900 transition-colors flex items-center text-sm font-medium">
+                          View Details
+                          <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              // List View
+              <div className="space-y-6">
+                {filteredProjects.map((project, index) => (
+                  <div 
+                    key={index}
+                    className="bg-white rounded-xl shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer"
+                    onClick={() => {
+                      setSelectedProject(project);
+                      navigate(`/portfolio/${project.id}`);
+                    }}
+                  >
+                    <div className="flex flex-col md:flex-row">
+                      <div className="relative md:w-1/3 h-60 overflow-hidden">
+                        {/* Before/After effect in list view */}
+                        <div className="absolute inset-0 z-10 transition-transform duration-700 ease-in-out transform group-hover:translate-y-full md:group-hover:translate-y-0 md:group-hover:translate-x-full">
+                          <img 
+                            src={project.beforeImage} 
+                            alt={`Before: ${project.title}`} 
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                            <span className="text-white font-bold inline-block bg-black/70 px-2.5 py-1 rounded-full text-xs">BEFORE</span>
+                          </div>
+                        </div>
+                        
+                        <img 
+                          src={project.afterImage} 
+                          alt={`After: ${project.title}`} 
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                          <span className="text-white font-bold inline-block bg-blue-700 px-2.5 py-1 rounded-full text-xs">AFTER</span>
+                        </div>
+                        
+                        {/* Visual cue for list view */}
+                        <div className="absolute top-3 right-3 text-white bg-black/60 backdrop-blur-sm rounded-full px-2.5 py-1 text-xs font-medium opacity-80 group-hover:opacity-0 transition-opacity z-20 shadow-md">
+                          <span className="flex items-center gap-1">
+                            <ArrowLeftRight className="w-3 h-3" />
+                            Hover to Compare
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="p-6 md:w-2/3 flex flex-col justify-between">
+                        <div>
+                          <div className="flex justify-between items-start mb-3">
+                            <h3 className="text-xl font-bold text-gray-800 group-hover:text-blue-700 transition-colors">{project.title}</h3>
+                            <span className="bg-blue-50 text-blue-700 text-xs font-medium px-2.5 py-0.5 rounded">
+                              {project.category}
+                            </span>
+                          </div>
+                          <p className="text-gray-600 mb-4">{project.description}</p>
+                          
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            {project.tags.map((tag, i) => (
+                              <span key={i} className="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <div className="flex justify-between items-center pt-3 border-t border-gray-100">
+                          <div className="flex items-center gap-4">
+                            <span className="text-gray-500 text-sm flex items-center">
+                              <MapPin className="w-3.5 h-3.5 mr-1" />
+                              {project.location}
+                            </span>
+                            <span className="text-gray-500 text-sm flex items-center">
+                              <Clock className="w-3.5 h-3.5 mr-1" />
+                              {project.completionDate}
+                            </span>
+                          </div>
+                          
+                          <span className="text-blue-700 group-hover:text-blue-900 transition-colors flex items-center text-sm font-medium">
+                            View Details
+                            <ArrowRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
             
-            {/* CTA Section */}
+            {/* CTA Section with improved contrast */}
             <div className="mt-16 bg-blue-900 rounded-2xl shadow-2xl p-8 md:p-12 text-white">
               <div className="flex flex-col md:flex-row items-center justify-between">
                 <div className="md:w-2/3 mb-6 md:mb-0">
                   <h2 className="text-2xl md:text-3xl font-bold mb-3">Ready to Transform Your Space?</h2>
-                  <p className="text-blue-100 mb-4">
-                    Our award-winning team has completed over 2,500 successful projects across Georgia. Let's bring your vision to life.
+                  <p className="text-white mb-4">
+                    Our award-winning team is ready to bring your vision to life with quality craftsmanship and exceptional service.
                   </p>
                   <div className="flex flex-wrap gap-4">
                     <Link 
@@ -1626,7 +1777,7 @@ const Portfolio = () => {
                     </Link>
                     <Link
                       to="/contact"
-                      className="bg-blue-800 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors inline-flex items-center gap-2 border border-blue-700"
+                      className="bg-blue-700 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors inline-flex items-center gap-2 border border-blue-600"
                     >
                       Contact Us
                       <ArrowRight className="w-4 h-4" />
@@ -1634,13 +1785,13 @@ const Portfolio = () => {
                   </div>
                 </div>
                 <div className="md:w-1/3 grid grid-cols-2 gap-4">
-                  <div className="bg-blue-800/50 backdrop-blur-sm p-4 rounded-lg text-center">
-                    <div className="text-3xl font-bold mb-1">2,500+</div>
-                    <div className="text-blue-200 text-sm">Completed Projects</div>
+                  <div className="bg-blue-700 p-4 rounded-lg text-center">
+                    <div className="text-3xl font-bold mb-1">Quality</div>
+                    <div className="text-white text-sm">Craftsmanship</div>
                   </div>
-                  <div className="bg-blue-800/50 backdrop-blur-sm p-4 rounded-lg text-center">
-                    <div className="text-3xl font-bold mb-1">98%</div>
-                    <div className="text-blue-200 text-sm">Satisfied Clients</div>
+                  <div className="bg-blue-700 p-4 rounded-lg text-center">
+                    <div className="text-3xl font-bold mb-1">Service</div>
+                    <div className="text-white text-sm">Excellence</div>
                   </div>
                 </div>
               </div>
