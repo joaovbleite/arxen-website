@@ -33,7 +33,7 @@ export interface FormData {
     email: string;
     phone: string;
     company: string;
-    preferredContact: 'email' | 'phone' | 'message' | '';
+    preferredContact: string;
     preferredTime?: 'morning' | 'afternoon' | 'evening' | 'anytime' | '';
     additionalContactInfo?: string;
     countryCode?: string; // Add country code field for international phone numbers
@@ -698,7 +698,8 @@ const FreeEstimate: React.FC = () => {
         case 3:
           return renderComponent(ContactInfo, {
             contactInfo: formData.contactInfo,
-            updateFormData: updateFormData
+            updateFormData: updateFormData,
+            projectType: formData.projectType
           });
         case 4:
           return renderComponent(ReviewSubmit, {
@@ -730,7 +731,7 @@ const FreeEstimate: React.FC = () => {
       case 3:
         return formData.contactInfo.name.trim().length > 0 && 
                formData.contactInfo.email.trim().length > 0 && 
-               formData.contactInfo.preferredContact !== '';
+               formData.contactInfo.preferredContact.length > 0;
       case 4:
         return true;
       default:

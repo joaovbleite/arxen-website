@@ -6,9 +6,10 @@ import { validatePhoneNumber, formatPhoneNumber, getCountryOptions, CountryCode 
 interface ContactInfoProps {
   contactInfo: FormData['contactInfo'];
   updateFormData: (data: Partial<FormData>) => void;
+  projectType?: 'residential' | 'commercial'; // Add project type prop
 }
 
-const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }) => {
+const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData, projectType = 'residential' }) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [phoneError, setPhoneError] = useState<string | null>(null);
   const [showCountryList, setShowCountryList] = useState(false);
@@ -55,14 +56,36 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }
     }
   };
 
-  // Set preferred contact method
-  const setPreferredContact = (method: 'email' | 'phone' | 'message') => {
+  // Toggle preferred contact method - Updated to handle multiple selections
+  const togglePreferredContact = (method: string) => {
+    // Parse the existing preferredContact field as a comma-separated string
+    const currentMethods = contactInfo.preferredContact ? contactInfo.preferredContact.split(',') : [];
+    
+    // Check if the method is already selected
+    const isSelected = currentMethods.includes(method);
+    
+    let updatedMethods;
+    if (isSelected) {
+      // Remove the method if it's already selected
+      updatedMethods = currentMethods.filter(m => m !== method);
+    } else {
+      // Add the method if it's not already selected
+      updatedMethods = [...currentMethods, method];
+    }
+    
+    // Update the form data with the new comma-separated string
     updateFormData({
       contactInfo: {
         ...contactInfo,
-        preferredContact: method
+        preferredContact: updatedMethods.join(',')
       }
     });
+  };
+
+  // Helper function to check if a contact method is selected
+  const isMethodSelected = (method: string): boolean => {
+    const currentMethods = contactInfo.preferredContact ? contactInfo.preferredContact.split(',') : [];
+    return currentMethods.includes(method);
   };
 
   // Set preferred time for contact
@@ -251,26 +274,28 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }
               </p>
             </div>
 
-            {/* Company */}
-            <div className="col-span-1">
-              <label htmlFor="company" className="block font-medium text-gray-700 mb-1">
-                Company/Organization
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Building className="h-5 w-5 text-gray-700" />
+            {/* Company - Only show for Commercial projects */}
+            {projectType === 'commercial' && (
+              <div className="col-span-1">
+                <label htmlFor="company" className="block font-medium text-gray-700 mb-1">
+                  Company/Organization
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Building className="h-5 w-5 text-gray-700" />
+                  </div>
+                  <input
+                    type="text"
+                    id="company"
+                    name="company"
+                    value={contactInfo.company}
+                    onChange={handleChange}
+                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="Your company (if applicable)"
+                  />
                 </div>
-                <input
-                  type="text"
-                  id="company"
-                  name="company"
-                  value={contactInfo.company}
-                  onChange={handleChange}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Your company (if applicable)"
-                />
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
@@ -299,88 +324,94 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }
         </div>
 
         <div className={`p-6 sm:p-8 bg-gray-50 ${activeSection === 'communication' ? 'block' : 'hidden md:block'}`}>
-          {/* Preferred Contact Method */}
+          {/* Preferred Contact Method - Updated for multiple selection */}
           <div className="mb-8">
             <label className="block font-medium text-gray-700 mb-3">
-              Preferred Contact Method <span className="text-red-500">*</span>
+              Preferred Contact Method <span className="text-red-500">*</span> <span className="text-xs font-normal text-gray-500">(Select all that apply)</span>
             </label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div 
-                onClick={() => setPreferredContact('email')}
+                onClick={() => togglePreferredContact('email')}
                 className={`
                   p-4 border rounded-lg cursor-pointer transition-all flex items-center
-                  ${contactInfo.preferredContact === 'email' 
+                  ${isMethodSelected('email') 
                     ? 'border-blue-500 bg-blue-50 shadow-sm' 
                     : 'border-gray-200 hover:border-blue-200'
                   }
                 `}
               >
                 <div className="mr-4">
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                    contactInfo.preferredContact === 'email' ? 'border-blue-500' : 'border-gray-300'
+                  <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center ${
+                    isMethodSelected('email') ? 'border-blue-500 bg-blue-500' : 'border-gray-300'
                   }`}>
-                    {contactInfo.preferredContact === 'email' && (
-                      <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                    {isMethodSelected('email') && (
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
                     )}
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <Mail className={`h-5 w-5 mr-2 ${contactInfo.preferredContact === 'email' ? 'text-blue-600' : 'text-gray-500'}`} />
-                  <span className={`font-medium ${contactInfo.preferredContact === 'email' ? 'text-blue-800' : 'text-gray-800'}`}>
+                  <Mail className={`h-5 w-5 mr-2 ${isMethodSelected('email') ? 'text-blue-600' : 'text-gray-500'}`} />
+                  <span className={`font-medium ${isMethodSelected('email') ? 'text-blue-800' : 'text-gray-800'}`}>
                     Email
                   </span>
                 </div>
               </div>
 
               <div 
-                onClick={() => setPreferredContact('phone')}
+                onClick={() => togglePreferredContact('phone')}
                 className={`
                   p-4 border rounded-lg cursor-pointer transition-all flex items-center
-                  ${contactInfo.preferredContact === 'phone' 
+                  ${isMethodSelected('phone') 
                     ? 'border-blue-500 bg-blue-50 shadow-sm' 
                     : 'border-gray-200 hover:border-blue-200'
                   }
                 `}
               >
                 <div className="mr-4">
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                    contactInfo.preferredContact === 'phone' ? 'border-blue-500' : 'border-gray-300'
+                  <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center ${
+                    isMethodSelected('phone') ? 'border-blue-500 bg-blue-500' : 'border-gray-300'
                   }`}>
-                    {contactInfo.preferredContact === 'phone' && (
-                      <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                    {isMethodSelected('phone') && (
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
                     )}
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <Phone className={`h-5 w-5 mr-2 ${contactInfo.preferredContact === 'phone' ? 'text-blue-600' : 'text-gray-500'}`} />
-                  <span className={`font-medium ${contactInfo.preferredContact === 'phone' ? 'text-blue-800' : 'text-gray-800'}`}>
+                  <Phone className={`h-5 w-5 mr-2 ${isMethodSelected('phone') ? 'text-blue-600' : 'text-gray-500'}`} />
+                  <span className={`font-medium ${isMethodSelected('phone') ? 'text-blue-800' : 'text-gray-800'}`}>
                     Phone
                   </span>
                 </div>
               </div>
 
               <div 
-                onClick={() => setPreferredContact('message')}
+                onClick={() => togglePreferredContact('message')}
                 className={`
                   p-4 border rounded-lg cursor-pointer transition-all flex items-center
-                  ${contactInfo.preferredContact === 'message' 
+                  ${isMethodSelected('message') 
                     ? 'border-blue-500 bg-blue-50 shadow-sm' 
                     : 'border-gray-200 hover:border-blue-200'
                   }
                 `}
               >
                 <div className="mr-4">
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                    contactInfo.preferredContact === 'message' ? 'border-blue-500' : 'border-gray-300'
+                  <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center ${
+                    isMethodSelected('message') ? 'border-blue-500 bg-blue-500' : 'border-gray-300'
                   }`}>
-                    {contactInfo.preferredContact === 'message' && (
-                      <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                    {isMethodSelected('message') && (
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                      </svg>
                     )}
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <MessageSquare className={`h-5 w-5 mr-2 ${contactInfo.preferredContact === 'message' ? 'text-blue-600' : 'text-gray-500'}`} />
-                  <span className={`font-medium ${contactInfo.preferredContact === 'message' ? 'text-blue-800' : 'text-gray-800'}`}>
+                  <MessageSquare className={`h-5 w-5 mr-2 ${isMethodSelected('message') ? 'text-blue-600' : 'text-gray-500'}`} />
+                  <span className={`font-medium ${isMethodSelected('message') ? 'text-blue-800' : 'text-gray-800'}`}>
                     Message (SMS)
                   </span>
                 </div>
@@ -388,7 +419,7 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }
             </div>
           </div>
 
-          {/* NEW: Preferred Time for Contact */}
+          {/* Preferred Time for Contact */}
           <div className="mb-8">
             <label className="block font-medium text-gray-700 mb-3">
               Best Time to Contact You
@@ -422,7 +453,7 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }
             </div>
           </div>
 
-          {/* NEW: Additional Contact Instructions */}
+          {/* Additional Contact Instructions */}
           <div>
             <label htmlFor="additionalContactInfo" className="block font-medium text-gray-700 mb-1">
               Additional Contact Instructions
@@ -440,7 +471,7 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }
         </div>
       </div>
 
-      {/* Project Interest Section - NEW */}
+      {/* Project Interest Section */}
       <div className="mb-10 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="p-6 sm:p-8 border-b border-gray-100">
           <div className="flex justify-between items-center" onClick={() => toggleSection('interest')}>
@@ -511,31 +542,11 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }
         </div>
       </div>
 
-      {/* Privacy Policy */}
-      <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-8">
-        <div className="flex items-start gap-3">
-          <div className="flex-shrink-0 pt-1">
-            <Shield className="h-5 w-5 text-blue-500" />
-          </div>
-          <div>
-            <h3 className="font-medium text-gray-800 mb-2">Privacy & Data Security</h3>
-            <p className="text-gray-700 mb-2">
-              By submitting this form, you agree to our privacy policy and consent to being contacted about your construction project.
-            </p>
-            <p className="text-sm text-gray-500">
-              We respect your privacy and will only use your information to contact you about your estimate request.
-              Your information will never be shared with third parties without your explicit consent.
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* Required Fields Notice */}
       <div className="text-sm text-gray-500 flex items-center">
         <AlertCircle className="w-4 h-4 mr-1 text-red-500" />
         Fields marked with <span className="text-red-500 mx-1">*</span> are required
       </div>
-
 
     </div>
   );
