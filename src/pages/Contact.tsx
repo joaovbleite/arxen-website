@@ -121,6 +121,63 @@ const Contact: React.FC = () => {
     };
   }, [location]);
 
+  useEffect(() => {
+    // Get URL search parameters
+    const searchParams = new URLSearchParams(window.location.search);
+    
+    // Check for parameters that might come from other forms
+    const email = searchParams.get('email');
+    const name = searchParams.get('name');
+    const phone = searchParams.get('phone');
+    const service = searchParams.get('service') || searchParams.get('initialService');
+    const projectType = searchParams.get('projectType');
+    const message = searchParams.get('message') || searchParams.get('description');
+    
+    // Build an update object for the form data
+    const formUpdates: {[key: string]: string} = {};
+    
+    if (email) formUpdates.email = email;
+    if (name) formUpdates.name = name;
+    if (phone) formUpdates.phone = phone;
+    if (service) {
+      formUpdates.serviceType = service;
+      setSelectedService(service);
+    }
+    if (projectType) formUpdates.projectType = projectType;
+    if (message) formUpdates.description = message;
+    
+    // Only update form if we have parameters
+    if (Object.keys(formUpdates).length > 0) {
+      console.log('Pre-filling contact form with data from URL:', formUpdates);
+      setFormData(prevData => ({
+        ...prevData,
+        ...formUpdates
+      }));
+    }
+    
+    // Check localStorage for previously saved form data
+    const savedContactData = localStorage.getItem('arxen-contact-form-data');
+    if (savedContactData) {
+      try {
+        const parsedData = JSON.parse(savedContactData);
+        // Use saved data if we don't have URL parameters for those fields
+        setFormData(prevData => ({
+          ...prevData,
+          name: formUpdates.name || parsedData.name || prevData.name,
+          email: formUpdates.email || parsedData.email || prevData.email,
+          phone: formUpdates.phone || parsedData.phone || prevData.phone,
+          // Other fields - use correct property names that match the form data structure
+          address: parsedData.address || prevData.address,
+          inquiryType: parsedData.inquiryType || prevData.inquiryType,
+          serviceType: formUpdates.serviceType || parsedData.serviceType || prevData.serviceType,
+          description: formUpdates.description || parsedData.description || prevData.description
+        }));
+      } catch (error) {
+        console.error('Error parsing saved contact data:', error);
+      }
+    }
+  }, []);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     // Handle radio button type specifically
@@ -152,7 +209,7 @@ const Contact: React.FC = () => {
     }
   };
 
-  // Validate form 
+  // Validate form - returns an object with validation errors
   const validateForm = () => {
     const newErrors: {[key: string]: string} = {};
     
@@ -171,8 +228,8 @@ const Contact: React.FC = () => {
       newErrors.phone = "Please enter a valid phone number";
     }
     
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    // Don't set errors here, just return them
+    return newErrors;
   };
   
   // Handle blur event for immediate validation feedback
@@ -217,19 +274,40 @@ const Contact: React.FC = () => {
     }
     
     // Validate all fields
-    if (!validateForm()) {
+    const validationErrors = validateForm();
+    setErrors(validationErrors);
+    
+    if (Object.keys(validationErrors).length > 0) {
       // Mark all fields as touched to show errors
       const allTouched: {[key: string]: boolean} = {};
       Object.keys(formData).forEach(key => {
         allTouched[key] = true;
       });
       setTouchedFields(allTouched);
+      console.log('Form has errors:', validationErrors);
       return;
     }
     
     setIsSubmitting(true);
     
-    // Prepare the email template parameters
+    // Save basic contact info to localStorage for potential re-use
+    try {
+      const contactData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        inquiryType: formData.inquiryType,
+        serviceType: formData.serviceType,
+        projectType: formData.projectType,
+        description: formData.description
+      };
+      localStorage.setItem('arxen-contact-form-data', JSON.stringify(contactData));
+    } catch (error) {
+      console.error('Error saving contact data to localStorage:', error);
+    }
+    
+    // Prepare the emailjs template params
     const templateParams = {
       from_name: formData.name,
       from_email: formData.email,

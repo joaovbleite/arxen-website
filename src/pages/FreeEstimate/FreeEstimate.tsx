@@ -216,6 +216,11 @@ const FreeEstimate: React.FC = () => {
     const urlBuildingType = searchParams.get('buildingType');
     const initialService = searchParams.get('initialService');
     
+    // Get additional parameters from the homepage form
+    const zipCode = searchParams.get('zip');
+    const timelineParam = searchParams.get('initialTimeline');
+    const emailParam = searchParams.get('email');
+    
     if (savedKey) {
       loadSavedForm(savedKey);
       setSavedFormKey(savedKey);
@@ -304,7 +309,58 @@ const FreeEstimate: React.FC = () => {
       }
     }
 
+    // Add the handling for additional parameters from homepage form
+    if (zipCode) {
+      // Add zip code to contact info
+      initialUpdates.contactInfo = {
+        ...(initialUpdates.contactInfo || initialFormData.contactInfo),
+        additionalContactInfo: `Zip Code: ${zipCode}\n${initialUpdates.contactInfo?.additionalContactInfo || ''}`
+      };
+    }
 
+    if (emailParam) {
+      // Pre-fill email field
+      initialUpdates.contactInfo = {
+        ...(initialUpdates.contactInfo || initialFormData.contactInfo),
+        email: emailParam
+      };
+    }
+
+    if (timelineParam) {
+      // Map the timeline value from the homepage to the FreeEstimate format
+      let timelineValue = 2; // Default
+      let timelineUnit: 'days' | 'weeks' | 'months' = 'weeks'; // Default
+      
+      switch (timelineParam) {
+        case 'asap':
+          timelineValue = 1;
+          timelineUnit = 'weeks';
+          break;
+        case '1month':
+          timelineValue = 1;
+          timelineUnit = 'months';
+          break;
+        case '3months':
+          timelineValue = 3;
+          timelineUnit = 'months';
+          break;
+        case 'planning':
+          timelineValue = 6;
+          timelineUnit = 'months';
+          break;
+      }
+      
+      initialUpdates.timeline = {
+        value: timelineValue,
+        unit: timelineUnit
+      };
+      
+      // Also note the urgency in project details
+      initialUpdates.projectDetails = {
+        ...(initialUpdates.projectDetails || initialFormData.projectDetails),
+        urgency: timelineParam === 'asap' ? 'rush' : 'standard'
+      };
+    }
     
     if (Object.keys(initialUpdates).length > 0) {
       setFormData(prev => ({ ...prev, ...initialUpdates }));
