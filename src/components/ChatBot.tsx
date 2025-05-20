@@ -4508,15 +4508,16 @@ const ChatBot: React.FC = () => {
               className="flex-1 px-3 py-2 border rounded-l-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
               disabled={isTyping}
             />
-            <button 
-              type="submit" 
-              className={`bg-blue-600 text-white px-4 rounded-r-lg flex items-center justify-center ${
-                isTyping || !message.trim() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
-              }`}
-              disabled={isTyping || !message.trim()}
-            >
-              <Send size={18} />
-            </button>
+                          <button 
+                type="submit" 
+                className={`bg-blue-600 text-white px-4 rounded-r-lg flex items-center justify-center ${
+                  isTyping || !message.trim() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+                }`}
+                disabled={isTyping || !message.trim()}
+                aria-label="Send message"
+              >
+                <Send size={18} />
+              </button>
           </form>
         )}
         

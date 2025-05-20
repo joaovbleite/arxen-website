@@ -940,6 +940,7 @@ const FreeEstimate: React.FC = () => {
             <button 
               onClick={() => setShowChatWidget(false)}
               className="text-white hover:text-gray-200"
+              aria-label="Close chat"
             >
               ×
             </button>
@@ -961,6 +962,7 @@ const FreeEstimate: React.FC = () => {
               <button 
                 type="submit"
                 className="bg-blue-600 text-white px-4 rounded-r-lg hover:bg-blue-700"
+                aria-label="Send message"
               >
                 Send
               </button>

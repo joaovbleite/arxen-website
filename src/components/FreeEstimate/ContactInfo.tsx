@@ -145,7 +145,10 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData, 
               <h3 className="text-xl font-semibold text-gray-800">Personal Information</h3>
             </div>
             {/* Only show toggle on mobile */}
-            <button className="md:hidden text-gray-500">
+            <button 
+              className="md:hidden text-gray-500"
+              aria-label={activeSection === 'personal' ? 'Collapse personal information section' : 'Expand personal information section'}
+            >
               {activeSection === 'personal' ? (
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clipRule="evenodd" />
@@ -217,6 +220,9 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData, 
                     type="button"
                     onClick={() => setShowCountryList(!showCountryList)}
                     className={`flex items-center h-full px-3 py-3 border ${phoneError ? 'border-red-500' : 'border-gray-300'} bg-gray-50 hover:bg-gray-100 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition`}
+                    aria-label={`Select country code. Currently ${selectedCountry.name} (${selectedCountry.code})`}
+                    aria-expanded={showCountryList}
+                    aria-haspopup="listbox"
                   >
                     <Globe className="h-5 w-5 text-gray-600 mr-1" />
                     <span className="hidden sm:inline text-gray-700 font-medium">{selectedCountry.code}</span>
@@ -309,7 +315,10 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData, 
               <h3 className="text-xl font-semibold text-gray-800">Communication Preferences</h3>
             </div>
             {/* Only show toggle on mobile */}
-            <button className="md:hidden text-gray-500">
+            <button 
+              className="md:hidden text-gray-500"
+              aria-label={activeSection === 'communication' ? 'Collapse communication preferences section' : 'Expand communication preferences section'}
+            >
               {activeSection === 'communication' ? (
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clipRule="evenodd" />
@@ -480,7 +489,10 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData, 
               <h3 className="text-xl font-semibold text-gray-800">Project Interest</h3>
             </div>
             {/* Only show toggle on mobile */}
-            <button className="md:hidden text-gray-500">
+            <button 
+              className="md:hidden text-gray-500"
+              aria-label={activeSection === 'interest' ? 'Collapse project interest section' : 'Expand project interest section'}
+            >
               {activeSection === 'interest' ? (
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clipRule="evenodd" />
