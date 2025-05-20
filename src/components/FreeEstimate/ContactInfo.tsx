@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { User, Mail, Phone, Building, AlertCircle, MessageSquare, Clock, Calendar, Shield, Info } from 'lucide-react';
+import { User, Mail, Phone, Building, AlertCircle, MessageSquare, Clock, Calendar, Shield, Info, Globe } from 'lucide-react';
 import { FormData } from '../../pages/FreeEstimate/FreeEstimate';
-import { validatePhoneNumber, formatPhoneNumber } from '../../utils/validation';
+import { validatePhoneNumber, formatPhoneNumber, getCountryOptions, CountryCode } from '../../utils/validation';
 
 interface ContactInfoProps {
   contactInfo: FormData['contactInfo'];
@@ -11,6 +11,14 @@ interface ContactInfoProps {
 const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [phoneError, setPhoneError] = useState<string | null>(null);
+  const [showCountryList, setShowCountryList] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState<{code: CountryCode, name: string}>({ 
+    code: contactInfo.countryCode || 'US', 
+    name: 'United States' 
+  });
+  
+  // Get country options from the utility
+  const countryOptions = getCountryOptions();
 
   // Update contact info field
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -28,8 +36,8 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawInput = e.target.value;
     
-    // Format the phone number as user types
-    const formattedPhone = formatPhoneNumber(rawInput);
+    // Format the phone number as user types based on country
+    const formattedPhone = formatPhoneNumber(rawInput, selectedCountry.code);
     
     updateFormData({
       contactInfo: {
@@ -38,8 +46,8 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }
       }
     });
     
-    // Validate the phone number
-    const validation = validatePhoneNumber(formattedPhone);
+    // Validate the phone number with country code
+    const validation = validatePhoneNumber(formattedPhone, selectedCountry.code);
     if (!validation.isValid && formattedPhone.trim()) {
       setPhoneError(validation.message || null);
     } else {
@@ -70,6 +78,30 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }
   // Toggle section accordion (for mobile view)
   const toggleSection = (section: string) => {
     setActiveSection(activeSection === section ? null : section);
+  };
+  
+  // Handle country selection
+  const handleCountrySelect = (country: {code: CountryCode, name: string}) => {
+    setSelectedCountry(country);
+    setShowCountryList(false);
+    
+    // Update the form data with the new country code
+    updateFormData({
+      contactInfo: {
+        ...contactInfo,
+        countryCode: country.code
+      }
+    });
+    
+    // Re-validate phone number with new country code if there's a phone number
+    if (contactInfo.phone) {
+      const validation = validatePhoneNumber(contactInfo.phone, country.code);
+      if (!validation.isValid && contactInfo.phone.trim()) {
+        setPhoneError(validation.message || null);
+      } else {
+        setPhoneError(null);
+      }
+    }
   };
 
   return (
@@ -150,32 +182,73 @@ const ContactInfo: React.FC<ContactInfoProps> = ({ contactInfo, updateFormData }
               </div>
             </div>
 
-            {/* Phone */}
+            {/* Phone with Country Selector */}
             <div className="col-span-1">
               <label htmlFor="phone" className="block font-medium text-gray-700 mb-1">
                 Phone Number
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Phone className="h-5 w-5 text-gray-700" />
+              <div className="flex">
+                {/* Country Selector Dropdown */}
+                <div className="relative">
+                  <button 
+                    type="button"
+                    onClick={() => setShowCountryList(!showCountryList)}
+                    className={`flex items-center h-full px-3 py-3 border ${phoneError ? 'border-red-500' : 'border-gray-300'} bg-gray-50 hover:bg-gray-100 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition`}
+                  >
+                    <Globe className="h-5 w-5 text-gray-600 mr-1" />
+                    <span className="hidden sm:inline text-gray-700 font-medium">{selectedCountry.code}</span>
+                    <svg className="w-4 h-4 ml-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Country List Dropdown */}
+                  {showCountryList && (
+                    <div className="absolute z-10 mt-1 w-60 max-h-60 overflow-y-auto rounded-md shadow-lg bg-white border border-gray-300">
+                      <div className="py-1">
+                        {countryOptions.map((country) => (
+                          <button
+                            key={country.code}
+                            type="button"
+                            className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 transition ${country.code === selectedCountry.code ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-700'}`}
+                            onClick={() => handleCountrySelect(country)}
+                          >
+                            {country.name} ({country.code})
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={contactInfo.phone}
-                  onChange={handlePhoneChange}
-                  className={`block w-full pl-10 pr-3 py-3 border ${
-                    phoneError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-                  } rounded-lg`}
-                  placeholder="(123) 456-7890"
-                />
-                {phoneError && (
-                  <div className="text-red-500 text-sm mt-1">
-                    {phoneError}
+
+                {/* Phone Input */}
+                <div className="relative flex-1">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Phone className="h-5 w-5 text-gray-700" />
                   </div>
-                )}
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={contactInfo.phone}
+                    onChange={handlePhoneChange}
+                    className={`block w-full pl-10 pr-3 py-3 border ${
+                      phoneError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                    } rounded-r-lg rounded-l-none border-l-0`}
+                    placeholder={selectedCountry.code === 'US' ? "(123) 456-7890" : "Enter phone number"}
+                  />
+                </div>
               </div>
+              {phoneError && (
+                <div className="text-red-500 text-sm mt-1">
+                  {phoneError}
+                </div>
+              )}
+              <p className="text-xs text-gray-500 mt-1">
+                {selectedCountry.code === 'US' 
+                  ? 'Format: (123) 456-7890' 
+                  : `International format: Include + and country code or enter local format for ${selectedCountry.name}`}
+              </p>
             </div>
 
             {/* Company */}

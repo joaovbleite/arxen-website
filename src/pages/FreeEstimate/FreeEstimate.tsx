@@ -17,6 +17,7 @@ export interface FormData {
     referredBy?: string;
     referenceProject?: string; // Added to support portfolio requests
     propertyZip?: string; // Add property zip code field
+    propertyCountryCode?: string; // Add property country code for international postal codes
   };
   commercialDetails?: {
     buildingTypeId?: string;
@@ -35,6 +36,7 @@ export interface FormData {
     preferredContact: 'email' | 'phone' | 'message' | '';
     preferredTime?: 'morning' | 'afternoon' | 'evening' | 'anytime' | '';
     additionalContactInfo?: string;
+    countryCode?: string; // Add country code field for international phone numbers
   };
   notes: string;
   promoCode?: string;
@@ -666,39 +668,6 @@ const FreeEstimate: React.FC = () => {
                 updateFormData: updateFormData,
                 commercialDetails: formData.commercialDetails
               })}
-              
-              {/* Add custom service input field when "custom-services" or "other" is selected */}
-              {formData.services.some(service => 
-                service === 'custom-services' || service === 'other' || service === 'Other'
-              ) && (
-                <div className="mt-6 p-5 bg-blue-50 rounded-lg border border-blue-100 animate-fade-in">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Custom Service Details</h3>
-                  <label htmlFor="otherService" className="block text-sm font-medium text-gray-700 mb-2">
-                    Please describe the specific service you need
-                  </label>
-                  <input
-                    type="text"
-                    id="otherService"
-                    value={otherServiceInput}
-                    onChange={(e) => {
-                      setOtherServiceInput(e.target.value);
-                      // Also update the project details description
-                      setFormData(prev => ({
-                        ...prev,
-                        projectDetails: {
-                          ...prev.projectDetails,
-                          description: `Custom Service: ${e.target.value}\n\n${prev.projectDetails.description.replace(/Custom Service:.*\n\n/g, '')}`
-                        }
-                      }));
-                    }}
-                    placeholder="Enter the specific service you're looking for"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                  <p className="mt-2 text-sm text-blue-600">
-                    Providing details helps us better understand your specific needs.
-                  </p>
-                </div>
-              )}
             </>
           );
         case 2:
@@ -719,7 +688,12 @@ const FreeEstimate: React.FC = () => {
             services: formData.services,
             selectedServiceNames: selectedServiceNames,
             projectType: formData.projectType,
-            commercialDetails: formData.commercialDetails
+            commercialDetails: formData.commercialDetails,
+            otherServiceInput: otherServiceInput,
+            setOtherServiceInput: setOtherServiceInput,
+            showCustomServiceInput: formData.services.some(service => 
+              service === 'custom-services' || service === 'other' || service === 'Other' || service === 'custom-commercial'
+            )
           });
         case 3:
           return renderComponent(ContactInfo, {

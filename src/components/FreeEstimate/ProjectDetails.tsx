@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { AlertCircle, Upload, X, Clock, FileText, Lightbulb, Check, Zap, Home, Building, Maximize, Info, Image, MapPin } from 'lucide-react';
 import { FormData } from '../../pages/FreeEstimate/FreeEstimate';
-import { validateZipCode } from '../../utils/validation';
+import { validateZipCode, checkServiceArea } from '../../utils/validation';
 
 interface ProjectDetailsProps {
   projectDetails: FormData['projectDetails'];
@@ -14,6 +14,9 @@ interface ProjectDetailsProps {
   commercialDetails?: {
     buildingTypeId?: string;
   };
+  otherServiceInput?: string;
+  setOtherServiceInput?: React.Dispatch<React.SetStateAction<string>>;
+  showCustomServiceInput?: boolean;
 }
 
 // AI Suggestion type
@@ -89,7 +92,10 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
   services = [],
   selectedServiceNames = [],
   projectType = 'residential',
-  commercialDetails
+  commercialDetails,
+  otherServiceInput = '',
+  setOtherServiceInput,
+  showCustomServiceInput = false
 }) => {
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -98,6 +104,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
   const [aiSuggestions, setAiSuggestions] = useState<AISuggestion[]>([]);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [zipError, setZipError] = useState<string | null>(null);
+  const [serviceAreaWarning, setServiceAreaWarning] = useState<string | null>(null);
   
   // State for guided description fields - Initialize with potentially existing parts if structured
   const [guidedDesc, setGuidedDesc] = useState(() => {
@@ -360,7 +367,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
 
   const guidedQuestions = projectType === 'commercial' ? commercialQuestions : residentialQuestions;
 
-  // Add zip code validation function
+  // Update the zip code validation function to include service area check
   const handleZipChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const zipValue = e.target.value;
     
@@ -375,10 +382,21 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
       
       // Only validate if there's input
       if (zipValue.trim()) {
+        // Validate format first
         const validation = validateZipCode(zipValue);
         setZipError(validation.isValid ? null : validation.message || null);
+        
+        // Check service area only if valid format
+        if (validation.isValid) {
+          const countryCode = projectDetails.propertyCountryCode || 'US';
+          const serviceAreaCheck = checkServiceArea(zipValue, countryCode);
+          setServiceAreaWarning(!serviceAreaCheck.inServiceArea ? serviceAreaCheck.warningMessage || null : null);
+        } else {
+          setServiceAreaWarning(null);
+        }
       } else {
         setZipError(null);
+        setServiceAreaWarning(null);
       }
     }
   };
@@ -598,6 +616,39 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
           </div>
         </div>
 
+        {/* Custom Service Input (conditionally rendered) */}
+        {showCustomServiceInput && (
+          <div className="p-6 border border-gray-200 rounded-lg bg-white shadow-sm mt-6 mb-6 animate-fade-in">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Custom Service Details</h3>
+            <label htmlFor="otherService" className="block text-sm font-medium text-gray-700 mb-2">
+              Please describe the specific service you need
+            </label>
+            <textarea
+              id="otherService"
+              value={otherServiceInput || ''}
+              onChange={(e) => {
+                if (setOtherServiceInput) {
+                  setOtherServiceInput(e.target.value);
+                  // Also update the project details description
+                  updateFormData({
+                    projectDetails: {
+                      ...projectDetails,
+                      description: `Custom Service: ${e.target.value}\n\n${projectDetails.description.replace(/Custom Service:.*\n\n/g, '')}`
+                    }
+                  });
+                }
+              }}
+              placeholder="Enter the specific service you're looking for (e.g., specialty finish work, unique installation requirements, etc.)"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y"
+              rows={3}
+            />
+            <p className="text-sm text-gray-500 mt-2">
+              <Info className="inline-block w-4 h-4 mr-1" />
+              Your detailed description helps us assign the right specialists to your project.
+            </p>
+          </div>
+        )}
+
         {/* Section 3: File Upload & Optional Info */}
         <div className="p-6 border border-gray-200 rounded-lg bg-white shadow-sm">
            <h3 className="text-lg font-semibold text-gray-800 mb-4">Supporting Documents</h3>
@@ -706,31 +757,89 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
         Fields marked with <span className="text-red-500 mx-1">*</span> are required
       </div>
 
-      {/* Zip Code Input */}
-      <div className="col-span-1">
-        <label htmlFor="property-zip" className="block font-medium text-gray-700 mb-1">
-          Zip Code <span className="text-red-500">*</span>
-        </label>
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <MapPin className="h-5 w-5 text-gray-700" />
+      {/* Zip Code Input - Updated to include service area warning and country selection */}
+      <div className="col-span-1 mt-6 p-6 border border-gray-200 rounded-lg bg-white shadow-sm">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">Property Location</h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Country Selection - This would ideally be a dropdown with country options */}
+          <div>
+            <label htmlFor="property-country" className="block font-medium text-gray-700 mb-1">
+              Country
+            </label>
+            <select
+              id="property-country"
+              value={projectDetails.propertyCountryCode || 'US'}
+              onChange={(e) => updateFormData({
+                projectDetails: {
+                  ...projectDetails,
+                  propertyCountryCode: e.target.value,
+                  // Clear existing warning if country changes
+                  ...(projectDetails.propertyZip ? {} : { propertyZip: '' })
+                }
+              })}
+              className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="GB">United Kingdom</option>
+              <option value="AU">Australia</option>
+              <option value="FR">France</option>
+              <option value="DE">Germany</option>
+              {/* Add more countries as needed */}
+            </select>
           </div>
-                 <input
-             type="text"
-             id="property-zip"
-             value={projectDetails.propertyZip || ''}
-             onChange={handleZipChange}
-             className={`block w-full pl-10 pr-3 py-3 border ${
-               zipError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
-             } rounded-lg`}
-             placeholder="Enter zip code"
-             required
-           />
-          {zipError && (
-            <div className="text-red-500 text-sm mt-1">
-              {zipError}
+          
+          {/* Zip/Postal Code */}
+          <div>
+            <label htmlFor="property-zip" className="block font-medium text-gray-700 mb-1">
+              {projectDetails.propertyCountryCode === 'US' ? 'Zip Code' : 'Postal Code'} <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <MapPin className="h-5 w-5 text-gray-700" />
+              </div>
+              <input
+                type="text"
+                id="property-zip"
+                value={projectDetails.propertyZip || ''}
+                onChange={handleZipChange}
+                className={`block w-full pl-10 pr-3 py-3 border ${
+                  zipError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
+                } rounded-lg`}
+                placeholder={`Enter ${projectDetails.propertyCountryCode === 'US' ? 'zip code' : 'postal code'}`}
+                required
+              />
+              {zipError && (
+                <div className="text-red-500 text-sm mt-1">
+                  {zipError}
+                </div>
+              )}
+              {serviceAreaWarning && !zipError && (
+                <div className="text-gray-500 text-sm mt-1 flex items-center">
+                  <Info className="h-4 w-4 mr-1 text-gray-400" />
+                  {serviceAreaWarning}
+                </div>
+              )}
             </div>
-          )}
+            <p className="text-xs text-gray-500 mt-1">
+              {projectDetails.propertyCountryCode === 'US' 
+                ? 'Format: 12345 or 12345-6789' 
+                : projectDetails.propertyCountryCode === 'CA'
+                  ? 'Format: A1A 1A1'
+                  : projectDetails.propertyCountryCode === 'GB'
+                    ? 'Format: SW1A 1AA'
+                    : 'Enter your postal code'}
+            </p>
+          </div>
+        </div>
+        
+        {/* Extra contextual information about service area */}
+        <div className="mt-4 text-sm text-gray-600">
+          <p className="flex items-start">
+            <Info className="h-4 w-4 mr-1 mt-1 flex-shrink-0 text-blue-500" />
+            <span>Our primary service areas include New York and Georgia regions, but we can accommodate projects in many other locations. Enter your postal code to check availability.</span>
+          </p>
         </div>
       </div>
     </div>
