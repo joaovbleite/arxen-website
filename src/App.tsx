@@ -2327,24 +2327,21 @@ function App() {
                                   <Hammer className="absolute top-1/2 left-3 -translate-y-1/2 w-5 h-5 text-gray-700" />
                                   <ChevronDown className="absolute top-1/2 right-3 -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
                                 </div>
+                                
+                                {/* Custom Service Input - shown when "Other / Custom" is selected */}
+                                {homeService === 'other' && (
+                                  <div className="mt-2 animate-fade-in">
+                                    <input 
+                                      type="text"
+                                      id="home-custom-service"
+                                      placeholder="Please describe the specific service you need"
+                                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                      value={homeCustomService || ''}
+                                      onChange={(e) => setHomeCustomService(e.target.value)}
+                                    />
+                                  </div>
+                                )}
                               </div>
-                              
-                              {/* Custom Service Input - shown when "Other / Custom" is selected */}
-                              {homeService === 'other' && (
-                                <div className="mt-4 animate-fade-in bg-blue-50 p-4 rounded-lg border border-blue-100">
-                                  <label htmlFor="home-custom-service" className="block text-sm font-medium text-gray-700 mb-1">
-                                    Please describe the specific service you need
-                                  </label>
-                                  <input 
-                                    type="text"
-                                    id="home-custom-service"
-                                    placeholder="Describe your service needs"
-                                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    value={homeCustomService || ''}
-                                    onChange={(e) => setHomeCustomService(e.target.value)}
-                                  />
-                                </div>
-                              )}
 
                               {/* Timeline Select */}
                               <div className="relative">
