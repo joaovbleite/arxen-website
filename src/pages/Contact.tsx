@@ -91,6 +91,8 @@ const Contact: React.FC = () => {
     website: '', // Honeypot field for spam protection
     otherSource: '',
     otherServiceType: '',
+    referralName: '',
+    previousProject: '',
   });
 
   // Memoize testimonials to prevent re-rendering on scroll
@@ -320,6 +322,8 @@ const Contact: React.FC = () => {
       how_heard: formData.howDidYouHear || 'Not specified',
       other_source: formData.otherSource || '',
       other_service: formData.otherServiceType || '',
+      referral_name: formData.referralName || '',
+      previous_project: formData.previousProject || '',
       to_name: 'ARXEN Construction Team',
       to_email: 'sustenablet@gmail.com'
     };
@@ -345,6 +349,8 @@ const Contact: React.FC = () => {
           website: '',
           otherSource: '',
           otherServiceType: '',
+          referralName: '',
+          previousProject: '',
         };
         setFormData({...resetData, website: ''});
         setTouchedFields({});
@@ -702,6 +708,52 @@ const Contact: React.FC = () => {
                         onChange={handleInputChange}
                         className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Please tell us where you heard about us"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Conditional field for "Friend/Family" referral */}
+                {formData.howDidYouHear === 'Friend/Family' && (
+                  <div className="animate-fade-in">
+                    <label htmlFor="referralName" className="block text-sm font-medium text-gray-700 mb-1">
+                      Please provide the name of who referred you
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <User className="h-5 w-5 text-gray-700" />
+                      </div>
+                      <input
+                        type="text"
+                        id="referralName"
+                        name="referralName"
+                        value={formData.referralName || ''}
+                        onChange={handleInputChange}
+                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Name of friend or family member"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Conditional field for "Previous Customer" */}
+                {formData.howDidYouHear === 'Previous Customer' && (
+                  <div className="animate-fade-in">
+                    <label htmlFor="previousProject" className="block text-sm font-medium text-gray-700 mb-1">
+                      Please tell us about your previous project with us
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Info className="h-5 w-5 text-gray-700" />
+                      </div>
+                      <input
+                        type="text"
+                        id="previousProject"
+                        name="previousProject"
+                        value={formData.previousProject || ''}
+                        onChange={handleInputChange}
+                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Tell us about your previous project (what, when, where)"
                       />
                     </div>
                   </div>
