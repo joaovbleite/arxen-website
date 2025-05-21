@@ -3459,7 +3459,71 @@ Please enter your zip code to continue.
                     </div>
                   </div>
                   
-                  <form action="https://formspree.io/f/xbloejrb" method="POST" className="space-y-3" noValidate>
+                  <form 
+                    action="https://formspree.io/f/xbloejrb" 
+                    method="POST"
+                    className="space-y-3" 
+                    onSubmit={(e) => {
+                      // Check if form validation issues exist
+                      if (!homeContactName || !homeContactEmail || !homeContactMessage) {
+                        return; // Let the form's native validation handle this
+                      }
+                      
+                      // Prevent default form submission (which would cause page navigation)
+                      e.preventDefault();
+                      
+                      // Set status to submitting
+                      setHomeContactStatus('submitting');
+                      
+                      // Get form data
+                      const form = e.target as HTMLFormElement;
+                      const formData = new FormData(form);
+                      
+                      // Submit the form data via fetch
+                      fetch('https://formspree.io/f/xbloejrb', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                          'Accept': 'application/json'
+                        }
+                      })
+                      .then(response => {
+                        if (response.ok) {
+                          // Set status to success
+                          setHomeContactStatus('success');
+                          
+                          // Reset form fields
+                          setHomeContactName('');
+                          setHomeContactEmail('');
+                          setHomeContactPhone('');
+                          setHomeContactMessage('');
+                          
+                          // Reset status after 5 seconds
+                          setTimeout(() => {
+                            setHomeContactStatus('idle');
+                          }, 5000);
+                        } else {
+                          // Set status to error
+                          setHomeContactStatus('error');
+                          
+                          // Reset status after 5 seconds
+                          setTimeout(() => {
+                            setHomeContactStatus('idle');
+                          }, 5000);
+                        }
+                      })
+                      .catch(error => {
+                        console.error('Error submitting form:', error);
+                        setHomeContactStatus('error');
+                        
+                        // Reset status after 5 seconds
+                        setTimeout(() => {
+                          setHomeContactStatus('idle');
+                        }, 5000);
+                      });
+                    }}
+                    noValidate
+                  >
                     <div className="grid grid-cols-2 gap-3">
                       <div className="relative">
                         <input
@@ -3613,11 +3677,24 @@ Please enter your zip code to continue.
                     </div>
                     
                     {homeContactStatus === 'error' && (
-                      <div className="bg-red-900/30 border border-red-700 text-red-200 px-3 py-1.5 rounded-md text-xs">
-                        Something went wrong. Please try again or contact us directly.
-                      </div> 
+                      <div className="bg-red-700/30 border border-red-600 rounded-lg p-4 text-center animate-fade-in">
+                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-red-100 text-red-600 mb-2">
+                          <X className="w-6 h-6" />
+                        </div>
+                        <h4 className="text-white font-bold mb-1">Error!</h4>
+                        <p className="text-red-100 text-sm">Something went wrong. Please try again or contact us directly at sustenablet@gmail.com</p>
+                      </div>
                     )}
 
+                    {homeContactStatus === 'success' ? (
+                    <div className="bg-green-700/30 border border-green-600 rounded-lg p-4 text-center animate-fade-in">
+                      <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-green-100 text-green-600 mb-2">
+                        <Check className="w-6 h-6" />
+                      </div>
+                      <h4 className="text-white font-bold mb-1">Thank You!</h4>
+                      <p className="text-green-100 text-sm">Your message has been sent successfully. We'll get back to you soon.</p>
+                    </div>
+                  ) : (
                     <div className="flex justify-between items-center">
                       <button 
                         type="submit" 
@@ -3634,14 +3711,9 @@ Please enter your zip code to continue.
                             </svg>
                             Sending...
                           </span>
-                        ) : homeContactStatus === 'success' ? (
-                          <span className="flex items-center">
-                            <Check className="-ml-1 mr-2 h-5 w-5 text-white" />
-                            Message Sent!
-                          </span>
                         ) : (
                           <span className="flex items-center">
-                            <Send className="-ml-1 mr-2 h-5 w-5 text-white" />
+                            <Send className="-ml-1 mr-2 h-5 w-5" />
                             Send Message
                           </span>
                         )}
@@ -3651,6 +3723,7 @@ Please enter your zip code to continue.
                         We respond within 24 hours
                       </p>
                     </div>
+                  )}
                   </form>
                 </div>
               ) : ( 
