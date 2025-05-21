@@ -365,6 +365,7 @@ const Contact: React.FC = () => {
                 action="https://formspree.io/f/xbloejrb" 
                 method="POST"
                 className="space-y-6"
+                target="hidden_iframe"
                 onSubmit={(e) => {
                   const validationErrors = validateForm();
                   // Only set submitting if there are no errors
@@ -740,13 +741,6 @@ const Contact: React.FC = () => {
                   />
                 </div>
 
-                {/* Formspree redirect URL */}
-                <input 
-                  type="hidden" 
-                  name="_next" 
-                  value="https://arxenconstruction.com/thank-you"
-                />
-
                 {/* Formspree honeypot field */}
                 <input type="text" name="_gotcha" style={{ display: 'none' }} />
 
@@ -776,6 +770,19 @@ const Contact: React.FC = () => {
                   </button>
                 </div>
               </form>
+
+              {/* Hidden iframe to handle the form submission response */}
+              <iframe 
+                name="hidden_iframe" 
+                id="hidden_iframe" 
+                style={{ display: 'none' }} 
+                onLoad={() => {
+                  if (isSubmitting) {
+                    setSubmitted(true);
+                    setIsSubmitting(false);
+                  }
+                }}
+              />
             </div>
           </div>
 
