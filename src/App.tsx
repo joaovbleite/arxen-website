@@ -4,43 +4,15 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } f
 import emailjs from '@emailjs/browser';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Loader2, ChevronsRight, Send } from 'lucide-react';
-import HardwoodService from './pages/HardwoodService';
-import KitchenRemodeling from './pages/KitchenRemodeling';
-import BathroomRemodeling from './pages/BathroomRemodeling';
+// Replace direct imports with lazy imports for page components
+// Keep essential components that are used immediately in the main bundle
 import ServiceTemplate from './pages/ServiceTemplate';
-import Contact from './pages/Contact';
-import CommercialQuote from './pages/CommercialQuote';
-import ResidentialQuote from './pages/ResidentialQuote';
-// Remove imports that don't exist and clean up the code
-import Testimonials from './pages/Testimonials';
-import Portfolio from './pages/Portfolio';
-import TestimonialSlider from './components/TestimonialSlider';
-import Blog from './pages/Blog';
-import About from './pages/About';
-import Residential from './pages/Residential';
-import Offers from './pages/Offers';
-// import VisualizeIt from './pages/VisualizeIt'; // Already commented
-// import MyProjects from './pages/MyProjects'; // Commenting out MyProjects import
-import BlogPost from './pages/BlogPost';
-import BlogCategory from './pages/BlogCategory';
-import CategoryServices from './pages/CategoryServices';
-import CommercialServicePage from './pages/CommercialServicePage';
-import CustomCabinetryPage from './pages/CustomCabinetryPage';
-import FlooringServicesPage from './pages/FlooringServicesPage';
-import Financing from './pages/Financing';
-import FreeEstimate from './pages/FreeEstimate/FreeEstimate';
 import Footer from './components/Footer';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsOfService from './pages/TermsOfService';
-import Sitemap from './pages/Sitemap';
-import NotFound from './pages/NotFound';
 import CookieConsent from './components/CookieConsent';
 import PromoModal from './components/PromoModal';
 import ChatBot from './components/ChatBot';
 import HomeSEO from './components/HomeSEO';
 import { allTestimonials } from './data/testimonials';
-import AccessibilityStatement from './pages/AccessibilityStatement';
-import FAQ from './pages/FAQ';
 import PropertyTypeProvider from './components/PropertyTypeContext';
 import ReviewForm from './components/ReviewForm';
 import LoadingIndicator from './components/LoadingIndicator';
@@ -48,6 +20,36 @@ import { sendContactEmail } from './utils/emailService';
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Analytics } from "@vercel/analytics/react";
 import { validateZipCode } from './utils/validation';
+import TestimonialSlider from './components/TestimonialSlider';
+
+// Lazy load page components
+const HardwoodService = lazy(() => import('./pages/HardwoodService'));
+const KitchenRemodeling = lazy(() => import('./pages/KitchenRemodeling'));
+const BathroomRemodeling = lazy(() => import('./pages/BathroomRemodeling'));
+const Contact = lazy(() => import('./pages/Contact'));
+const CommercialQuote = lazy(() => import('./pages/CommercialQuote'));
+const ResidentialQuote = lazy(() => import('./pages/ResidentialQuote'));
+const Testimonials = lazy(() => import('./pages/Testimonials'));
+const Portfolio = lazy(() => import('./pages/Portfolio'));
+const Blog = lazy(() => import('./pages/Blog'));
+const About = lazy(() => import('./pages/About'));
+const Residential = lazy(() => import('./pages/Residential'));
+const Offers = lazy(() => import('./pages/Offers'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
+const BlogCategory = lazy(() => import('./pages/BlogCategory'));
+const CategoryServices = lazy(() => import('./pages/CategoryServices'));
+const CommercialServicePage = lazy(() => import('./pages/CommercialServicePage'));
+const CustomCabinetryPage = lazy(() => import('./pages/CustomCabinetryPage'));
+const FlooringServicesPage = lazy(() => import('./pages/FlooringServicesPage'));
+const Financing = lazy(() => import('./pages/Financing'));
+const FreeEstimate = lazy(() => import('./pages/FreeEstimate/FreeEstimate'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const Sitemap = lazy(() => import('./pages/Sitemap'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const AccessibilityStatement = lazy(() => import('./pages/AccessibilityStatement'));
+const FAQ = lazy(() => import('./pages/FAQ'));
+
 // Define Service type locally based on usage
 interface Service {
   type?: 'category' | 'service' | 'page'; // Added 'page' to allowed types
