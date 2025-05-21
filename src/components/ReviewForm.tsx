@@ -53,16 +53,16 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ isOpen, onClose }) => {
       formRef.current.submit();
       
       // Set submitted state after a delay to simulate API response
+    setTimeout(() => {
+      setSubmitting(false);
+      setSubmitted(true);
+      
+      // Reset form after 3 seconds and close
       setTimeout(() => {
-        setSubmitting(false);
-        setSubmitted(true);
-        
-        // Reset form after 3 seconds and close
-        setTimeout(() => {
-          resetForm();
-          onClose();
-        }, 3000);
-      }, 1500);
+        resetForm();
+        onClose();
+      }, 3000);
+    }, 1500);
     }
   };
 

@@ -1421,7 +1421,7 @@ function App() {
     }
 
     setHomeContactStatus('submitting');
-
+    
     const formData = new FormData();
     formData.append('name', homeContactName);
     formData.append('email', homeContactEmail);
@@ -2391,7 +2391,7 @@ function App() {
                           LIMITED TIME OFFER <span className="ml-1 sm:ml-2 font-bold"><CountdownTimer /></span>
                         </div>
                         
-                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 leading-tight">Spring Renovation Special</h2>
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 leading-tight">Summer Renovation Special</h2>
                         
                         <div className="flex items-baseline mb-4 sm:mb-6">
                           <div className="text-5xl sm:text-7xl lg:text-8xl font-bold">25%</div>
@@ -3587,7 +3587,7 @@ Please enter your zip code to continue.
                     noValidate
                   >
                     <div className="grid grid-cols-2 gap-3">
-                                            <div className="relative">
+                      <div className="relative">
                         <input
                           type="text"
                           id="homeName"
@@ -3603,13 +3603,13 @@ Please enter your zip code to continue.
                             setFocusedField(null);
                             validateHomeContactName();
                           }}
-                          className={`peer w-full px-3 py-2 text-sm rounded-md bg-blue-700/50 border text-white placeholder-transparent
+                          className={`peer w-full px-3 py-2 text-sm rounded-md bg-blue-700/50 border text-white placeholder-transparent 
                                       transition-all
                                       ${nameError 
                                         ? 'border-red-500 ring-1 ring-red-500' 
                                         : focusedField === 'homeName' || homeContactName 
-                                          ? 'border-blue-400 ring-1 ring-blue-400' 
-                                          : 'border-blue-700 hover:border-blue-500'} 
+                                        ? 'border-blue-400 ring-1 ring-blue-400' 
+                                        : 'border-blue-700 hover:border-blue-500'} 
                                       focus:outline-none focus:ring-1 focus:ring-blue-400`}
                           placeholder="Your Name *"
                         />
@@ -3628,7 +3628,7 @@ Please enter your zip code to continue.
                         )}
                       </div>
 
-                                            <div className="relative">
+                      <div className="relative">
                         <input
                           type="email"
                           id="homeEmail"
@@ -3644,13 +3644,13 @@ Please enter your zip code to continue.
                             setFocusedField(null);
                             validateHomeContactEmail();
                           }}
-                          className={`peer w-full px-3 py-2 text-sm rounded-md bg-blue-700/50 border text-white placeholder-transparent
+                          className={`peer w-full px-3 py-2 text-sm rounded-md bg-blue-700/50 border text-white placeholder-transparent 
                                       transition-all
                                       ${emailError 
                                         ? 'border-red-500 ring-1 ring-red-500' 
                                         : focusedField === 'homeEmail' || homeContactEmail 
-                                          ? 'border-blue-400 ring-1 ring-blue-400' 
-                                          : 'border-blue-700 hover:border-blue-500'} 
+                                        ? 'border-blue-400 ring-1 ring-blue-400' 
+                                        : 'border-blue-700 hover:border-blue-500'} 
                                       focus:outline-none focus:ring-1 focus:ring-blue-400`}
                           placeholder="Your Email *"
                         />
@@ -3776,7 +3776,7 @@ Please enter your zip code to continue.
                         </div>
                         <h4 className="text-white font-bold mb-1">Error!</h4>
                         <p className="text-red-100 text-sm">Something went wrong. Please try again or contact us directly at sustenablet@gmail.com</p>
-                      </div>
+                      </div> 
                     )}
 
                     {(homeContactStatus as ContactFormStatus) === 'success' && (

@@ -111,21 +111,21 @@ const ResidentialQuote: React.FC = () => {
     if (formRef.current) {
       // Set timeout to show success message
       setTimeout(() => {
-        // Basic feedback
-        alert('Thank you for your quote request! We will contact you shortly.');
+    // Basic feedback
+    alert('Thank you for your quote request! We will contact you shortly.');
         // Reset form
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          address: '',
-          serviceType: '',
-          description: '',
-          timeframe: 'flexible',
-          preferredContact: 'phone',
-          preferredTime: 'morning',
-          propertyType: ''
-        });
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      address: '',
+      serviceType: '',
+      description: '',
+      timeframe: 'flexible',
+      preferredContact: 'phone',
+      preferredTime: 'morning',
+      propertyType: ''
+    });
       }, 1000);
       
       formRef.current.submit();

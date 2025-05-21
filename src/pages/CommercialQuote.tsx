@@ -90,22 +90,22 @@ const CommercialQuote: React.FC = () => {
     if (formRef.current) {
       // Set timeout to show success message
       setTimeout(() => {
-        // Basic feedback
-        alert('Thank you for your commercial quote request! We will be in touch soon.');
+    // Basic feedback
+    alert('Thank you for your commercial quote request! We will be in touch soon.');
         // Reset form
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          company: '',
-          address: '',
-          serviceType: '',
-          description: '',
-          timeframe: 'flexible',
-          contactMethod: '',
-          bestTime: '',
-          buildingType: ''
-        });
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      company: '',
+      address: '',
+      serviceType: '',
+      description: '',
+      timeframe: 'flexible',
+      contactMethod: '',
+      bestTime: '',
+      buildingType: ''
+    });
       }, 1000);
       
       formRef.current.submit();
