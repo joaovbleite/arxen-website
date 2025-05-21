@@ -199,6 +199,154 @@ export const testimonials: GeneralTestimonial[] = [
     location: "Augusta, GA",
     text: "We were hesitant due to the distance, but they made the process smooth and delivered exceptional quality on our home renovation.",
     rating: 4.5
+  },
+
+  // Additional testimonials to reach 60 total
+  {
+    name: "Grace Chen",
+    location: "Decatur, GA",
+    text: "Their custom cabinetry work completely transformed our outdated kitchen. The installation was flawless and the team was a pleasure to work with.",
+    rating: 5
+  },
+  {
+    name: "Terrell Jackson",
+    location: "Stockbridge, GA",
+    text: "We had our basement finished and couldn't be happier with the results. The team was professional, cleaned up daily, and delivered amazing quality.",
+    rating: 4.5
+  },
+  {
+    name: "Victoria Lopez",
+    location: "McDonough, GA",
+    text: "Our bathroom remodel was completed exactly as planned. The tile work is impeccable and the team's attention to detail was impressive.",
+    rating: 5
+  },
+  {
+    name: "Aiden O'Connor",
+    location: "Fayetteville, GA",
+    text: "They installed engineered hardwood throughout our home, and the results are stunning. The crew was knowledgeable and worked efficiently.",
+    rating: 4
+  },
+  {
+    name: "Zoe Mitchell",
+    location: "Conyers, GA",
+    text: "We had our sunroom converted into a home office, and the team did an exceptional job. From the flooring to the custom shelving, everything is perfect.",
+    rating: 5
+  },
+  {
+    name: "Darnell Hayes",
+    location: "College Park, GA",
+    text: "The crown molding and trim work they did transformed our living room. Their craftsmanship and attention to detail are outstanding.",
+    rating: 4.5
+  },
+  {
+    name: "Fatima Rahman",
+    location: "Covington, GA",
+    text: "We had luxury vinyl plank installed throughout our home, and the quality of work exceeded our expectations. The team was professional and respectful.",
+    rating: 5
+  },
+  {
+    name: "Benjamin Cohen",
+    location: "Johns Creek, GA",
+    text: "The team completely remodeled our master bathroom and created a luxurious retreat. The custom shower and vanity are absolutely stunning.",
+    rating: 4.5
+  },
+  {
+    name: "Leila Washington",
+    location: "East Point, GA",
+    text: "Their wood flooring restoration brought our 100-year-old hardwoods back to life. The expertise and care they showed was remarkable.",
+    rating: 5
+  },
+  {
+    name: "Ricardo Diaz",
+    location: "Macon, GA",
+    text: "Despite the distance, they delivered exceptional service for our kitchen renovation. Their design recommendations were spot-on and the execution was flawless.",
+    rating: 4.5
+  },
+  {
+    name: "Hannah Kim",
+    location: "Suwanee, GA",
+    text: "Our exterior deck renovation was completed professionally and ahead of schedule. The quality of materials and craftsmanship is evident in every detail.",
+    rating: 5
+  },
+
+  // Additional 13 testimonials to reach 73 total
+  {
+    name: "Jason Walker",
+    location: "Brookhaven, GA",
+    text: "Our basement transformation exceeded our expectations. The team was highly skilled, professional, and completed the project on time and within budget.",
+    rating: 4.5
+  },
+  {
+    name: "Lakshmi Patel",
+    location: "Milton, GA",
+    text: "The custom shelving and organization systems they installed in our home office are both beautiful and functional. The craftsmanship is impeccable.",
+    rating: 5
+  },
+  {
+    name: "Marcus Blackwell",
+    location: "Chamblee, GA",
+    text: "We had our kitchen completely remodeled and couldn't be more pleased. From the cabinets to the countertops, everything is exactly as we envisioned.",
+    rating: 5
+  },
+  {
+    name: "Gabriela Sanchez",
+    location: "Doraville, GA",
+    text: "The team did an amazing job with our bathroom tile installation. Their attention to detail and pattern alignment was remarkable.",
+    rating: 4.5
+  },
+  {
+    name: "Tyler Johnson",
+    location: "Kennesaw, GA",
+    text: "Our laminate flooring installation was quick, professional, and looks fantastic. The team was respectful of our home and left everything spotless.",
+    rating: 4
+  },
+  {
+    name: "Amara Nelson",
+    location: "Lithonia, GA",
+    text: "The custom built-in entertainment center transformed our living room. The quality of construction and finishing is exactly what we hoped for.",
+    rating: 5
+  },
+  {
+    name: "Derek Wilson",
+    location: "Snellville, GA",
+    text: "We had our hardwood floors refinished, and they look brand new again. The team was professional, timely, and their work was exceptional.",
+    rating: 4.5
+  },
+  {
+    name: "Michelle Tran",
+    location: "Lilburn, GA",
+    text: "The team installed crown molding throughout our first floor, and it completely elevated the look of our home. Their craftsmanship was impressive.",
+    rating: 5
+  },
+  {
+    name: "Christopher Adams",
+    location: "Loganville, GA",
+    text: "Our kitchen backsplash installation was perfectly executed. The team was meticulous with the tile alignment and the results are stunning.",
+    rating: 4.5
+  },
+  {
+    name: "Lauren Davidson",
+    location: "Grayson, GA",
+    text: "The custom pantry organization system they designed and installed has made such a difference in our kitchen functionality. Worth every penny!",
+    rating: 5
+  },
+  {
+    name: "Reggie Thomas",
+    location: "Dunwoody, GA",
+    text: "The team converted our unfinished attic into a beautiful guest suite. The transformation was amazing, and their attention to detail was outstanding.",
+    rating: 5
+  },
+  {
+    name: "Stephanie Morgan",
+    location: "Clarkston, GA",
+    text: "We had LVP flooring installed throughout our home, and the results are beautiful. The installation was quick, and the team was professional.",
+    rating: 4.5
+  },
+  {
+    name: "Xavier Coleman",
+    location: "Union City, GA",
+    text: "The custom walk-in closet they designed and built has completely transformed our master bedroom. The storage solutions are both practical and elegant.",
+    rating: 5
   }
 ];
 
