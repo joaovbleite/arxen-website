@@ -878,7 +878,13 @@ function App() {
           image: "https://images.unsplash.com/photo-1580281658223-9b93f18ae9ae?auto=format&fit=crop&q=80",
           features: ["Specialized medical room design", "Compliance with healthcare codes", "Patient flow optimization", "Durable & hygienic materials"],
           benefits: ["Improved patient care environment", "Regulatory compliance assurance", "Enhanced operational efficiency", "Safe and welcoming space"],
-          processSteps: [], galleryImages: []
+          processSteps: [
+            { title: "Medical Space Planning", description: "Design efficient clinical workflow spaces" },
+            { title: "Code Compliance", description: "Meet strict healthcare facility regulations" },
+            { title: "Specialized Systems", description: "Implement medical gas, negative pressure, and other systems" },
+            { title: "Clean Construction", description: "Maintain infection control during construction" }
+          ], 
+          galleryImages: []
         },
         {
           title: "Warehouse & Industrial", 
@@ -887,7 +893,13 @@ function App() {
           image: "https://images.unsplash.com/photo-1587019158091-1a123c84796e?auto=format&fit=crop&q=80",
           features: ["High-bay construction", "Loading dock design", "Specialized flooring", "Safety systems integration"],
           benefits: ["Optimized storage & logistics", "Improved operational safety", "Durable and functional space", "Scalable infrastructure"],
-          processSteps: [], galleryImages: [] 
+          processSteps: [
+            { title: "Requirements Analysis", description: "Assess operational needs and facility requirements" },
+            { title: "Structural Planning", description: "Design optimal layout for workflow efficiency" },
+            { title: "Systems Integration", description: "Incorporate specialized industrial systems" },
+            { title: "Quality Construction", description: "Build with durable materials for industrial use" }
+          ], 
+          galleryImages: [] 
         },
         {
           title: "Commercial Flooring", 
@@ -1011,7 +1023,7 @@ function App() {
           title: "Warehouse Optimization", 
           path: "/services/warehouse-optimization", 
           description: "Transform storage and distribution facilities for maximum efficiency.", 
-          image: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&q=80",
+          image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80",
           features: ["Racking system design", "Loading dock renovation", "Workflow analysis", "Automation integration"],
           benefits: ["Increased storage capacity", "Improved inventory management", "Enhanced logistics flow", "Reduced operational costs"],
           processSteps: [
