@@ -138,7 +138,10 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ isOpen, onClose }) => {
               target="hidden_iframe"
               className="space-y-3"
             >
-              <input type="hidden" name="form-type" value="customer-review" />
+              {/* Hidden fields for Formspree */}
+              <input type="hidden" name="form-name" value="customer-review" />
+              <input type="hidden" name="subject" value="New Customer Review Submission" />
+
               {/* Rating */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -167,6 +170,8 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ isOpen, onClose }) => {
                     </button>
                   ))}
                 </div>
+                {/* Hidden input to store rating value for form submission */}
+                <input type="hidden" name="rating" value={rating} />
               </div>
 
               {/* Name */}
@@ -177,6 +182,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ isOpen, onClose }) => {
                 <input
                   type="text"
                   id="name"
+                  name="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -192,6 +198,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ isOpen, onClose }) => {
                 <input
                   type="email"
                   id="email"
+                  name="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -210,6 +217,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ isOpen, onClose }) => {
                 <input
                   type="text"
                   id="location"
+                  name="location"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="City, State (e.g. Atlanta, GA)"
@@ -225,6 +233,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ isOpen, onClose }) => {
                 </label>
                 <select
                   id="projectType"
+                  name="project-type"
                   value={projectType}
                   onChange={(e) => setProjectType(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -247,6 +256,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ isOpen, onClose }) => {
                 </label>
                 <textarea
                   id="reviewText"
+                  name="message"
                   value={reviewText}
                   onChange={(e) => setReviewText(e.target.value)}
                   rows={3}
