@@ -3700,7 +3700,7 @@ Please enter your zip code to continue.
                       </div>
                     )}
 
-                    {homeContactStatus === 'success' && (
+                    {(homeContactStatus as ContactFormStatus) === 'success' && (
                       <div className="bg-green-700/30 border border-green-600 rounded-lg p-4 text-center animate-fade-in">
                         <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-green-100 text-green-600 mb-2">
                           <Check className="w-6 h-6" />
