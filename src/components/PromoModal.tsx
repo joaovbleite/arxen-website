@@ -25,14 +25,13 @@ const PromoModal: React.FC = () => {
     // Add resize listener
     window.addEventListener('resize', checkDeviceType);
 
-    // Check if the user has already seen the popup
-    const hasSeenPopup = localStorage.getItem(LOCAL_STORAGE_KEY) === 'true';
-
-    // Show the popup after 3 seconds only on desktop and if not seen before
-    if (!isMobileOrTablet && !hasSeenPopup) {
+    // MODIFIED: Force popup to appear by removing localStorage check
+    // Show the popup after a short delay on all devices
+    if (!isMobileOrTablet) {
       const timer = setTimeout(() => {
+        console.log('Showing popup modal'); // Debugging
         setOpen(true);
-      }, 3000);
+      }, 1500); // Reduced from 3000ms to 1500ms to make it appear faster
       
       // Clean up timer if component unmounts
       return () => {
@@ -74,6 +73,7 @@ const PromoModal: React.FC = () => {
 
   const handleClose = () => {
     setOpen(false);
+    // Still save to localStorage when closed
     localStorage.setItem(LOCAL_STORAGE_KEY, 'true');
   };
 
@@ -94,8 +94,16 @@ const PromoModal: React.FC = () => {
     setTimeout(() => setOpen(false), 2500);
   };
 
+  // Debugging visible in console
+  useEffect(() => {
+    console.log('PromoModal state:', { open, isMobileOrTablet });
+  }, [open, isMobileOrTablet]);
+
   // Don't render on mobile/tablet
-  if (isMobileOrTablet || !open) return null;
+  if (isMobileOrTablet || !open) {
+    console.log('PromoModal not rendering:', { isMobileOrTablet, open });
+    return null;
+  }
 
   return (
     <div className="fixed bottom-24 right-4 z-[2000] animate-fade-in">
