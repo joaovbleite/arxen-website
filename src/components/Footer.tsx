@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, MessageCircle, Mail, Phone, ArrowRight, Send, ChevronUp } from 'lucide-react';
 
@@ -7,11 +7,21 @@ const Footer = () => {
   const [subscribed, setSubscribed] = useState(false);
   const [activeAccordion, setActiveAccordion] = useState<string | null>(null);
 
+  const formRef = useRef<HTMLFormElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
-      // In a real app, you would call an API to handle the subscription
+      // Set subscribed state for UI feedback
       setSubscribed(true);
+      
+      // Submit form to Formspree
+      if (formRef.current) {
+        formRef.current.submit();
+      }
+      
+      // Reset after delay
       setTimeout(() => {
         setSubscribed(false);
         setEmail('');
@@ -149,17 +159,25 @@ const Footer = () => {
                   Thanks for subscribing!
                 </div>
               ) : (
-                <form onSubmit={handleSubscribe} className="mt-4 relative">
+                <form 
+                  ref={formRef}
+                  action="https://formspree.io/f/xbloejrb" 
+                  method="POST"
+                  onSubmit={handleSubscribe} 
+                  className="mt-4 relative"
+                  target="hidden_iframe"
+                >
                   <input
                     type="email"
                     id="newsletter-email"
-                    name="newsletter-email"
+                    name="email"
                     placeholder="Your email address"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full px-4 py-3 rounded-lg bg-blue-800 text-white placeholder-blue-200 border border-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
                   />
+                  <input type="hidden" name="form-type" value="newsletter-subscription" />
                   <button
                     type="submit"
                     className="absolute right-1.5 top-1.5 bg-blue-600 hover:bg-blue-500 transition-colors duration-300 rounded-lg p-2"
@@ -202,6 +220,9 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      {/* Hidden iframe for form submission */}
+      <iframe name="hidden_iframe" id="hidden_iframe" ref={iframeRef} style={{ display: 'none' }}></iframe>
     </footer>
   );
 };

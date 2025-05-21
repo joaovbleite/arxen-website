@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 const LOCAL_STORAGE_KEY = 'arxen_promo_signup_seen';
 
@@ -7,6 +7,9 @@ const PromoModal: React.FC = () => {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
+
+  const formRef = useRef<HTMLFormElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     // Check if the device is mobile or tablet
@@ -47,8 +50,14 @@ const PromoModal: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
-    // TODO: integrate with backend / email service
+    
     console.log('Notification signup email:', email);
+    
+    // Submit form to Formspree
+    if (formRef.current) {
+      formRef.current.submit();
+    }
+    
     setSubmitted(true);
     localStorage.setItem(LOCAL_STORAGE_KEY, 'true');
     setTimeout(() => setOpen(false), 2500);
@@ -79,17 +88,25 @@ const PromoModal: React.FC = () => {
           <>
             <h3 className="text-xl font-bold text-center text-blue-800 mb-1">Stay Updated!</h3>
             <p className="text-center text-gray-700 text-xs mb-3">Sign up to receive notifications about our <span className="font-semibold text-blue-700">exclusive offers</span> and special promotions.</p>
-            <form onSubmit={handleSubmit} className="space-y-2">
+            <form 
+              ref={formRef}
+              action="https://formspree.io/f/xbloejrb" 
+              method="POST"
+              onSubmit={handleSubmit} 
+              className="space-y-2"
+              target="hidden_iframe"
+            >
               <input
                 type="email"
                 id="promo-email"
-                name="promo-email"
+                name="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 className="w-full px-3 py-1.5 text-xs border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
+              <input type="hidden" name="form-type" value="promo-subscription" />
               <button
                 type="submit"
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-1.5 rounded-lg font-medium transition-colors text-xs"
@@ -101,6 +118,8 @@ const PromoModal: React.FC = () => {
           </>
         )}
       </div>
+      {/* Hidden iframe for form submission */}
+      <iframe name="hidden_iframe" id="hidden_iframe" ref={iframeRef} style={{ display: 'none' }}></iframe>
     </div>
   );
 };

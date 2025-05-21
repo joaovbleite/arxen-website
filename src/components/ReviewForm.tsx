@@ -18,6 +18,8 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ isOpen, onClose }) => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const modalRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // Add keyboard handler for ESC key
   useEffect(() => {
@@ -43,19 +45,25 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ isOpen, onClose }) => {
       return;
     }
 
-    // Simulate API submission
-    setTimeout(() => {
-      // In a real app, this would be an API call to save the review
-      console.log('Review submitted:', { name, email, location, reviewText, rating, projectType });
-      setSubmitting(false);
-      setSubmitted(true);
+    // Log the review data
+    console.log('Review submitted:', { name, email, location, reviewText, rating, projectType });
+    
+    // Submit form to Formspree
+    if (formRef.current) {
+      formRef.current.submit();
       
-      // Reset form after 3 seconds and close
+      // Set submitted state after a delay to simulate API response
       setTimeout(() => {
-        resetForm();
-        onClose();
-      }, 3000);
-    }, 1500);
+        setSubmitting(false);
+        setSubmitted(true);
+        
+        // Reset form after 3 seconds and close
+        setTimeout(() => {
+          resetForm();
+          onClose();
+        }, 3000);
+      }, 1500);
+    }
   };
 
   const resetForm = () => {
@@ -122,7 +130,15 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ isOpen, onClose }) => {
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-3">
+            <form 
+              ref={formRef}
+              action="https://formspree.io/f/xbloejrb" 
+              method="POST"
+              onSubmit={handleSubmit}
+              target="hidden_iframe"
+              className="space-y-3"
+            >
+              <input type="hidden" name="form-type" value="customer-review" />
               {/* Rating */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -273,6 +289,8 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ isOpen, onClose }) => {
           )}
         </div>
       </div>
+      {/* Hidden iframe for form submission */}
+      <iframe name="hidden_iframe" id="hidden_iframe" ref={iframeRef} style={{ display: 'none' }}></iframe>
     </div>
   );
 };

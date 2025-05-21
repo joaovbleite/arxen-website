@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Phone, Mail, MapPin, Clock, Calendar } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
@@ -71,25 +71,45 @@ const CommercialQuote: React.FC = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  // Create a hidden iframe ref for form submission
+  const formRef = useRef<HTMLFormElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form
+    if (!formData.name || !formData.email || !formData.phone) {
+      alert('Please fill out all required fields.');
+      return;
+    }
+    
     console.log('Commercial Quote Form submitted:', formData);
-    // Basic feedback
-    alert('Thank you for your commercial quote request! We will be in touch soon.');
-    // Reset form (optional)
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      company: '',
-      address: '',
-      serviceType: '',
-      description: '',
-      timeframe: 'flexible',
-      contactMethod: '',
-      bestTime: '',
-      buildingType: ''
-    });
+    
+    // Submit the form to Formspree
+    if (formRef.current) {
+      // Set timeout to show success message
+      setTimeout(() => {
+        // Basic feedback
+        alert('Thank you for your commercial quote request! We will be in touch soon.');
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          company: '',
+          address: '',
+          serviceType: '',
+          description: '',
+          timeframe: 'flexible',
+          contactMethod: '',
+          bestTime: '',
+          buildingType: ''
+        });
+      }, 1000);
+      
+      formRef.current.submit();
+    }
   };
 
   return (
@@ -124,7 +144,14 @@ const CommercialQuote: React.FC = () => {
           <div className="md:col-span-2">
             <div className="bg-white rounded-lg shadow-lg p-8">
               <h2 className="text-2xl font-bold mb-6">Request a Commercial Quote</h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form 
+                ref={formRef}
+                action="https://formspree.io/f/xbloejrb" 
+                method="POST"
+                onSubmit={handleSubmit} 
+                className="space-y-6"
+                target="hidden_iframe"
+              >
                 <input
                   type="text"
                   name="name"
@@ -298,6 +325,9 @@ const CommercialQuote: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Hidden iframe for form submission */}
+      <iframe name="hidden_iframe" id="hidden_iframe" ref={iframeRef} style={{ display: 'none' }}></iframe>
     </div>
   );
 };
