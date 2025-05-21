@@ -198,6 +198,8 @@ const FreeEstimate: React.FC = () => {
   const [showChatWidget, setShowChatWidget] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
   const [otherServiceInput, setOtherServiceInput] = useState('');
+  // Add formspree form ref
+  const formspreeFormRef = React.useRef<HTMLFormElement>(null);
 
   // Total number of steps
   const totalSteps = 4;
@@ -866,6 +868,31 @@ const FreeEstimate: React.FC = () => {
                 {renderStep()}
               </div>
 
+              {/* Hidden Formspree form for submission in step 4 */}
+              {currentStep === 4 && (
+                <form 
+                  ref={formspreeFormRef}
+                  action="https://formspree.io/f/xrgwyejq" 
+                  method="POST" 
+                  style={{ display: 'none' }}
+                >
+                  <input type="text" name="name" value={formData.contactInfo.name} readOnly />
+                  <input type="email" name="email" value={formData.contactInfo.email} readOnly />
+                  <input type="text" name="phone" value={formData.contactInfo.phone} readOnly />
+                  <input type="text" name="company" value={formData.contactInfo.company} readOnly />
+                  <input type="text" name="reference_number" value={referenceNumber} readOnly />
+                  <input type="text" name="project_type" value={formData.projectType} readOnly />
+                  <input type="text" name="services" value={formData.services.map(s => serviceNames[s] || s).join(', ')} readOnly />
+                  <textarea name="project_description" readOnly>{formData.projectDetails.description}</textarea>
+                  <input type="text" name="urgency" value={formData.projectDetails.urgency} readOnly />
+                  <input type="text" name="scope" value={formData.projectDetails.scope} readOnly />
+                  <input type="text" name="timeline" value={`${formData.timeline.value} ${formData.timeline.unit}`} readOnly />
+                  <input type="text" name="preferred_contact" value={formData.contactInfo.preferredContact} readOnly />
+                  <input type="text" name="_next" value="https://arxenconstruction.com/thank-you" readOnly />
+                  <input type="text" name="_gotcha" style={{ display: 'none' }} />
+                </form>
+              )}
+
               {/* Save Progress Button */}
               {currentStep > 1 && (
                 <div className="flex justify-center mb-6">
@@ -909,7 +936,13 @@ const FreeEstimate: React.FC = () => {
                   </button>
                 ) : (
                   <button
-                    onClick={handleSubmit}
+                    onClick={() => {
+                      setIsSubmitting(true);
+                      // Submit the hidden Formspree form
+                      if (formspreeFormRef.current) {
+                        formspreeFormRef.current.submit();
+                      }
+                    }}
                     disabled={isSubmitting}
                     className={`flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors ${
                       isSubmitting ? 'opacity-70 cursor-not-allowed' : ''

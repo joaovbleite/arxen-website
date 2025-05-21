@@ -260,11 +260,12 @@ const Contact: React.FC = () => {
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    // Don't prevent default - allow the form to submit naturally to Formspree
     
     // Check if honeypot field is filled (bot detection)
     if (formData.website) {
       console.log("Spam submission detected");
+      e.preventDefault(); // Only prevent submission for spam
       // Pretend to submit but don't actually do anything
       setIsSubmitting(true);
       setTimeout(() => {
@@ -280,6 +281,7 @@ const Contact: React.FC = () => {
     setErrors(validationErrors);
     
     if (Object.keys(validationErrors).length > 0) {
+      e.preventDefault(); // Prevent submission if there are errors
       // Mark all fields as touched to show errors
       const allTouched: {[key: string]: boolean} = {};
       Object.keys(formData).forEach(key => {
@@ -289,8 +291,6 @@ const Contact: React.FC = () => {
       console.log('Form has errors:', validationErrors);
       return;
     }
-    
-    setIsSubmitting(true);
     
     // Save basic contact info to localStorage for potential re-use
     try {
@@ -309,61 +309,8 @@ const Contact: React.FC = () => {
       console.error('Error saving contact data to localStorage:', error);
     }
     
-    // Prepare the emailjs template params
-    const templateParams = {
-      from_name: formData.name,
-      from_email: formData.email,
-      phone: formData.phone || 'Not provided',
-      address: formData.address || 'Not provided',
-      inquiry_type: formData.inquiryType,
-      service_type: formData.serviceType || 'Not specified',
-      project_type: formData.projectType,
-      message: formData.description,
-      how_heard: formData.howDidYouHear || 'Not specified',
-      other_source: formData.otherSource || '',
-      other_service: formData.otherServiceType || '',
-      referral_name: formData.referralName || '',
-      previous_project: formData.previousProject || '',
-      to_name: 'ARXEN Construction Team',
-      to_email: 'sustenablet@gmail.com'
-    };
-    
-    // Send the email using our email service
-    sendContactEmail(templateParams)
-      .then((result) => {
-        console.log('Email sent successfully:', result.text);
-        setIsSubmitting(false);
-        setSubmitted(true);
-        
-        // Reset form after delay
-        const resetData = {
-          name: '',
-          email: '',
-          phone: '',
-          address: '',
-          inquiryType: 'project',
-          serviceType: '',
-          projectType: 'residential',
-          description: '',
-          howDidYouHear: '',
-          website: '',
-          otherSource: '',
-          otherServiceType: '',
-          referralName: '',
-          previousProject: '',
-        };
-        setFormData({...resetData, website: ''});
-        setTouchedFields({});
-        
-        // Keep success message for 5 seconds
-        setTimeout(() => setSubmitted(false), 5000);
-      })
-      .catch((error) => {
-        console.error('Failed to send email:', error);
-        setIsSubmitting(false);
-        // You can add error handling UI here
-        alert('There was an error sending your message. Please try again or contact us directly at sustenablet@gmail.com');
-      });
+    // Show submitting state (Formspree will handle the actual submission)
+    setIsSubmitting(true);
   };
 
   return (
@@ -414,7 +361,28 @@ const Contact: React.FC = () => {
                 <p className="text-gray-600">Fill out the form below and we'll get back to you as soon as possible.</p>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form 
+                action="https://formspree.io/f/xjvqkrko" 
+                method="POST"
+                className="space-y-6"
+                onSubmit={(e) => {
+                  const validationErrors = validateForm();
+                  // Only set submitting if there are no errors
+                  if (Object.keys(validationErrors).length === 0) {
+                    setIsSubmitting(true);
+                    // Track submission in localStorage for UX
+                    try {
+                      localStorage.setItem('arxen-form-submitted', 'true');
+                      setTimeout(() => {
+                        setSubmitted(true);
+                        setIsSubmitting(false);
+                      }, 2000);
+                    } catch (error) {
+                      console.error('Error saving submission state:', error);
+                    }
+                  }
+                }}
+              >
                 {/* Name and Email row */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
@@ -522,7 +490,7 @@ const Contact: React.FC = () => {
                       </div>
                       <select
                         id="serviceType"
-                        name="serviceType"
+                        name="service"
                         value={formData.serviceType}
                         onChange={handleInputChange}
                         className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none"
@@ -574,7 +542,7 @@ const Contact: React.FC = () => {
                       <input
                         type="text"
                         id="otherServiceType"
-                        name="otherServiceType"
+                        name="other_service"
                         value={formData.otherServiceType || ''}
                         onChange={handleInputChange}
                         className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -593,7 +561,7 @@ const Contact: React.FC = () => {
                     <label className="inline-flex items-center bg-white px-4 py-2 rounded-md border border-gray-300 cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition-colors">
                       <input
                         type="radio"
-                        name="projectType"
+                        name="project_type"
                         value="residential"
                         checked={formData.projectType === 'residential'}
                         onChange={handleInputChange}
@@ -604,7 +572,7 @@ const Contact: React.FC = () => {
                     <label className="inline-flex items-center bg-white px-4 py-2 rounded-md border border-gray-300 cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition-colors">
                       <input
                         type="radio"
-                        name="projectType"
+                        name="project_type"
                         value="commercial"
                         checked={formData.projectType === 'commercial'}
                         onChange={handleInputChange}
@@ -640,7 +608,7 @@ const Contact: React.FC = () => {
                     </div>
                     <textarea
                       id="description"
-                      name="description"
+                      name="message"
                       value={formData.description}
                       onChange={handleInputChange}
                       onBlur={handleBlur}
@@ -672,7 +640,7 @@ const Contact: React.FC = () => {
                     </div>
                     <select
                       id="howDidYouHear"
-                      name="howDidYouHear"
+                      name="how_heard"
                       value={formData.howDidYouHear}
                       onChange={handleInputChange}
                       className="block w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none"
@@ -703,7 +671,7 @@ const Contact: React.FC = () => {
                       <input
                         type="text"
                         id="otherSource"
-                        name="otherSource"
+                        name="other_source"
                         value={formData.otherSource || ''}
                         onChange={handleInputChange}
                         className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -726,7 +694,7 @@ const Contact: React.FC = () => {
                       <input
                         type="text"
                         id="referralName"
-                        name="referralName"
+                        name="referral_name"
                         value={formData.referralName || ''}
                         onChange={handleInputChange}
                         className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -749,7 +717,7 @@ const Contact: React.FC = () => {
                       <input
                         type="text"
                         id="previousProject"
-                        name="previousProject"
+                        name="previous_project"
                         value={formData.previousProject || ''}
                         onChange={handleInputChange}
                         className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -771,6 +739,16 @@ const Contact: React.FC = () => {
                     autoComplete="off"
                   />
                 </div>
+
+                {/* Formspree redirect URL */}
+                <input 
+                  type="hidden" 
+                  name="_next" 
+                  value="https://arxenconstruction.com/thank-you"
+                />
+
+                {/* Formspree honeypot field */}
+                <input type="text" name="_gotcha" style={{ display: 'none' }} />
 
                 {/* Submit Button */}
                 <div>
