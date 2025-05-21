@@ -195,7 +195,7 @@ function App() {
   const [homeContactMessage, setHomeContactMessage] = useState('');
   const [homeContactStatus, setHomeContactStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [focusedField, setFocusedField] = useState<string | null>(null); // State to track focused field
-  const [homeContactPreferredMethod, setHomeContactPreferredMethod] = useState('email'); // Added new state
+  const [homeContactPreferredMethods, setHomeContactPreferredMethods] = useState<string[]>(['email']); // Updated to array for multiple selections
   const [homeContactPhone, setHomeContactPhone] = useState(''); // Added new state
 
   // State for services filter type
@@ -1383,7 +1383,7 @@ function App() {
       from_name: homeContactName,
       from_email: homeContactEmail,
       phone: homeContactPhone,
-      preferred_contact: homeContactPreferredMethod,
+      preferred_contact: homeContactPreferredMethods.join(', '),
       message: homeContactMessage,
       to_name: 'ARXEN Construction Team',
       to_email: 'sustenablet@gmail.com',
@@ -3627,7 +3627,7 @@ Please enter your zip code to continue.
                             key={option.id}
                             htmlFor={option.id}
                             className={`flex items-center cursor-pointer px-2 py-1.5 rounded-md transition-colors duration-200 text-xs ${
-                              homeContactPreferredMethod === option.value 
+                              homeContactPreferredMethods.includes(option.value) 
                                 ? 'bg-blue-600 text-white' 
                                 : 'bg-blue-700/50 text-blue-100 hover:bg-blue-700'
                             }`}
@@ -3637,8 +3637,17 @@ Please enter your zip code to continue.
                               id={option.id}
                               name="contactMethod"
                               value={option.value}
-                              checked={homeContactPreferredMethod === option.value}
-                              onChange={() => setHomeContactPreferredMethod(option.value)}
+                              checked={homeContactPreferredMethods.includes(option.value)}
+                                                              onChange={() => {
+                                  // Toggle selection logic
+                                  if (homeContactPreferredMethods.includes(option.value)) {
+                                    // Remove if already selected
+                                    setHomeContactPreferredMethods(homeContactPreferredMethods.filter(m => m !== option.value));
+                                  } else {
+                                    // Add if not selected
+                                    setHomeContactPreferredMethods([...homeContactPreferredMethods, option.value]);
+                                  }
+                                }}
                               className="mt-1 bg-gray-800 border-gray-700 text-yellow-500 rounded focus:ring-yellow-500"
                             />
                             <div className="flex items-center">
