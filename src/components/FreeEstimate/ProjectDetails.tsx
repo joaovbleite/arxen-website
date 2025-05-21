@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { AlertCircle, Upload, X, Clock, FileText, Lightbulb, Check, Zap, Home, Building, Maximize, Info, Image, MapPin } from 'lucide-react';
+import { AlertCircle, Upload, X, Clock, FileText, Lightbulb, Check, Zap, Home, Building, Building2, Maximize, Info, Image, MapPin } from 'lucide-react';
 import { FormData } from '../../pages/FreeEstimate/FreeEstimate';
 import { validateZipCode, checkServiceArea } from '../../utils/validation';
 
@@ -451,8 +451,8 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
           Help us understand your vision by providing some key details about your project.
         </p>
         
-        {/* Display Context: Project Type, Building Type, Selected Services/Categories - Refined Styling */}
-        <div className="mt-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-lg space-y-3 shadow-sm">
+        {/* Enhanced Display Context: Project Type, Building Type, Selected Services/Categories */}
+        <div className="mt-4 p-5 bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200 rounded-lg space-y-3 shadow-sm">
           <div className="flex items-center text-sm">
             <span className="font-medium text-gray-500 w-36 flex-shrink-0">Project Type:</span>
             <span className="font-semibold text-gray-900">
@@ -463,7 +463,17 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
           {projectType === 'commercial' && selectedBuildingTypeName && (
             <div className="flex items-center text-sm">
               <span className="font-medium text-gray-500 w-36 flex-shrink-0">Building Type:</span>
-              <span className="font-semibold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-md">{selectedBuildingTypeName}</span>
+              <div className="flex items-center">
+                <span className="font-semibold text-blue-700 bg-blue-100 px-2 py-1 rounded-md flex items-center">
+                  <Building2 className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
+                  {selectedBuildingTypeName}
+                </span>
+                {/* Building type suggestion info */}
+                <div className="ml-2 text-xs text-gray-500 flex items-center">
+                  <Info className="w-3.5 h-3.5 text-gray-400 mr-1" />
+                  <span>Services customized for this building type</span>
+                </div>
+              </div>
             </div>
           )}
           
@@ -474,10 +484,23 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {selectedServiceNames.map((name, index) => (
-                  <span key={index} className="px-2.5 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs font-medium border border-blue-200">
+                  <span key={index} className="px-2.5 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium border border-blue-200 flex items-center">
+                    <Check className="w-3 h-3 mr-1 text-blue-700" />
                     {name}
                   </span>
                 ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Add guidance for commercial building types */}
+          {projectType === 'commercial' && selectedBuildingTypeName && (
+            <div className="mt-2 pt-3 border-t border-gray-200">
+              <div className="text-xs text-gray-600 flex items-start">
+                <Lightbulb className="w-4 h-4 text-amber-500 mr-1.5 mt-0.5 flex-shrink-0" />
+                <span>
+                  <strong className="font-medium text-gray-700">Building-Specific Recommendations:</strong> Our experts will provide tailored solutions for {selectedBuildingTypeName.toLowerCase()}, including industry-specific requirements and best practices.
+                </span>
               </div>
             </div>
           )}

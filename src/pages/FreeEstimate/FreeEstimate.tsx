@@ -294,6 +294,25 @@ const FreeEstimate: React.FC = () => {
           description: `Request related to ${buildingName}.\n\nProject Description:\n`
         };
       }
+      
+      // Enhanced building type integration - Automatically select related services based on building type
+      const buildingTypeToServicesMap: Record<string, string[]> = {
+        'office': ['office-renovation', 'commercial-flooring'],
+        'retail': ['retail-fit-out', 'storefront-design'],
+        'restaurant': ['restaurant-renovation', 'commercial-flooring'],
+        'healthcare': ['healthcare-facilities'],
+        'warehouse': ['warehouse-industrial', 'warehouse-optimization'],
+        'data_center': ['data-center-construction', 'network-infrastructure'],
+        'hotel': ['commercial-build-out', 'commercial-flooring'],
+        'manufacturing': ['manufacturing-facility-design', 'warehouse-industrial'],
+        'school': ['commercial-renovations']
+      };
+      
+      // Add recommended services based on building type if services aren't already selected
+      if (buildingTypeToServicesMap[urlBuildingType] && 
+          (!initialUpdates.services || initialUpdates.services.length === 0)) {
+        initialUpdates.services = buildingTypeToServicesMap[urlBuildingType];
+      }
     }
     
     // Handle initialService parameter (from Request Similar Project or other sources)

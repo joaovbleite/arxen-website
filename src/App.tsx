@@ -849,7 +849,7 @@ function App() {
           features: ["Space planning & optimization", "Modern aesthetic upgrades", "Technology integration", "Ergonomic solutions"],
           benefits: ["Improved employee productivity", "Enhanced brand image", "Better client impressions", "Increased property value"],
           processSteps: [ { title: "Needs Assessment", description: "Analyze workflow and space needs" }, { title: "Design & Layout", description: "Develop efficient floor plans" }, { title: "Phased Construction", description: "Minimize business disruption" }, { title: "Fit-out & Finish", description: "Install fixtures and finishes" } ],
-          galleryImages: ["https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5", "https://images.unsplash.com/photo-1600880292203-94d56c436f16"]
+          galleryImages: ["https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5", "https://images.unsplash.com/photo-1600880292203-94d56c436f16", "https://images.unsplash.com/photo-1604328698692-f76ea9498e76", "https://images.unsplash.com/photo-1604328471023-4c9cc8184821"]
         },
         {
           title: "Retail Fit-Outs", 
@@ -859,7 +859,7 @@ function App() {
           features: ["Custom storefront design", "Display & shelving solutions", "POS area integration", "Lighting design"],
           benefits: ["Enhanced customer experience", "Improved product visibility", "Stronger brand presence", "Optimized sales flow"],
           processSteps: [ { title: "Brand Analysis", description: "Understand brand identity & target customer" }, { title: "Layout Planning", description: "Optimize customer flow and display areas" }, { title: "Construction & Installation", description: "Build out the space and install fixtures" }, { title: "Visual Merchandising Setup", description: "Prepare space for opening" } ],
-          galleryImages: ["https://images.unsplash.com/photo-1556742049-0cfed4f6a45d", "https://images.unsplash.com/photo-1523961131990-5ea7c61b2107"]
+          galleryImages: ["https://images.unsplash.com/photo-1556742049-0cfed4f6a45d", "https://images.unsplash.com/photo-1523961131990-5ea7c61b2107", "https://images.unsplash.com/photo-1582719471384-894fbb16e074", "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5", "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5"]
         },
         {
           title: "Restaurant Renovation", 
@@ -869,7 +869,7 @@ function App() {
           features: ["Commercial kitchen design", "Dining area layout optimization", "Bar design & build", "Health code compliance"],
           benefits: ["Improved kitchen efficiency", "Enhanced dining atmosphere", "Increased seating capacity", "Compliance assurance"],
           processSteps: [ { title: "Concept & Design", description: "Develop theme, layout, and kitchen plan" }, { title: "Permitting & Compliance", description: "Ensure adherence to health/building codes" }, { title: "Construction & Installation", description: "Build out dining, kitchen, bar areas" }, { title: "Final Inspections", description: "Pass health and safety checks" } ],
-          galleryImages: ["https://images.unsplash.com/photo-1517248135467-4c7edcad34c4", "https://images.unsplash.com/photo-1552566626-52f8b828add9"]
+          galleryImages: ["https://images.unsplash.com/photo-1517248135467-4c7edcad34c4", "https://images.unsplash.com/photo-1552566626-52f8b828add9", "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d", "https://images.unsplash.com/photo-1559339352-11d035aa65de", "https://images.unsplash.com/photo-1484980972926-edee96e0960d"]
         },
         {
           title: "Healthcare Facilities", 
@@ -951,7 +951,12 @@ function App() {
             { title: "Construction & Installation", description: "Build to exact specifications" },
             { title: "Testing & Certification", description: "Verify all systems meet requirements" }
           ],
-          galleryImages: []
+          galleryImages: [
+            "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
+            "https://images.unsplash.com/photo-1516750105099-4b8a83e217ee",
+            "https://images.unsplash.com/photo-1606765962248-7ff407b51667",
+            "https://images.unsplash.com/photo-1539340422392-0b5a571e364e"
+          ]
         },
         {
           title: "Smart Building Integration", 
@@ -993,10 +998,18 @@ function App() {
           processSteps: [
             { title: "Site Survey", description: "Assess existing infrastructure and requirements" },
             { title: "Infrastructure Planning", description: "Design optimal network layout" },
+            { title: "Equipment Selection", description: "Choose appropriate hardware components" },
             { title: "Professional Installation", description: "Install cabling and network equipment" },
-            { title: "Testing & Certification", description: "Validate all connections meet standards" }
+            { title: "Network Configuration", description: "Set up and optimize network settings" },
+            { title: "Security Implementation", description: "Configure firewalls and security protocols" },
+            { title: "Testing & Certification", description: "Validate all connections meet standards" },
+            { title: "Documentation", description: "Provide complete network documentation" }
           ],
-          galleryImages: []
+          galleryImages: [
+            "https://images.unsplash.com/photo-1544197150-b99a580bb7a8",
+            "https://images.unsplash.com/photo-1558402529-2a93df5f8c9d",
+            "https://images.unsplash.com/photo-1593508512255-86ab42a8e620"
+          ]
         }
       ]
     },
@@ -1147,9 +1160,15 @@ function App() {
             { title: "Space Planning", description: "Design optimal customer journey and product placement" },
             { title: "Material Selection", description: "Choose fixtures, finishes, and materials" },
             { title: "Construction", description: "Build walls, floors, ceilings, and infrastructure" },
-            { title: "Fixture Installation", description: "Install custom displays and merchandising systems" }
+            { title: "Fixture Installation", description: "Install custom displays and merchandising systems" },
+            { title: "Final Walkthrough", description: "Verify quality and functionality of all elements" },
+            { title: "Merchandising Support", description: "Assist with initial product placement strategies" }
           ],
-          galleryImages: []
+          galleryImages: [
+            "https://images.unsplash.com/photo-1551446591-142875a901a1",
+            "https://images.unsplash.com/photo-1618223583953-d57c85321338",
+            "https://images.unsplash.com/photo-1611003228941-98852ba62227"
+          ]
         },
         {
           title: "Pop-up Store Construction", 
@@ -1176,10 +1195,17 @@ function App() {
           processSteps: [
             { title: "Needs Assessment", description: "Determine product and operational requirements" },
             { title: "Design Development", description: "Create effective small-footprint retail solution" },
+            { title: "Material Selection", description: "Choose durable, attractive materials for high-traffic areas" },
             { title: "Custom Fabrication", description: "Build kiosk to exact specifications" },
-            { title: "On-site Installation", description: "Set up and prepare for operation" }
+            { title: "Lighting & Technology", description: "Integrate effective lighting and POS systems" },
+            { title: "On-site Installation", description: "Set up and prepare for operation" },
+            { title: "Final Review", description: "Ensure all elements function as designed" }
           ],
-          galleryImages: []
+          galleryImages: [
+            "https://images.unsplash.com/photo-1605463208491-19726e72798e",
+            "https://images.unsplash.com/photo-1581695171579-96dc88a46408",
+            "https://images.unsplash.com/photo-1480843669328-3f7e37d196ae" 
+          ]
         }
       ]
     },
