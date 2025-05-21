@@ -3459,13 +3459,13 @@ Please enter your zip code to continue.
                     </div>
                   </div>
                   
-                  <form className="space-y-3" onSubmit={handleHomeContactSubmit} noValidate>
+                  <form action="https://formspree.io/f/xbloejrb" method="POST" className="space-y-3" noValidate>
                     <div className="grid grid-cols-2 gap-3">
                       <div className="relative">
                         <input
                           type="text"
                           id="homeName"
-                          name="homeName"
+                          name="name"
                           required
                           value={homeContactName}
                           onChange={(e) => setHomeContactName(e.target.value)}
@@ -3495,7 +3495,7 @@ Please enter your zip code to continue.
                         <input
                           type="email"
                           id="homeEmail"
-                          name="homeEmail"
+                          name="email"
                           required
                           value={homeContactEmail}
                           onChange={(e) => setHomeContactEmail(e.target.value)}
@@ -3588,28 +3588,24 @@ Please enter your zip code to continue.
 
                     <div className="relative">
                       <textarea
-                        id="homeMessage"
-                        name="homeMessage"
+                                                  id="homeContactMessage"
+                          name="message"
                         required
                         rows={3}
                         value={homeContactMessage}
                         onChange={(e) => setHomeContactMessage(e.target.value)}
-                        onFocus={() => setFocusedField('homeMessage')}
+                        onFocus={() => setFocusedField('homeContactMessage')}
                         onBlur={() => setFocusedField(null)}
                         className={`peer w-full px-3 py-2 text-sm rounded-md bg-blue-700/50 border text-white placeholder-transparent resize-none
                                     transition-all
-                                    ${focusedField === 'homeMessage' || homeContactMessage 
-                                      ? 'border-blue-400 ring-1 ring-blue-400' 
-                                      : 'border-blue-700 hover:border-blue-500'} 
+                                    ${focusedField === 'homeContactMessage' ? 'border-blue-400 ring-1 ring-blue-400' : 'border-blue-700 hover:border-blue-500'} 
                                     focus:outline-none focus:ring-1 focus:ring-blue-400`}
                         placeholder="Your Message *"
                       ></textarea>
                       <label 
-                        htmlFor="homeMessage" 
+                        htmlFor="homeContactMessage" 
                         className={`absolute left-3 transition-all pointer-events-none text-xs
-                                   ${focusedField === 'homeMessage' || homeContactMessage 
-                                     ? '-top-2 text-blue-300 bg-blue-800 px-1 rounded' 
-                                     : 'top-2.5 text-blue-300'}
+                                   ${focusedField === 'homeContactMessage' ? '-top-2 text-blue-300 bg-blue-800 px-1 rounded' : 'top-2.5 text-blue-300'}
                                    peer-focus:-top-2 peer-focus:text-blue-300 peer-focus:bg-blue-800 peer-focus:px-1 peer-focus:rounded`}
                       >
                         Your Message *
@@ -3638,7 +3634,17 @@ Please enter your zip code to continue.
                             </svg>
                             Sending...
                           </span>
-                        ) : 'Send Message'}
+                        ) : homeContactStatus === 'success' ? (
+                          <span className="flex items-center">
+                            <Check className="-ml-1 mr-2 h-5 w-5 text-white" />
+                            Message Sent!
+                          </span>
+                        ) : (
+                          <span className="flex items-center">
+                            <Send className="-ml-1 mr-2 h-5 w-5 text-white" />
+                            Send Message
+                          </span>
+                        )}
                       </button>
                       
                       <p className="text-xs text-blue-200">
