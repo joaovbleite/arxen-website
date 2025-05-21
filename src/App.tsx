@@ -261,9 +261,9 @@ function App() {
       category: "Remodeling",
       services: [
         { title: "Kitchen Remodeling", description: "Complete kitchen transformations", path: "/services/kitchen-remodeling", image: "https://images.unsplash.com/photo-1556913088-485a1b37190a", features: ["Custom design", "Cabinet installation", "Countertop replacement", "Appliance integration"], benefits: ["Increased home value", "Improved functionality", "Modern aesthetics", "Personalized space"], processSteps: [ { title: "Consultation", description: "Discuss goals and budget" }, { title: "Design Phase", description: "Create detailed plans" }, { title: "Construction", description: "Execute the remodel" }, { title: "Final Walkthrough", description: "Ensure satisfaction" } ], galleryImages: [ "https://images.unsplash.com/photo-1600585154340-be6161a56a0c", "https://images.unsplash.com/photo-1556913088-485a1b37190a", "https://images.unsplash.com/photo-1579811520974-4f41f89a1f39" ] },
-        { title: "Bathroom Remodeling", description: "Modern bathroom renovations", path: "/services/bathroom-remodeling", image: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14", features: ["Fixture upgrades", "Tile work", "Vanity installation", "Lighting solutions"], benefits: ["Enhanced relaxation", "Increased property value", "Better space utilization", "Improved hygiene"], processSteps: [], galleryImages: [] },
-        { title: "Basement Finishing", description: "Custom basement spaces", path: "/services/basement-finishing", image: "https://images.unsplash.com/photo-1565538810643-b5bdb714032a", features: ["Layout design", "Insulation", "Drywall & flooring", "Egress windows"], benefits: ["Added living area", "Entertainment space", "Potential rental income", "Increased home value"], processSteps: [], galleryImages: [] },
-        { title: "Room Additions", description: "Expand your living space", path: "/services/room-additions", image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e", features: ["Foundation work", "Framing", "Roofing integration", "Interior finishing"], benefits: ["More square footage", "Customized space", "Avoids moving costs", "Boosts property value"], processSteps: [], galleryImages: [] },
+        { title: "Bathroom Remodeling", description: "Modern bathroom renovations", path: "/services/bathroom-remodeling", image: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14", features: ["Fixture upgrades", "Tile work", "Vanity installation", "Lighting solutions"], benefits: ["Enhanced relaxation", "Increased property value", "Better space utilization", "Improved hygiene"], processSteps: [{ title: "Design Consultation", description: "Select fixtures, tiles, and layout" }, { title: "Demolition", description: "Remove old fixtures and finishes" }, { title: "Rough-In Work", description: "Update plumbing and electrical" }, { title: "Installation", description: "Install new fixtures and finishes" }], galleryImages: ["https://images.unsplash.com/photo-1584622650111-993a426fbf0a", "https://images.unsplash.com/photo-1620626011761-996317b8d101", "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14", "https://images.unsplash.com/photo-1507652313519-d4e9174996dd"] },
+        { title: "Basement Finishing", description: "Custom basement spaces", path: "/services/basement-finishing", image: "https://images.unsplash.com/photo-1565538810643-b5bdb714032a", features: ["Layout design", "Insulation", "Drywall & flooring", "Egress windows"], benefits: ["Added living area", "Entertainment space", "Potential rental income", "Increased home value"], processSteps: [{ title: "Waterproofing Inspection", description: "Ensure space is properly sealed" }, { title: "Design & Planning", description: "Create layout for optimal use" }, { title: "Framing & Insulation", description: "Build walls and add thermal protection" }, { title: "Finishing Work", description: "Install drywall, flooring, and fixtures" }], galleryImages: ["https://images.unsplash.com/photo-1600566752355-35792bedcfea", "https://images.unsplash.com/photo-1600210492493-0946911123ea", "https://images.unsplash.com/photo-1560185007-cde436f6a4d0", "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace"] },
+        { title: "Room Additions", description: "Expand your living space", path: "/services/room-additions", image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e", features: ["Foundation work", "Framing", "Roofing integration", "Interior finishing"], benefits: ["More square footage", "Customized space", "Avoids moving costs", "Boosts property value"], processSteps: [{ title: "Architectural Planning", description: "Design addition to match home" }, { title: "Permitting", description: "Secure necessary building permits" }, { title: "Foundation & Structure", description: "Build foundation and frame addition" }, { title: "Integration", description: "Connect new space with existing home" }, { title: "Interior Finishing", description: "Complete all interior details" }], galleryImages: ["https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf", "https://images.unsplash.com/photo-1513694203232-719a280e022f", "https://images.unsplash.com/photo-1531835551805-16d864c8d311", "https://images.unsplash.com/photo-1484154218962-a197022b5858"] },
         { 
           title: "Whole Home Renovation", 
           description: "Complete home transformation", 
@@ -1241,7 +1241,12 @@ function App() {
             { title: "Construction", description: "Build according to specifications" },
             { title: "Completion", description: "Final inspections and handover" }
           ],
-          galleryImages: []
+          galleryImages: [
+            "https://images.unsplash.com/photo-1553413077-190dd305871c",
+            "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d",
+            "https://images.unsplash.com/photo-1499336315816-097655dcfbda",
+            "https://images.unsplash.com/photo-1542013936693-884638332954"
+          ]
         },
         {
           title: "Tenant Build-outs", 
@@ -1254,9 +1259,16 @@ function App() {
             { title: "Requirements Review", description: "Analyze lease and business needs" },
             { title: "Design Development", description: "Create custom space plans" },
             { title: "Permitting", description: "Secure necessary approvals" },
-            { title: "Construction", description: "Build to your specifications" }
+            { title: "Construction", description: "Build to your specifications" },
+            { title: "Final Inspections", description: "Ensure code compliance" },
+            { title: "Move-in Support", description: "Coordinate transition to new space" }
           ],
-          galleryImages: []
+          galleryImages: [
+            "https://images.unsplash.com/photo-1497366811353-6870744d04b2",
+            "https://images.unsplash.com/photo-1497215728101-856f4ea42174",
+            "https://images.unsplash.com/photo-1533090161767-e6ffed986c88",
+            "https://images.unsplash.com/photo-1564069114553-7215e1ff1890"
+          ]
         }
       ]
     }

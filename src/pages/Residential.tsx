@@ -74,7 +74,7 @@ const Residential: React.FC = () => {
         { title: "Bathroom Remodeling", path: "/services/bathroom-remodeling", description: "Modern bathroom renovations" },
         { title: "Basement Finishing", path: "/services/basement-finishing", description: "Custom basement spaces" },
         { title: "Room Additions", path: "/services/room-additions", description: "Expand your living space" },
-        { title: "Placeholder Service 5", path: "/services/placeholder", description: "Demonstrates the View All button." }
+        { title: "Whole Home Renovation", path: "/services/whole-home-renovation", description: "Full house transformation" }
       ]
     },
     {
