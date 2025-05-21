@@ -362,7 +362,7 @@ const Contact: React.FC = () => {
               </div>
 
               <form 
-                action="https://formspree.io/f/xjvqkrko" 
+                action="https://formspree.io/f/xbloejrb" 
                 method="POST"
                 className="space-y-6"
                 onSubmit={(e) => {
