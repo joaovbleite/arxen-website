@@ -3443,9 +3443,11 @@ Please enter your zip code to continue.
                           key={idx}
                           type="button"
                           onClick={() => {
-                            setHomeContactMessage(currentMsg => 
-                              currentMsg.includes(`Regarding: ${purpose}`) ? currentMsg : 
-                              `Regarding: ${purpose}\n\n${currentMsg.replace(/Regarding: .*\n\n/g, '')}`)
+                            setHomeContactMessage(currentMsg => {
+                              // Remove any existing regarding prefix
+                              const cleanedMsg = currentMsg.replace(/Regarding: .*\n\n/g, '');
+                              return `Regarding: ${purpose}\n\n${cleanedMsg}`;
+                            });
                           }}
                           className={`text-center py-1.5 px-1 rounded-md transition-all duration-200 text-xs ${
                             homeContactMessage.includes(`Regarding: ${purpose}`) 
@@ -3661,10 +3663,10 @@ Please enter your zip code to continue.
 
                     <div className="relative">
                       <textarea
-                                                  id="homeContactMessage"
-                          name="message"
+                        id="homeContactMessage"
+                        name="message"
                         required
-                        rows={3}
+                        rows={5}
                         value={homeContactMessage}
                         onChange={(e) => setHomeContactMessage(e.target.value)}
                         onFocus={() => setFocusedField('homeContactMessage')}
@@ -3678,7 +3680,7 @@ Please enter your zip code to continue.
                       <label 
                         htmlFor="homeContactMessage" 
                         className={`absolute left-3 transition-all pointer-events-none text-xs
-                                   ${focusedField === 'homeContactMessage' ? '-top-2 text-blue-300 bg-blue-800 px-1 rounded' : 'top-2.5 text-blue-300'}
+                                   ${focusedField === 'homeContactMessage' || homeContactMessage ? '-top-2 text-blue-300 bg-blue-800 px-1 rounded' : 'top-2.5 text-blue-300'}
                                    peer-focus:-top-2 peer-focus:text-blue-300 peer-focus:bg-blue-800 peer-focus:px-1 peer-focus:rounded`}
                       >
                         Your Message *
