@@ -227,6 +227,7 @@ const FreeEstimate: React.FC = () => {
     const timelineParam = searchParams.get('initialTimeline');
     const emailParam = searchParams.get('email');
     const customServiceParam = searchParams.get('customService');
+    const promoCodeParam = searchParams.get('promo'); // Add promo code from URL parameters
     
     if (savedKey) {
       loadSavedForm(savedKey);
@@ -383,6 +384,17 @@ const FreeEstimate: React.FC = () => {
       initialUpdates.projectDetails = {
         ...(initialUpdates.projectDetails || initialFormData.projectDetails),
         urgency: timelineParam === 'asap' ? 'rush' : 'standard'
+      };
+    }
+    
+    if (promoCodeParam) {
+      initialUpdates.projectDetails = { 
+        ...(initialUpdates.projectDetails || { 
+          description: '', 
+          urgency: '', 
+          scope: '' 
+        }),
+        promoCode: promoCodeParam.toUpperCase()
       };
     }
     
@@ -605,6 +617,7 @@ const FreeEstimate: React.FC = () => {
       scope: formData.projectDetails.scope,
       timeline: `${formData.timeline.value} ${formData.timeline.unit}`,
       promo_code: formData.projectDetails.promoCode || 'None',
+      discount_applied: formData.projectDetails.promoCode?.toUpperCase() === 'ARX25' ? 'YES - 10% OFF LABOR' : 'No',
       preferred_contact: formData.contactInfo.preferredContact,
       to_name: 'ARXEN Construction Team',
       form_source: 'Free Estimate Form'
@@ -892,11 +905,16 @@ const FreeEstimate: React.FC = () => {
                   <input type="text" name="reference_number" value={referenceNumber} readOnly />
                   <input type="text" name="project_type" value={formData.projectType} readOnly />
                   <input type="text" name="services" value={formData.services.map(s => serviceNames[s] || s).join(', ')} readOnly />
-                  <textarea name="project_description" readOnly>{formData.projectDetails.description}</textarea>
-                  <input type="text" name="urgency" value={formData.projectDetails.urgency} readOnly />
-                  <input type="text" name="scope" value={formData.projectDetails.scope} readOnly />
+                  <input type="text" name="description" value={formData.projectDetails.description} readOnly />
                   <input type="text" name="timeline" value={`${formData.timeline.value} ${formData.timeline.unit}`} readOnly />
                   <input type="text" name="preferred_contact" value={formData.contactInfo.preferredContact} readOnly />
+                  
+                  {/* Add prominent promo code fields */}
+                  <input type="text" name="promo_code" value={formData.projectDetails.promoCode || 'None'} readOnly />
+                  <input type="text" name="discount_applied" value={formData.projectDetails.promoCode?.toUpperCase() === 'ARX25' ? 'YES - 10% OFF LABOR' : 'No'} readOnly />
+                  
+                  <input type="text" name="form_source" value="Free Estimate Form" readOnly />
+                  <input type="text" name="_subject" value={`New Estimate Request - ${formData.projectType} Project - ${referenceNumber}`} readOnly />
                   <input type="text" name="_gotcha" style={{ display: 'none' }} />
                 </form>
               )}

@@ -347,6 +347,13 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = ({ formData, referenceNumber, 
             <p className="text-sm text-gray-600">
               If you have a promotional code, enter it here to apply any available discounts to your project quote.
             </p>
+            
+            {/* Add ARX25 discount callout */}
+            <div className="mt-3 bg-orange-100 border border-orange-200 rounded-lg p-3">
+              <p className="text-sm font-medium text-orange-800">
+                <span className="font-bold">Special Offer!</span> Use code <code className="bg-orange-200 text-orange-900 px-1.5 py-0.5 rounded">ARX25</code> during your consultation to get <strong className="text-orange-700">10% OFF</strong> labor costs on your first project!
+              </p>
+            </div>
           </div>
         </div>
       </div>
