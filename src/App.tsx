@@ -4162,6 +4162,7 @@ const enhancedBackgroundCSS = `
 // Extend Window interface to include our custom properties
 declare global {
   interface Window {
+    navigationStartTime?: number;
     navigationTimer?: ReturnType<typeof setTimeout>;
   }
 }
