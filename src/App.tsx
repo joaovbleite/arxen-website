@@ -189,11 +189,14 @@ function App() {
   const [homeEmail, setHomeEmail] = useState('');
   const [homeKeepUpdated, setHomeKeepUpdated] = useState(false);
 
+  // Define a type for the contact form status
+  type ContactFormStatus = 'idle' | 'submitting' | 'success' | 'error';
+  
   // State for homepage contact form
   const [homeContactName, setHomeContactName] = useState('');
   const [homeContactEmail, setHomeContactEmail] = useState('');
   const [homeContactMessage, setHomeContactMessage] = useState('');
-  const [homeContactStatus, setHomeContactStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [homeContactStatus, setHomeContactStatus] = useState<ContactFormStatus>('idle');
   const [focusedField, setFocusedField] = useState<string | null>(null); // State to track focused field
   const [homeContactPreferredMethods, setHomeContactPreferredMethods] = useState<string[]>(['email']); // Updated to array for multiple selections
   const [homeContactPhone, setHomeContactPhone] = useState(''); // Added new state
@@ -3697,15 +3700,17 @@ Please enter your zip code to continue.
                       </div>
                     )}
 
-                    {homeContactStatus === 'success' ? (
-                    <div className="bg-green-700/30 border border-green-600 rounded-lg p-4 text-center animate-fade-in">
-                      <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-green-100 text-green-600 mb-2">
-                        <Check className="w-6 h-6" />
+                    {homeContactStatus === 'success' && (
+                      <div className="bg-green-700/30 border border-green-600 rounded-lg p-4 text-center animate-fade-in">
+                        <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-green-100 text-green-600 mb-2">
+                          <Check className="w-6 h-6" />
+                        </div>
+                        <h4 className="text-white font-bold mb-1">Thank You!</h4>
+                        <p className="text-green-100 text-sm">Your message has been sent successfully. We'll get back to you soon.</p>
                       </div>
-                      <h4 className="text-white font-bold mb-1">Thank You!</h4>
-                      <p className="text-green-100 text-sm">Your message has been sent successfully. We'll get back to you soon.</p>
-                    </div>
-                  ) : (
+                    )}
+                    
+                    {(homeContactStatus === 'idle' || homeContactStatus === 'submitting') && (
                     <div className="flex justify-between items-center">
                       <button 
                         type="submit" 
