@@ -200,6 +200,10 @@ function App() {
   const [focusedField, setFocusedField] = useState<string | null>(null); // State to track focused field
   const [homeContactPreferredMethods, setHomeContactPreferredMethods] = useState<string[]>(['email']); // Updated to array for multiple selections
   const [homeContactPhone, setHomeContactPhone] = useState(''); // Added new state
+  
+  // Form validation states
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // State for services filter type
   const [serviceFilterType, setServiceFilterType] = useState<'all' | 'commercial' | 'residential'>('all');
@@ -1377,45 +1381,98 @@ function App() {
   };
 
   // Handler for homepage contact form submission
+  // Validate the email address
+  const validateHomeContactEmail = () => {
+    if (!homeContactEmail.trim()) {
+      setEmailError("Email is required");
+      return false;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(homeContactEmail.trim())) {
+      setEmailError("Please enter a valid email address");
+      return false;
+    }
+    
+    setEmailError(null);
+    return true;
+  };
+  
+  // Validate name field
+  const validateHomeContactName = () => {
+    if (!homeContactName.trim()) {
+      setNameError("Name is required");
+      return false;
+    }
+    
+    setNameError(null);
+    return true;
+  };
+
   const handleHomeContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate all fields
+    const isEmailValid = validateHomeContactEmail();
+    const isNameValid = validateHomeContactName();
+    
+    if (!isEmailValid || !isNameValid || !homeContactMessage) {
+      return;
+    }
+
     setHomeContactStatus('submitting');
+
+    const formData = new FormData();
+    formData.append('name', homeContactName);
+    formData.append('email', homeContactEmail);
+    formData.append('message', homeContactMessage);
+    formData.append('preferred_contact', homeContactPreferredMethods.join(', '));
     
-    // Prepare template parameters
-    const templateParams = {
-      from_name: homeContactName,
-      from_email: homeContactEmail,
-      phone: homeContactPhone,
-      preferred_contact: homeContactPreferredMethods.join(', '),
-      message: homeContactMessage,
-      to_name: 'ARXEN Construction Team',
-      to_email: 'sustenablet@gmail.com',
-      form_source: 'Homepage Quick Contact'
-    };
+    // Add phone if provided
+    if (homeContactPhone) {
+      formData.append('phone', homeContactPhone);
+    }
     
-    // Send the email using our email service
-    sendContactEmail(templateParams)
-      .then((result) => {
-        console.log('Homepage contact form submitted successfully:', result.text);
-        // Handle success
+    // Check for promo code in message and add it as a separate field
+    if (homeContactMessage.includes('ARX25')) {
+      formData.append('promo_code', 'ARX25');
+      formData.append('discount_applied', 'YES - 10% OFF LABOR');
+    }
+
+    fetch('https://formspree.io/f/xbloejrb', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
         setHomeContactStatus('success');
         setHomeContactName('');
         setHomeContactEmail('');
-        setHomeContactPhone('');
         setHomeContactMessage('');
-        setFocusedField(null); // Reset focus state
+        setHomeContactPhone('');
+        setHomeContactPreferredMethods(['email']);
         
-        // Reset to idle after a delay
-        setTimeout(() => setHomeContactStatus('idle'), 5000);
+        // Reset form after 5 seconds
+        setTimeout(() => {
+          setHomeContactStatus('idle');
+        }, 5000);
       })
-      .catch((error) => {
-        console.error('Failed to send homepage contact form:', error);
-        // Handle error
+      .catch(error => {
+        console.error('Form submission error:', error);
         setHomeContactStatus('error');
-        alert('There was a problem sending your message. Please try again or contact us directly at sustenablet@gmail.com');
         
-        // Reset to idle after a delay
-        setTimeout(() => setHomeContactStatus('idle'), 5000);
+        // Reset error state after 5 seconds
+        setTimeout(() => {
+          setHomeContactStatus('idle');
+        }, 5000);
       });
   };
 
@@ -3530,21 +3587,29 @@ Please enter your zip code to continue.
                     noValidate
                   >
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="relative">
+                                            <div className="relative">
                         <input
                           type="text"
                           id="homeName"
                           name="name"
                           required
                           value={homeContactName}
-                          onChange={(e) => setHomeContactName(e.target.value)}
+                          onChange={(e) => {
+                            setHomeContactName(e.target.value);
+                            if (nameError) validateHomeContactName();
+                          }}
                           onFocus={() => setFocusedField('homeName')}
-                          onBlur={() => setFocusedField(null)}
-                          className={`peer w-full px-3 py-2 text-sm rounded-md bg-blue-700/50 border text-white placeholder-transparent 
+                          onBlur={() => {
+                            setFocusedField(null);
+                            validateHomeContactName();
+                          }}
+                          className={`peer w-full px-3 py-2 text-sm rounded-md bg-blue-700/50 border text-white placeholder-transparent
                                       transition-all
-                                      ${focusedField === 'homeName' || homeContactName 
-                                        ? 'border-blue-400 ring-1 ring-blue-400' 
-                                        : 'border-blue-700 hover:border-blue-500'} 
+                                      ${nameError 
+                                        ? 'border-red-500 ring-1 ring-red-500' 
+                                        : focusedField === 'homeName' || homeContactName 
+                                          ? 'border-blue-400 ring-1 ring-blue-400' 
+                                          : 'border-blue-700 hover:border-blue-500'} 
                                       focus:outline-none focus:ring-1 focus:ring-blue-400`}
                           placeholder="Your Name *"
                         />
@@ -3558,23 +3623,34 @@ Please enter your zip code to continue.
                         >
                           Your Name *
                         </label>
+                        {nameError && (
+                          <p className="text-red-400 text-xs mt-1">{nameError}</p>
+                        )}
                       </div>
 
-                      <div className="relative">
+                                            <div className="relative">
                         <input
                           type="email"
                           id="homeEmail"
                           name="email"
                           required
                           value={homeContactEmail}
-                          onChange={(e) => setHomeContactEmail(e.target.value)}
+                          onChange={(e) => {
+                            setHomeContactEmail(e.target.value);
+                            if (emailError) validateHomeContactEmail();
+                          }}
                           onFocus={() => setFocusedField('homeEmail')}
-                          onBlur={() => setFocusedField(null)}
-                          className={`peer w-full px-3 py-2 text-sm rounded-md bg-blue-700/50 border text-white placeholder-transparent 
+                          onBlur={() => {
+                            setFocusedField(null);
+                            validateHomeContactEmail();
+                          }}
+                          className={`peer w-full px-3 py-2 text-sm rounded-md bg-blue-700/50 border text-white placeholder-transparent
                                       transition-all
-                                      ${focusedField === 'homeEmail' || homeContactEmail 
-                                        ? 'border-blue-400 ring-1 ring-blue-400' 
-                                        : 'border-blue-700 hover:border-blue-500'} 
+                                      ${emailError 
+                                        ? 'border-red-500 ring-1 ring-red-500' 
+                                        : focusedField === 'homeEmail' || homeContactEmail 
+                                          ? 'border-blue-400 ring-1 ring-blue-400' 
+                                          : 'border-blue-700 hover:border-blue-500'} 
                                       focus:outline-none focus:ring-1 focus:ring-blue-400`}
                           placeholder="Your Email *"
                         />
@@ -3588,6 +3664,9 @@ Please enter your zip code to continue.
                         >
                           Your Email *
                         </label>
+                        {emailError && (
+                          <p className="text-red-400 text-xs mt-1">{emailError}</p>
+                        )}
                       </div>
                     </div>
                     
