@@ -2186,7 +2186,7 @@ function App() {
               {/* Hero Section - Enhanced with professional gradient overlay */}
               <div 
                 className="relative h-[50vh] sm:h-[60vh] flex items-center justify-center text-center bg-cover bg-center z-[5]" 
-                style={{ backgroundImage: `url('https://images.unsplash.com/photo-1543286386-71314a40aac6?auto=format&fit=crop&q=80')` }}
+                style={{ backgroundImage: `url('https://i.postimg.cc/c4D7fcpT/Chat-GPT-Image-May-21-2025-08-36-21-PM.png')` }}
               >
                 {/* Professional gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 via-black/70 to-blue-900/80"></div>
