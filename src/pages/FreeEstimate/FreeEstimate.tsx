@@ -508,92 +508,230 @@ const FreeEstimate: React.FC = () => {
   // Generate PDF
   const generatePDF = () => {
     const pdf = new jsPDF();
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const margin = 20;
+    const contentWidth = pageWidth - (margin * 2);
     
-    // Add header
-    pdf.setFontSize(22);
-    pdf.setTextColor(0, 51, 102); // Dark Blue
-    pdf.text('Arxen Construction Estimate Request', 20, 20);
+    // Colors
+    const primaryBlue: [number, number, number] = [59, 130, 246]; // Blue-600
+    const darkGray: [number, number, number] = [31, 41, 55]; // Gray-800
+    const mediumGray: [number, number, number] = [107, 114, 128]; // Gray-500
+    const lightGray: [number, number, number] = [243, 244, 246]; // Gray-100
+    const green: [number, number, number] = [16, 185, 129]; // Green-500
     
+    // Add background header
+    pdf.setFillColor(primaryBlue[0], primaryBlue[1], primaryBlue[2]);
+    pdf.rect(0, 0, pageWidth, 50, 'F');
+    
+    // Add company name in header
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(28);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('ARXEN', margin, 25);
+    pdf.setFontSize(12);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text('CONSTRUCTION', margin, 35);
+    
+    // Add document title on the right
+    pdf.setFontSize(16);
+    pdf.text('ESTIMATE REQUEST', pageWidth - margin - 60, 25);
+    pdf.setFontSize(10);
+    pdf.text('CONFIRMATION', pageWidth - margin - 60, 35);
+    
+    // Reset text color
+    pdf.setTextColor(darkGray[0], darkGray[1], darkGray[2]);
+    
+    // Add reference box
+    let yPos = 65;
+    pdf.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
+    pdf.roundedRect(margin, yPos, contentWidth, 25, 3, 3, 'F');
+    
+    pdf.setFontSize(10);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('REFERENCE NUMBER', margin + 5, yPos + 10);
     pdf.setFontSize(14);
-    pdf.setTextColor(0, 0, 0); // Black
-    pdf.text(`Reference Number: ${referenceNumber}`, 20, 30);
-    pdf.text(`Date: ${new Date().toLocaleDateString()}`, 20, 38);
-    pdf.text(`Project Type: ${formData.projectType === 'residential' ? 'Residential' : 'Commercial'}`, 20, 46);
+    pdf.setTextColor(primaryBlue[0], primaryBlue[1], primaryBlue[2]);
+    pdf.text(referenceNumber, margin + 5, yPos + 18);
     
-    // Add services
-    pdf.setFontSize(16);
-    pdf.setTextColor(0, 51, 102); // Dark Blue
-    pdf.text('Requested Services:', 20, 58);
+    // Add date and project type
+    pdf.setTextColor(mediumGray[0], mediumGray[1], mediumGray[2]);
+    pdf.setFontSize(10);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text(`Date: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}`, pageWidth - margin - 50, yPos + 10);
+    pdf.text(`Type: ${formData.projectType === 'residential' ? 'Residential' : 'Commercial'} Project`, pageWidth - margin - 50, yPos + 18);
     
-    pdf.setFontSize(12);
-    pdf.setTextColor(0, 0, 0); // Black
-    let yPos = 66;
-    formData.services.forEach(serviceId => {
-      pdf.text(`• ${serviceNames[serviceId] || serviceId}`, 25, yPos);
-      yPos += 7;
-    });
+    // Customer Information Section
+    yPos += 40;
+    pdf.setTextColor(darkGray[0], darkGray[1], darkGray[2]);
+    pdf.setFontSize(14);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('CUSTOMER INFORMATION', margin, yPos);
     
-    // Add project details
-    pdf.setFontSize(16);
-    pdf.setTextColor(0, 51, 102); // Dark Blue
-    pdf.text('Project Details:', 20, yPos + 5);
+    // Add line under section header
+    pdf.setDrawColor(primaryBlue[0], primaryBlue[1], primaryBlue[2]);
+    pdf.setLineWidth(0.5);
+    pdf.line(margin, yPos + 2, margin + 80, yPos + 2);
     
-    pdf.setFontSize(12);
-    pdf.setTextColor(0, 0, 0); // Black
-    yPos += 13;
+    yPos += 12;
+    pdf.setFontSize(11);
+    pdf.setFont('helvetica', 'normal');
     
-    // Wrap description text to avoid overflow
-    const splitDescription = pdf.splitTextToSize(formData.projectDetails.description, 170);
-    pdf.text(splitDescription, 20, yPos);
-    yPos += splitDescription.length * 7 + 5;
+    // Two column layout for customer info
+    const col1X = margin;
+    const col2X = margin + contentWidth / 2;
     
-    pdf.text(`Timeline: ${formData.timeline.value} ${formData.timeline.unit}`, 20, yPos);
-    yPos += 7;
-    pdf.text(`Scope: ${formData.projectDetails.scope || 'Not specified'}`, 20, yPos);
-    yPos += 7;
-    pdf.text(`Urgency: ${formData.projectDetails.urgency || 'Not specified'}`, 20, yPos);
-    yPos += 15;
+    pdf.text(`Name: ${formData.contactInfo.name}`, col1X, yPos);
+    pdf.text(`Email: ${formData.contactInfo.email}`, col2X, yPos);
     
-    // Add contact information
-    pdf.setFontSize(16);
-    pdf.setTextColor(0, 51, 102); // Dark Blue
-    pdf.text('Contact Information:', 20, yPos);
-    
-    pdf.setFontSize(12);
-    pdf.setTextColor(0, 0, 0); // Black
-    yPos += 10;
-    pdf.text(`Name: ${formData.contactInfo.name}`, 20, yPos);
-    yPos += 7;
-    pdf.text(`Email: ${formData.contactInfo.email}`, 20, yPos);
-    yPos += 7;
+    yPos += 8;
     if (formData.contactInfo.phone) {
-      pdf.text(`Phone: ${formData.contactInfo.phone}`, 20, yPos);
-      yPos += 7;
+      pdf.text(`Phone: ${formData.contactInfo.phone}`, col1X, yPos);
     }
     if (formData.contactInfo.company) {
-      pdf.text(`Company: ${formData.contactInfo.company}`, 20, yPos);
-      yPos += 7;
+      pdf.text(`Company: ${formData.contactInfo.company}`, col2X, yPos);
     }
     
-    // Add notes if any
+    // Services Section
+    yPos += 20;
+    pdf.setFontSize(14);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('REQUESTED SERVICES', margin, yPos);
+    pdf.line(margin, yPos + 2, margin + 75, yPos + 2);
+    
+    yPos += 12;
+    pdf.setFontSize(11);
+    pdf.setFont('helvetica', 'normal');
+    
+    // Services in a box
+    pdf.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
+    const servicesBoxHeight = formData.services.length * 8 + 10;
+    pdf.roundedRect(margin, yPos - 5, contentWidth, servicesBoxHeight, 3, 3, 'F');
+    
+    formData.services.forEach((serviceId, index) => {
+      pdf.setTextColor(darkGray[0], darkGray[1], darkGray[2]);
+      pdf.text(`•`, margin + 5, yPos + (index * 8));
+      pdf.text(serviceNames[serviceId] || serviceId, margin + 10, yPos + (index * 8));
+    });
+    
+    yPos += servicesBoxHeight + 10;
+    
+    // Project Details Section
+    pdf.setFontSize(14);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('PROJECT DETAILS', margin, yPos);
+    pdf.line(margin, yPos + 2, margin + 60, yPos + 2);
+    
+    yPos += 12;
+    pdf.setFontSize(11);
+    pdf.setFont('helvetica', 'normal');
+    
+    // Primary Goal/Description
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Primary Goal:', margin, yPos);
+    pdf.setFont('helvetica', 'normal');
+    yPos += 8;
+    
+    const splitDescription = pdf.splitTextToSize(formData.projectDetails.description, contentWidth - 10);
+    pdf.text(splitDescription, margin, yPos);
+    yPos += splitDescription.length * 5 + 10;
+    
+    // Project specifications in a grid
+    const specBoxHeight = 30;
+    const specBoxWidth = (contentWidth - 10) / 3;
+    
+    // Timeline box
+    pdf.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
+    pdf.roundedRect(margin, yPos, specBoxWidth, specBoxHeight, 3, 3, 'F');
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(9);
+    pdf.text('TIMELINE', margin + 5, yPos + 8);
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(11);
+    pdf.text(`${formData.timeline.value} ${formData.timeline.unit}`, margin + 5, yPos + 18);
+    
+    // Scope box
+    pdf.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
+    pdf.roundedRect(margin + specBoxWidth + 5, yPos, specBoxWidth, specBoxHeight, 3, 3, 'F');
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(9);
+    pdf.text('SCOPE', margin + specBoxWidth + 10, yPos + 8);
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(11);
+    pdf.text(formData.projectDetails.scope || 'Not specified', margin + specBoxWidth + 10, yPos + 18);
+    
+    // Urgency box
+    pdf.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
+    pdf.roundedRect(margin + (specBoxWidth * 2) + 10, yPos, specBoxWidth, specBoxHeight, 3, 3, 'F');
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(9);
+    pdf.text('URGENCY', margin + (specBoxWidth * 2) + 15, yPos + 8);
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(11);
+    pdf.text(formData.projectDetails.urgency || 'Not specified', margin + (specBoxWidth * 2) + 15, yPos + 18);
+    
+    yPos += specBoxHeight + 15;
+    
+    // Additional Notes (if any)
     if (formData.notes) {
-      yPos += 8;
-      pdf.setFontSize(16);
-      pdf.setTextColor(0, 51, 102); // Dark Blue
-      pdf.text('Additional Notes:', 20, yPos);
+      pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('ADDITIONAL NOTES', margin, yPos);
+      pdf.line(margin, yPos + 2, margin + 65, yPos + 2);
       
-      pdf.setFontSize(12);
-      pdf.setTextColor(0, 0, 0); // Black
       yPos += 10;
-      const splitNotes = pdf.splitTextToSize(formData.notes, 170);
-      pdf.text(splitNotes, 20, yPos);
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'normal');
+      const splitNotes = pdf.splitTextToSize(formData.notes, contentWidth - 10);
+      pdf.text(splitNotes, margin, yPos);
+      yPos += splitNotes.length * 5 + 10;
     }
     
-    // Add footer
-    pdf.setFontSize(10);
-    pdf.setTextColor(128, 128, 128); // Gray
-    pdf.text('Arxen Construction - Your Trusted Remodeling Partner', 20, 280);
-    pdf.text('Phone: 404-934-9458 | Email: sustenablet@gmail.com', 20, 285);
+    // Promo code (if applicable)
+    if (formData.projectDetails.promoCode) {
+      pdf.setFillColor(green[0], green[1], green[2]);
+      pdf.setTextColor(255, 255, 255);
+      pdf.roundedRect(margin, yPos, 100, 20, 3, 3, 'F');
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('PROMO CODE APPLIED', margin + 5, yPos + 8);
+      pdf.setFontSize(12);
+      pdf.text(formData.projectDetails.promoCode, margin + 5, yPos + 16);
+      
+      if (formData.projectDetails.promoCode.toUpperCase() === 'ARX25') {
+        pdf.setTextColor(green[0], green[1], green[2]);
+        pdf.setFont('helvetica', 'normal');
+        pdf.setFontSize(10);
+        pdf.text('10% OFF LABOR', margin + 105, yPos + 12);
+      }
+      
+      yPos += 30;
+    }
+    
+    // Footer section
+    const footerY = pageHeight - 40;
+    
+    // Add separator line
+    pdf.setDrawColor(mediumGray[0], mediumGray[1], mediumGray[2]);
+    pdf.setLineWidth(0.1);
+    pdf.line(margin, footerY - 10, pageWidth - margin, footerY - 10);
+    
+    // Contact information in footer
+    pdf.setTextColor(mediumGray[0], mediumGray[1], mediumGray[2]);
+    pdf.setFontSize(9);
+    pdf.setFont('helvetica', 'normal');
+    pdf.text('ARXEN Construction - Your Trusted Remodeling Partner', margin, footerY);
+    pdf.text('404-934-9458', margin, footerY + 5);
+    pdf.text('teamarxen@gmail.com', margin + 35, footerY + 5);
+    pdf.text('www.arxenconstruction.com', margin + 85, footerY + 5);
+    
+    // Status message
+    pdf.setTextColor(primaryBlue[0], primaryBlue[1], primaryBlue[2]);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('Thank you for your estimate request!', pageWidth - margin - 70, footerY);
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(8);
+    pdf.text('We will contact you within 24-48 hours', pageWidth - margin - 70, footerY + 5);
     
     // Save the PDF
     pdf.save(`Arxen-Estimate-${referenceNumber}.pdf`);
