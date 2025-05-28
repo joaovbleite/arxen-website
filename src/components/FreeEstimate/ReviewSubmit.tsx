@@ -33,7 +33,12 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = ({ formData, referenceNumber, 
 
   // Handle promo code change
   const handlePromoCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateFormData({ promoCode: e.target.value.toUpperCase().trim() });
+    updateFormData({ 
+      projectDetails: { 
+        ...formData.projectDetails, 
+        promoCode: e.target.value.toUpperCase().trim() 
+      } 
+    });
   };
 
   // Format the timeline
@@ -338,7 +343,7 @@ const ReviewSubmit: React.FC<ReviewSubmitProps> = ({ formData, referenceNumber, 
               <input
                 id="promo-code"
                 type="text"
-                value={formData.promoCode || ''}
+                value={formData.projectDetails.promoCode || ''}
                 onChange={handlePromoCodeChange}
                 placeholder="Enter promo code (e.g., ARX25)"
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase tracking-wider"

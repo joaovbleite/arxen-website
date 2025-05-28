@@ -638,6 +638,7 @@ const FreeEstimate: React.FC = () => {
       promo_code: formData.projectDetails.promoCode || 'None',
       discount_applied: formData.projectDetails.promoCode?.toUpperCase() === 'ARX25' ? 'YES - 10% OFF LABOR' : 'No',
       preferred_contact: formData.contactInfo.preferredContact,
+      additional_notes: formData.notes || 'None',
       to_name: 'ARXEN Construction Team',
       form_source: 'Free Estimate Form'
     };
@@ -895,6 +896,56 @@ const FreeEstimate: React.FC = () => {
             </div>
           ) : (
             <>
+              {/* Progress Indicator */}
+              <div className="mb-8">
+                {/* Step Counter */}
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-medium text-gray-700">
+                    Step {currentStep} of {totalSteps}
+                  </h2>
+                  <span className="text-sm text-gray-500">
+                    {currentStep === 1 && 'Service Selection'}
+                    {currentStep === 2 && 'Project Details'}
+                    {currentStep === 3 && 'Contact Information'}
+                    {currentStep === 4 && 'Review & Submit'}
+                  </span>
+                </div>
+                
+                {/* Progress Bar */}
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${progressPercentage}%` }}
+                  />
+                </div>
+                
+                {/* Step Indicators */}
+                <div className="flex justify-between mt-4">
+                  {[1, 2, 3, 4].map((step) => (
+                    <div 
+                      key={step}
+                      className="flex flex-col items-center flex-1"
+                    >
+                      <div className={`
+                        w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium
+                        ${currentStep >= step 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-gray-300 text-gray-500'
+                        }
+                      `}>
+                        {step}
+                      </div>
+                      <span className="text-xs text-gray-500 mt-1 text-center hidden sm:block">
+                        {step === 1 && 'Services'}
+                        {step === 2 && 'Details'}
+                        {step === 3 && 'Contact'}
+                        {step === 4 && 'Review'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {/* Current Step Content */}
               <div className="mb-8">
                 {renderStep()}
@@ -931,6 +982,13 @@ const FreeEstimate: React.FC = () => {
                   {/* Add prominent promo code fields */}
                   <input type="text" name="promo_code" value={formData.projectDetails.promoCode || 'None'} readOnly />
                   <input type="text" name="discount_applied" value={formData.projectDetails.promoCode?.toUpperCase() === 'ARX25' ? 'YES - 10% OFF LABOR' : 'No'} readOnly />
+                  
+                  {/* Add additional notes field */}
+                  <input type="text" name="additional_notes" value={formData.notes || 'None'} readOnly />
+                  
+                  {/* Add urgency and scope fields */}
+                  <input type="text" name="urgency" value={formData.projectDetails.urgency || 'Not specified'} readOnly />
+                  <input type="text" name="scope" value={formData.projectDetails.scope || 'Not specified'} readOnly />
                   
                   <input type="text" name="form_source" value="Free Estimate Form" readOnly />
                   <input type="text" name="_subject" value={`New Estimate Request - ${formData.projectType} Project - ${referenceNumber}`} readOnly />
