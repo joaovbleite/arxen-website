@@ -198,6 +198,9 @@ const FreeEstimate: React.FC = () => {
   const [showChatWidget, setShowChatWidget] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
   const [otherServiceInput, setOtherServiceInput] = useState('');
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+  const [showErrorNotification, setShowErrorNotification] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   // Add formspree form ref
   const formspreeFormRef = React.useRef<HTMLFormElement>(null);
 
@@ -648,17 +651,43 @@ const FreeEstimate: React.FC = () => {
       const result = await sendEstimateEmail(templateParams);
       
       console.log('Free estimate form submitted successfully:', result.text);
-      setSubmissionComplete(true);
-      console.log('Form submitted:', dataToSubmit); // Log combined data
-      if (savedFormKey) {
-        localStorage.removeItem(`arxen-estimate-${savedFormKey}`);
-        setSavedFormKey(null);
+      
+      // Also submit the Formspree form as backup
+      if (formspreeFormRef.current) {
+        formspreeFormRef.current.submit();
       }
+      
+      // Show success and complete the submission
+      setTimeout(() => {
+        setShowSuccessNotification(true);
+        
+        // Hide success notification and show completion after 2 seconds
+        setTimeout(() => {
+          setShowSuccessNotification(false);
+          setSubmissionComplete(true);
+          setIsSubmitting(false);
+          
+          // Clear saved form if exists
+          if (savedFormKey) {
+            localStorage.removeItem(`arxen-estimate-${savedFormKey}`);
+            setSavedFormKey(null);
+          }
+        }, 2000);
+      }, 1000); // Small delay to ensure form submission
+      
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('There was a problem sending your estimate request. Please try again or contact us directly at teamarxen@gmail.com');
-    } finally {
       setIsSubmitting(false);
+      
+      // Show error notification
+      const errorMsg = `There was a problem sending your estimate request. Please try again or contact us directly at teamarxen@gmail.com (Reference: ${referenceNumber})`;
+      setErrorMessage(errorMsg);
+      setShowErrorNotification(true);
+      
+      // Hide error notification after 5 seconds
+      setTimeout(() => {
+        setShowErrorNotification(false);
+      }, 5000);
     }
   };
 
@@ -1052,13 +1081,7 @@ const FreeEstimate: React.FC = () => {
                   </button>
                 ) : (
                   <button
-                    onClick={() => {
-                      setIsSubmitting(true);
-                      // Submit the hidden Formspree form
-                      if (formspreeFormRef.current) {
-                        formspreeFormRef.current.submit();
-                      }
-                    }}
+                    onClick={handleSubmit}
                     disabled={isSubmitting}
                     className={`flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors ${
                       isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
@@ -1140,6 +1163,60 @@ const FreeEstimate: React.FC = () => {
       >
         <MessageCircle size={24} />
       </button>
+
+      {/* Success Notification */}
+      {showSuccessNotification && (
+        <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
+          <div className="bg-green-50 border border-green-200 rounded-lg shadow-lg p-4 flex items-start max-w-sm">
+            <div className="flex-shrink-0">
+              <CheckCircle className="h-6 w-6 text-green-600" />
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-green-800">Success!</h3>
+              <p className="mt-1 text-sm text-green-700">
+                Your estimate request has been submitted successfully. We'll contact you soon!
+              </p>
+            </div>
+            <button
+              onClick={() => setShowSuccessNotification(false)}
+              className="ml-4 flex-shrink-0 text-green-400 hover:text-green-600"
+            >
+              <span className="sr-only">Close</span>
+              <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Error Notification */}
+      {showErrorNotification && (
+        <div className="fixed top-4 right-4 z-50 animate-slide-in-right">
+          <div className="bg-red-50 border border-red-200 rounded-lg shadow-lg p-4 flex items-start max-w-md">
+            <div className="flex-shrink-0">
+              <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div className="ml-3 flex-1">
+              <h3 className="text-sm font-medium text-red-800">Submission Error</h3>
+              <p className="mt-1 text-sm text-red-700">
+                {errorMessage}
+              </p>
+            </div>
+            <button
+              onClick={() => setShowErrorNotification(false)}
+              className="ml-4 flex-shrink-0 text-red-400 hover:text-red-600"
+            >
+              <span className="sr-only">Close</span>
+              <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

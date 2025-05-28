@@ -4,15 +4,43 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } f
 import emailjs from '@emailjs/browser';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Loader2, ChevronsRight, Send } from 'lucide-react';
-// Replace direct imports with lazy imports for page components
-// Keep essential components that are used immediately in the main bundle
+import HardwoodService from './pages/HardwoodService';
+import KitchenRemodeling from './pages/KitchenRemodeling';
+import BathroomRemodeling from './pages/BathroomRemodeling';
 import ServiceTemplate from './pages/ServiceTemplate';
+import Contact from './pages/Contact';
+import CommercialQuote from './pages/CommercialQuote';
+import ResidentialQuote from './pages/ResidentialQuote';
+// Remove imports that don't exist and clean up the code
+import Testimonials from './pages/Testimonials';
+import Portfolio from './pages/Portfolio';
+import TestimonialSlider from './components/TestimonialSlider';
+import Blog from './pages/Blog';
+import About from './pages/About';
+import Residential from './pages/Residential';
+import Offers from './pages/Offers';
+// import VisualizeIt from './pages/VisualizeIt'; // Already commented
+// import MyProjects from './pages/MyProjects'; // Commenting out MyProjects import
+import BlogPost from './pages/BlogPost';
+import BlogCategory from './pages/BlogCategory';
+import CategoryServices from './pages/CategoryServices';
+import CommercialServicePage from './pages/CommercialServicePage';
+import CustomCabinetryPage from './pages/CustomCabinetryPage';
+import FlooringServicesPage from './pages/FlooringServicesPage';
+import Financing from './pages/Financing';
+import FreeEstimate from './pages/FreeEstimate/FreeEstimate';
 import Footer from './components/Footer';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import Sitemap from './pages/Sitemap';
+import NotFound from './pages/NotFound';
 import CookieConsent from './components/CookieConsent';
 import PromoModal from './components/PromoModal';
 import ChatBot from './components/ChatBot';
 import HomeSEO from './components/HomeSEO';
 import { allTestimonials } from './data/testimonials';
+import AccessibilityStatement from './pages/AccessibilityStatement';
+import FAQ from './pages/FAQ';
 import PropertyTypeProvider from './components/PropertyTypeContext';
 import ReviewForm from './components/ReviewForm';
 import LoadingIndicator from './components/LoadingIndicator';
@@ -20,36 +48,6 @@ import { sendContactEmail } from './utils/emailService';
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Analytics } from "@vercel/analytics/react";
 import { validateZipCode } from './utils/validation';
-import TestimonialSlider from './components/TestimonialSlider';
-
-// Lazy load page components
-const HardwoodService = lazy(() => import('./pages/HardwoodService'));
-const KitchenRemodeling = lazy(() => import('./pages/KitchenRemodeling'));
-const BathroomRemodeling = lazy(() => import('./pages/BathroomRemodeling'));
-const Contact = lazy(() => import('./pages/Contact'));
-const CommercialQuote = lazy(() => import('./pages/CommercialQuote'));
-const ResidentialQuote = lazy(() => import('./pages/ResidentialQuote'));
-const Testimonials = lazy(() => import('./pages/Testimonials'));
-const Portfolio = lazy(() => import('./pages/Portfolio'));
-const Blog = lazy(() => import('./pages/Blog'));
-const About = lazy(() => import('./pages/About'));
-const Residential = lazy(() => import('./pages/Residential'));
-const Offers = lazy(() => import('./pages/Offers'));
-const BlogPost = lazy(() => import('./pages/BlogPost'));
-const BlogCategory = lazy(() => import('./pages/BlogCategory'));
-const CategoryServices = lazy(() => import('./pages/CategoryServices'));
-const CommercialServicePage = lazy(() => import('./pages/CommercialServicePage'));
-const CustomCabinetryPage = lazy(() => import('./pages/CustomCabinetryPage'));
-const FlooringServicesPage = lazy(() => import('./pages/FlooringServicesPage'));
-const Financing = lazy(() => import('./pages/Financing'));
-const FreeEstimate = lazy(() => import('./pages/FreeEstimate/FreeEstimate'));
-const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
-const TermsOfService = lazy(() => import('./pages/TermsOfService'));
-const Sitemap = lazy(() => import('./pages/Sitemap'));
-const NotFound = lazy(() => import('./pages/NotFound'));
-const AccessibilityStatement = lazy(() => import('./pages/AccessibilityStatement'));
-const FAQ = lazy(() => import('./pages/FAQ'));
-
 // Define Service type locally based on usage
 interface Service {
   type?: 'category' | 'service' | 'page'; // Added 'page' to allowed types
@@ -263,9 +261,9 @@ function App() {
       category: "Remodeling",
       services: [
         { title: "Kitchen Remodeling", description: "Complete kitchen transformations", path: "/services/kitchen-remodeling", image: "https://images.unsplash.com/photo-1556913088-485a1b37190a", features: ["Custom design", "Cabinet installation", "Countertop replacement", "Appliance integration"], benefits: ["Increased home value", "Improved functionality", "Modern aesthetics", "Personalized space"], processSteps: [ { title: "Consultation", description: "Discuss goals and budget" }, { title: "Design Phase", description: "Create detailed plans" }, { title: "Construction", description: "Execute the remodel" }, { title: "Final Walkthrough", description: "Ensure satisfaction" } ], galleryImages: [ "https://images.unsplash.com/photo-1600585154340-be6161a56a0c", "https://images.unsplash.com/photo-1556913088-485a1b37190a", "https://images.unsplash.com/photo-1579811520974-4f41f89a1f39" ] },
-        { title: "Bathroom Remodeling", description: "Modern bathroom renovations", path: "/services/bathroom-remodeling", image: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14", features: ["Fixture upgrades", "Tile work", "Vanity installation", "Lighting solutions"], benefits: ["Enhanced relaxation", "Increased property value", "Better space utilization", "Improved hygiene"], processSteps: [{ title: "Design Consultation", description: "Select fixtures, tiles, and layout" }, { title: "Demolition", description: "Remove old fixtures and finishes" }, { title: "Rough-In Work", description: "Update plumbing and electrical" }, { title: "Installation", description: "Install new fixtures and finishes" }], galleryImages: ["https://images.unsplash.com/photo-1584622650111-993a426fbf0a", "https://images.unsplash.com/photo-1620626011761-996317b8d101", "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14", "https://images.unsplash.com/photo-1507652313519-d4e9174996dd"] },
-        { title: "Basement Finishing", description: "Custom basement spaces", path: "/services/basement-finishing", image: "https://images.unsplash.com/photo-1565538810643-b5bdb714032a", features: ["Layout design", "Insulation", "Drywall & flooring", "Egress windows"], benefits: ["Added living area", "Entertainment space", "Potential rental income", "Increased home value"], processSteps: [{ title: "Waterproofing Inspection", description: "Ensure space is properly sealed" }, { title: "Design & Planning", description: "Create layout for optimal use" }, { title: "Framing & Insulation", description: "Build walls and add thermal protection" }, { title: "Finishing Work", description: "Install drywall, flooring, and fixtures" }], galleryImages: ["https://images.unsplash.com/photo-1600566752355-35792bedcfea", "https://images.unsplash.com/photo-1600210492493-0946911123ea", "https://images.unsplash.com/photo-1560185007-cde436f6a4d0", "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace"] },
-        { title: "Room Additions", description: "Expand your living space", path: "/services/room-additions", image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e", features: ["Foundation work", "Framing", "Roofing integration", "Interior finishing"], benefits: ["More square footage", "Customized space", "Avoids moving costs", "Boosts property value"], processSteps: [{ title: "Architectural Planning", description: "Design addition to match home" }, { title: "Permitting", description: "Secure necessary building permits" }, { title: "Foundation & Structure", description: "Build foundation and frame addition" }, { title: "Integration", description: "Connect new space with existing home" }, { title: "Interior Finishing", description: "Complete all interior details" }], galleryImages: ["https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf", "https://images.unsplash.com/photo-1513694203232-719a280e022f", "https://images.unsplash.com/photo-1531835551805-16d864c8d311", "https://images.unsplash.com/photo-1484154218962-a197022b5858"] },
+        { title: "Bathroom Remodeling", description: "Modern bathroom renovations", path: "/services/bathroom-remodeling", image: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14", features: ["Fixture upgrades", "Tile work", "Vanity installation", "Lighting solutions"], benefits: ["Enhanced relaxation", "Increased property value", "Better space utilization", "Improved hygiene"], processSteps: [], galleryImages: [] },
+        { title: "Basement Finishing", description: "Custom basement spaces", path: "/services/basement-finishing", image: "https://images.unsplash.com/photo-1565538810643-b5bdb714032a", features: ["Layout design", "Insulation", "Drywall & flooring", "Egress windows"], benefits: ["Added living area", "Entertainment space", "Potential rental income", "Increased home value"], processSteps: [], galleryImages: [] },
+        { title: "Room Additions", description: "Expand your living space", path: "/services/room-additions", image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e", features: ["Foundation work", "Framing", "Roofing integration", "Interior finishing"], benefits: ["More square footage", "Customized space", "Avoids moving costs", "Boosts property value"], processSteps: [], galleryImages: [] },
         { 
           title: "Whole Home Renovation", 
           description: "Complete home transformation", 
@@ -851,7 +849,7 @@ function App() {
           features: ["Space planning & optimization", "Modern aesthetic upgrades", "Technology integration", "Ergonomic solutions"],
           benefits: ["Improved employee productivity", "Enhanced brand image", "Better client impressions", "Increased property value"],
           processSteps: [ { title: "Needs Assessment", description: "Analyze workflow and space needs" }, { title: "Design & Layout", description: "Develop efficient floor plans" }, { title: "Phased Construction", description: "Minimize business disruption" }, { title: "Fit-out & Finish", description: "Install fixtures and finishes" } ],
-          galleryImages: ["https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5", "https://images.unsplash.com/photo-1600880292203-94d56c436f16", "https://images.unsplash.com/photo-1604328698692-f76ea9498e76", "https://images.unsplash.com/photo-1604328471023-4c9cc8184821"]
+          galleryImages: ["https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5", "https://images.unsplash.com/photo-1600880292203-94d56c436f16"]
         },
         {
           title: "Retail Fit-Outs", 
@@ -861,7 +859,7 @@ function App() {
           features: ["Custom storefront design", "Display & shelving solutions", "POS area integration", "Lighting design"],
           benefits: ["Enhanced customer experience", "Improved product visibility", "Stronger brand presence", "Optimized sales flow"],
           processSteps: [ { title: "Brand Analysis", description: "Understand brand identity & target customer" }, { title: "Layout Planning", description: "Optimize customer flow and display areas" }, { title: "Construction & Installation", description: "Build out the space and install fixtures" }, { title: "Visual Merchandising Setup", description: "Prepare space for opening" } ],
-          galleryImages: ["https://images.unsplash.com/photo-1556742049-0cfed4f6a45d", "https://images.unsplash.com/photo-1523961131990-5ea7c61b2107", "https://images.unsplash.com/photo-1582719471384-894fbb16e074", "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5", "https://images.unsplash.com/photo-1581783342308-f792dbdd27c5"]
+          galleryImages: ["https://images.unsplash.com/photo-1556742049-0cfed4f6a45d", "https://images.unsplash.com/photo-1523961131990-5ea7c61b2107"]
         },
         {
           title: "Restaurant Renovation", 
@@ -871,7 +869,7 @@ function App() {
           features: ["Commercial kitchen design", "Dining area layout optimization", "Bar design & build", "Health code compliance"],
           benefits: ["Improved kitchen efficiency", "Enhanced dining atmosphere", "Increased seating capacity", "Compliance assurance"],
           processSteps: [ { title: "Concept & Design", description: "Develop theme, layout, and kitchen plan" }, { title: "Permitting & Compliance", description: "Ensure adherence to health/building codes" }, { title: "Construction & Installation", description: "Build out dining, kitchen, bar areas" }, { title: "Final Inspections", description: "Pass health and safety checks" } ],
-          galleryImages: ["https://images.unsplash.com/photo-1517248135467-4c7edcad34c4", "https://images.unsplash.com/photo-1552566626-52f8b828add9", "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d", "https://images.unsplash.com/photo-1559339352-11d035aa65de", "https://images.unsplash.com/photo-1484980972926-edee96e0960d"]
+          galleryImages: ["https://images.unsplash.com/photo-1517248135467-4c7edcad34c4", "https://images.unsplash.com/photo-1552566626-52f8b828add9"]
         },
         {
           title: "Healthcare Facilities", 
@@ -880,13 +878,7 @@ function App() {
           image: "https://images.unsplash.com/photo-1580281658223-9b93f18ae9ae?auto=format&fit=crop&q=80",
           features: ["Specialized medical room design", "Compliance with healthcare codes", "Patient flow optimization", "Durable & hygienic materials"],
           benefits: ["Improved patient care environment", "Regulatory compliance assurance", "Enhanced operational efficiency", "Safe and welcoming space"],
-          processSteps: [
-            { title: "Medical Space Planning", description: "Design efficient clinical workflow spaces" },
-            { title: "Code Compliance", description: "Meet strict healthcare facility regulations" },
-            { title: "Specialized Systems", description: "Implement medical gas, negative pressure, and other systems" },
-            { title: "Clean Construction", description: "Maintain infection control during construction" }
-          ], 
-          galleryImages: []
+          processSteps: [], galleryImages: []
         },
         {
           title: "Warehouse & Industrial", 
@@ -895,13 +887,7 @@ function App() {
           image: "https://images.unsplash.com/photo-1587019158091-1a123c84796e?auto=format&fit=crop&q=80",
           features: ["High-bay construction", "Loading dock design", "Specialized flooring", "Safety systems integration"],
           benefits: ["Optimized storage & logistics", "Improved operational safety", "Durable and functional space", "Scalable infrastructure"],
-          processSteps: [
-            { title: "Requirements Analysis", description: "Assess operational needs and facility requirements" },
-            { title: "Structural Planning", description: "Design optimal layout for workflow efficiency" },
-            { title: "Systems Integration", description: "Incorporate specialized industrial systems" },
-            { title: "Quality Construction", description: "Build with durable materials for industrial use" }
-          ], 
-          galleryImages: [] 
+          processSteps: [], galleryImages: [] 
         },
         {
           title: "Commercial Flooring", 
@@ -953,12 +939,7 @@ function App() {
             { title: "Construction & Installation", description: "Build to exact specifications" },
             { title: "Testing & Certification", description: "Verify all systems meet requirements" }
           ],
-          galleryImages: [
-            "https://images.unsplash.com/photo-1558494949-ef010cbdcc31",
-            "https://images.unsplash.com/photo-1516750105099-4b8a83e217ee",
-            "https://images.unsplash.com/photo-1606765962248-7ff407b51667",
-            "https://images.unsplash.com/photo-1539340422392-0b5a571e364e"
-          ]
+          galleryImages: []
         },
         {
           title: "Smart Building Integration", 
@@ -1000,18 +981,10 @@ function App() {
           processSteps: [
             { title: "Site Survey", description: "Assess existing infrastructure and requirements" },
             { title: "Infrastructure Planning", description: "Design optimal network layout" },
-            { title: "Equipment Selection", description: "Choose appropriate hardware components" },
             { title: "Professional Installation", description: "Install cabling and network equipment" },
-            { title: "Network Configuration", description: "Set up and optimize network settings" },
-            { title: "Security Implementation", description: "Configure firewalls and security protocols" },
-            { title: "Testing & Certification", description: "Validate all connections meet standards" },
-            { title: "Documentation", description: "Provide complete network documentation" }
+            { title: "Testing & Certification", description: "Validate all connections meet standards" }
           ],
-          galleryImages: [
-            "https://images.unsplash.com/photo-1544197150-b99a580bb7a8",
-            "https://images.unsplash.com/photo-1558402529-2a93df5f8c9d",
-            "https://images.unsplash.com/photo-1593508512255-86ab42a8e620"
-          ]
+          galleryImages: []
         }
       ]
     },
@@ -1038,7 +1011,7 @@ function App() {
           title: "Warehouse Optimization", 
           path: "/services/warehouse-optimization", 
           description: "Transform storage and distribution facilities for maximum efficiency.", 
-          image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80",
+          image: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&q=80",
           features: ["Racking system design", "Loading dock renovation", "Workflow analysis", "Automation integration"],
           benefits: ["Increased storage capacity", "Improved inventory management", "Enhanced logistics flow", "Reduced operational costs"],
           processSteps: [
@@ -1162,15 +1135,9 @@ function App() {
             { title: "Space Planning", description: "Design optimal customer journey and product placement" },
             { title: "Material Selection", description: "Choose fixtures, finishes, and materials" },
             { title: "Construction", description: "Build walls, floors, ceilings, and infrastructure" },
-            { title: "Fixture Installation", description: "Install custom displays and merchandising systems" },
-            { title: "Final Walkthrough", description: "Verify quality and functionality of all elements" },
-            { title: "Merchandising Support", description: "Assist with initial product placement strategies" }
+            { title: "Fixture Installation", description: "Install custom displays and merchandising systems" }
           ],
-          galleryImages: [
-            "https://images.unsplash.com/photo-1551446591-142875a901a1",
-            "https://images.unsplash.com/photo-1618223583953-d57c85321338",
-            "https://images.unsplash.com/photo-1611003228941-98852ba62227"
-          ]
+          galleryImages: []
         },
         {
           title: "Pop-up Store Construction", 
@@ -1197,17 +1164,10 @@ function App() {
           processSteps: [
             { title: "Needs Assessment", description: "Determine product and operational requirements" },
             { title: "Design Development", description: "Create effective small-footprint retail solution" },
-            { title: "Material Selection", description: "Choose durable, attractive materials for high-traffic areas" },
             { title: "Custom Fabrication", description: "Build kiosk to exact specifications" },
-            { title: "Lighting & Technology", description: "Integrate effective lighting and POS systems" },
-            { title: "On-site Installation", description: "Set up and prepare for operation" },
-            { title: "Final Review", description: "Ensure all elements function as designed" }
+            { title: "On-site Installation", description: "Set up and prepare for operation" }
           ],
-          galleryImages: [
-            "https://images.unsplash.com/photo-1605463208491-19726e72798e",
-            "https://images.unsplash.com/photo-1581695171579-96dc88a46408",
-            "https://images.unsplash.com/photo-1480843669328-3f7e37d196ae" 
-          ]
+          galleryImages: []
         }
       ]
     },
@@ -1243,12 +1203,7 @@ function App() {
             { title: "Construction", description: "Build according to specifications" },
             { title: "Completion", description: "Final inspections and handover" }
           ],
-          galleryImages: [
-            "https://images.unsplash.com/photo-1553413077-190dd305871c",
-            "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d",
-            "https://images.unsplash.com/photo-1499336315816-097655dcfbda",
-            "https://images.unsplash.com/photo-1542013936693-884638332954"
-          ]
+          galleryImages: []
         },
         {
           title: "Tenant Build-outs", 
@@ -1261,16 +1216,9 @@ function App() {
             { title: "Requirements Review", description: "Analyze lease and business needs" },
             { title: "Design Development", description: "Create custom space plans" },
             { title: "Permitting", description: "Secure necessary approvals" },
-            { title: "Construction", description: "Build to your specifications" },
-            { title: "Final Inspections", description: "Ensure code compliance" },
-            { title: "Move-in Support", description: "Coordinate transition to new space" }
+            { title: "Construction", description: "Build to your specifications" }
           ],
-          galleryImages: [
-            "https://images.unsplash.com/photo-1497366811353-6870744d04b2",
-            "https://images.unsplash.com/photo-1497215728101-856f4ea42174",
-            "https://images.unsplash.com/photo-1533090161767-e6ffed986c88",
-            "https://images.unsplash.com/photo-1564069114553-7215e1ff1890"
-          ]
+          galleryImages: []
         }
       ]
     }
@@ -2186,7 +2134,7 @@ function App() {
               {/* Hero Section - Enhanced with professional gradient overlay */}
               <div 
                 className="relative h-[50vh] sm:h-[60vh] flex items-center justify-center text-center bg-cover bg-center z-[5]" 
-                style={{ backgroundImage: `url('https://i.postimg.cc/c4D7fcpT/Chat-GPT-Image-May-21-2025-08-36-21-PM.png')` }}
+                style={{ backgroundImage: `url('https://images.unsplash.com/photo-1543286386-71314a40aac6?auto=format&fit=crop&q=80')` }}
               >
                 {/* Professional gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 via-black/70 to-blue-900/80"></div>
