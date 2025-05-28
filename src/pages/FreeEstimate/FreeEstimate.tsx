@@ -709,29 +709,35 @@ const FreeEstimate: React.FC = () => {
     }
     
     // Footer section
-    const footerY = pageHeight - 40;
+    const footerY = pageHeight - 50; // Increased from 40 to give more space
     
     // Add separator line
     pdf.setDrawColor(mediumGray[0], mediumGray[1], mediumGray[2]);
     pdf.setLineWidth(0.1);
     pdf.line(margin, footerY - 10, pageWidth - margin, footerY - 10);
     
-    // Contact information in footer
+    // Contact information in footer - LEFT SIDE
     pdf.setTextColor(mediumGray[0], mediumGray[1], mediumGray[2]);
     pdf.setFontSize(9);
     pdf.setFont('helvetica', 'normal');
     pdf.text('ARXEN Construction - Your Trusted Remodeling Partner', margin, footerY);
-    pdf.text('404-934-9458', margin, footerY + 5);
-    pdf.text('teamarxen@gmail.com', margin + 35, footerY + 5);
-    pdf.text('www.arxenconstruction.com', margin + 85, footerY + 5);
     
-    // Status message
+    // Contact details on separate lines
+    pdf.setFontSize(8);
+    pdf.text('Phone: 404-934-9458', margin, footerY + 7);
+    pdf.text('Email: teamarxen@gmail.com', margin, footerY + 14);
+    pdf.text('Web: www.arxenconstruction.com', margin, footerY + 21);
+    
+    // Status message - RIGHT SIDE
+    const rightTextX = pageWidth - margin - 80;
     pdf.setTextColor(primaryBlue[0], primaryBlue[1], primaryBlue[2]);
+    pdf.setFontSize(10);
     pdf.setFont('helvetica', 'bold');
-    pdf.text('Thank you for your estimate request!', pageWidth - margin - 70, footerY);
+    pdf.text('Thank you for your estimate request!', rightTextX, footerY + 7);
     pdf.setFont('helvetica', 'normal');
     pdf.setFontSize(8);
-    pdf.text('We will contact you within 24-48 hours', pageWidth - margin - 70, footerY + 5);
+    pdf.setTextColor(mediumGray[0], mediumGray[1], mediumGray[2]);
+    pdf.text('We will contact you within 24-48 hours', rightTextX, footerY + 14);
     
     // Save the PDF
     pdf.save(`Arxen-Estimate-${referenceNumber}.pdf`);
