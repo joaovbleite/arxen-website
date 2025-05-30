@@ -4,43 +4,44 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } f
 import emailjs from '@emailjs/browser';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Loader2, ChevronsRight, Send } from 'lucide-react';
-import HardwoodService from './pages/HardwoodService';
-import KitchenRemodeling from './pages/KitchenRemodeling';
-import BathroomRemodeling from './pages/BathroomRemodeling';
-import ServiceTemplate from './pages/ServiceTemplate';
-import Contact from './pages/Contact';
-import CommercialQuote from './pages/CommercialQuote';
-import ResidentialQuote from './pages/ResidentialQuote';
+// Use lazy loading for route components
+const HardwoodService = lazy(() => import('./pages/HardwoodService'));
+const KitchenRemodeling = lazy(() => import('./pages/KitchenRemodeling'));
+const BathroomRemodeling = lazy(() => import('./pages/BathroomRemodeling'));
+const ServiceTemplate = lazy(() => import('./pages/ServiceTemplate'));
+const Contact = lazy(() => import('./pages/Contact'));
+const CommercialQuote = lazy(() => import('./pages/CommercialQuote'));
+const ResidentialQuote = lazy(() => import('./pages/ResidentialQuote'));
 // Remove imports that don't exist and clean up the code
-import Testimonials from './pages/Testimonials';
-import Portfolio from './pages/Portfolio';
+const Testimonials = lazy(() => import('./pages/Testimonials'));
+const Portfolio = lazy(() => import('./pages/Portfolio'));
 import TestimonialSlider from './components/TestimonialSlider';
-import Blog from './pages/Blog';
-import About from './pages/About';
-import Residential from './pages/Residential';
-import Offers from './pages/Offers';
+const Blog = lazy(() => import('./pages/Blog'));
+const About = lazy(() => import('./pages/About'));
+const Residential = lazy(() => import('./pages/Residential'));
+const Offers = lazy(() => import('./pages/Offers'));
 // import VisualizeIt from './pages/VisualizeIt'; // Already commented
 // import MyProjects from './pages/MyProjects'; // Commenting out MyProjects import
-import BlogPost from './pages/BlogPost';
-import BlogCategory from './pages/BlogCategory';
-import CategoryServices from './pages/CategoryServices';
-import CommercialServicePage from './pages/CommercialServicePage';
-import CustomCabinetryPage from './pages/CustomCabinetryPage';
-import FlooringServicesPage from './pages/FlooringServicesPage';
-import Financing from './pages/Financing';
-import FreeEstimate from './pages/FreeEstimate/FreeEstimate';
+const BlogPost = lazy(() => import('./pages/BlogPost'));
+const BlogCategory = lazy(() => import('./pages/BlogCategory'));
+const CategoryServices = lazy(() => import('./pages/CategoryServices'));
+const CommercialServicePage = lazy(() => import('./pages/CommercialServicePage'));
+const CustomCabinetryPage = lazy(() => import('./pages/CustomCabinetryPage'));
+const FlooringServicesPage = lazy(() => import('./pages/FlooringServicesPage'));
+const Financing = lazy(() => import('./pages/Financing'));
+const FreeEstimate = lazy(() => import('./pages/FreeEstimate/FreeEstimate'));
 import Footer from './components/Footer';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsOfService from './pages/TermsOfService';
-import Sitemap from './pages/Sitemap';
-import NotFound from './pages/NotFound';
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const Sitemap = lazy(() => import('./pages/Sitemap'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 import CookieConsent from './components/CookieConsent';
 import PromoModal from './components/PromoModal';
 import ChatBot from './components/ChatBot';
 import HomeSEO from './components/HomeSEO';
 import { allTestimonials } from './data/testimonials';
-import AccessibilityStatement from './pages/AccessibilityStatement';
-import FAQ from './pages/FAQ';
+const AccessibilityStatement = lazy(() => import('./pages/AccessibilityStatement'));
+const FAQ = lazy(() => import('./pages/FAQ'));
 import PropertyTypeProvider from './components/PropertyTypeContext';
 import ReviewForm from './components/ReviewForm';
 import LoadingIndicator from './components/LoadingIndicator';
@@ -261,7 +262,7 @@ function App() {
       category: "Remodeling",
       services: [
         { title: "Kitchen Remodeling", description: "Complete kitchen transformations", path: "/services/kitchen-remodeling", image: "https://images.unsplash.com/photo-1556913088-485a1b37190a", features: ["Custom design", "Cabinet installation", "Countertop replacement", "Appliance integration"], benefits: ["Increased home value", "Improved functionality", "Modern aesthetics", "Personalized space"], processSteps: [ { title: "Consultation", description: "Discuss goals and budget" }, { title: "Design Phase", description: "Create detailed plans" }, { title: "Construction", description: "Execute the remodel" }, { title: "Final Walkthrough", description: "Ensure satisfaction" } ], galleryImages: [ "https://images.unsplash.com/photo-1600585154340-be6161a56a0c", "https://images.unsplash.com/photo-1556913088-485a1b37190a", "https://images.unsplash.com/photo-1579811520974-4f41f89a1f39" ] },
-        { title: "Bathroom Remodeling", description: "Modern bathroom renovations", path: "/services/bathroom-remodeling", image: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14", features: ["Fixture upgrades", "Tile work", "Vanity installation", "Lighting solutions"], benefits: ["Enhanced relaxation", "Increased property value", "Better space utilization", "Improved hygiene"], processSteps: [], galleryImages: [] },
+        { title: "Bathroom Remodeling", description: "Modern bathroom renovations", path: "/services/bathroom-remodeling", image: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&q=80", features: ["Fixture upgrades", "Tile work", "Vanity installation", "Lighting solutions"], benefits: ["Enhanced relaxation", "Increased property value", "Better space utilization", "Improved hygiene"], processSteps: [], galleryImages: [] },
         { title: "Basement Finishing", description: "Custom basement spaces", path: "/services/basement-finishing", image: "https://images.unsplash.com/photo-1565538810643-b5bdb714032a", features: ["Layout design", "Insulation", "Drywall & flooring", "Egress windows"], benefits: ["Added living area", "Entertainment space", "Potential rental income", "Increased home value"], processSteps: [], galleryImages: [] },
         { title: "Room Additions", description: "Expand your living space", path: "/services/room-additions", image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e", features: ["Foundation work", "Framing", "Roofing integration", "Interior finishing"], benefits: ["More square footage", "Customized space", "Avoids moving costs", "Boosts property value"], processSteps: [], galleryImages: [] },
         { 
@@ -2119,9 +2120,9 @@ function App() {
           </div>
         </div>
 
-        {/* Routes for all pages - wrapped in Suspense for better loading handling */}
-        <Suspense fallback={<LoadingIndicator isLoading={true} />}>
-        <Routes>
+                  {/* Routes for all pages - wrapped in Suspense for better loading handling */}
+          <Suspense fallback={<LoadingIndicator isLoading={true} />}>
+            <Routes>
           {/* Redirect from /quote to /free-estimate for legacy links */}
           <Route path="/quote" element={<Navigate to="/free-estimate" replace />} />
           
@@ -3192,6 +3193,8 @@ Please enter your zip code to continue.
                     src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&q=80" 
                     alt="Before Bathroom Renovation" 
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center md:hidden">
                     <span className="inline-block bg-black/60 px-2 py-0.5 rounded-full text-xs font-semibold text-white mb-1.5">BEFORE</span>
@@ -3211,6 +3214,8 @@ Please enter your zip code to continue.
                   src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&q=80" 
                   alt="After Bathroom Renovation" 
                   className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
                   <span className="text-white font-bold inline-block bg-blue-600 px-2 py-0.5 rounded-full text-xs">AFTER</span>
@@ -3241,6 +3246,8 @@ Please enter your zip code to continue.
                     src="https://images.unsplash.com/photo-1589459072535-550f4ea42174?auto=format&fit=crop&q=80" 
                     alt="Before Living Room Renovation" 
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center md:hidden">
                     <span className="inline-block bg-black/60 px-2 py-0.5 rounded-full text-xs font-semibold text-white mb-1.5">BEFORE</span>
@@ -3260,6 +3267,8 @@ Please enter your zip code to continue.
                   src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&q=80" 
                   alt="After Living Room Renovation" 
                   className="w-full h-full object-cover"
+                  loading="lazy" 
+                  decoding="async"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
                   <span className="text-white font-bold inline-block bg-blue-600 px-2 py-0.5 rounded-full text-xs">AFTER</span>
@@ -3290,6 +3299,8 @@ Please enter your zip code to continue.
                     src="https://images.unsplash.com/photo-1572025442646-866d16c84a54?auto=format&fit=crop&q=80" 
                     alt="Before Office Renovation" 
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center md:hidden">
                     <span className="inline-block bg-black/60 px-2 py-0.5 rounded-full text-xs font-semibold text-white mb-1.5">BEFORE</span>
@@ -3309,6 +3320,8 @@ Please enter your zip code to continue.
                   src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&q=80" 
                   alt="After Office Renovation" 
                   className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
                   <span className="text-white font-bold inline-block bg-blue-600 px-2 py-0.5 rounded-full text-xs">AFTER</span>

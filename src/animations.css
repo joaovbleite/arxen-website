@@ -7,6 +7,12 @@
   }
 }
 
+/* GPU-accelerated animation class */
+.gpu-accelerated {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
 @keyframes slide-in-right {
   from {
     transform: translateX(100%);
@@ -38,10 +44,10 @@
     transform: scale(1) translate(0px, 0px);
   }
   33% {
-    transform: scale(1.1) translate(30px, -30px);
+    transform: scale(1.05) translate(20px, -20px);
   }
   66% {
-    transform: scale(0.9) translate(-30px, 30px);
+    transform: scale(0.95) translate(-20px, 20px);
   }
   100% {
     transform: scale(1) translate(0px, 0px);
