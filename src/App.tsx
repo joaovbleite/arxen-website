@@ -2706,7 +2706,7 @@ Please enter your zip code to continue.
               <Link 
                 key={index}
                 to={service.path}
-                className="group relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                className="group relative rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-transform duration-200 transform hover:-translate-y-1 will-change-transform"
               >
                 <div className="h-64 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-b from-blue-900/70 to-black/80 opacity-70 group-hover:opacity-60 transition-opacity duration-300"></div>
@@ -2875,7 +2875,7 @@ Please enter your zip code to continue.
               <Link 
                 key={index}
                 to={service.path}
-                className="group relative rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col h-full bg-white border border-gray-200"
+                className="group relative rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-transform duration-200 transform hover:-translate-y-1 flex flex-col h-full bg-white border border-gray-200 will-change-transform"
               >
                 <div className="h-32 sm:h-40 md:h-48 relative overflow-hidden">
                   <img 
@@ -3184,7 +3184,7 @@ Please enter your zip code to continue.
           {/* More Transformations - 3 Column Grid */}
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             {/* Bathroom Transformation */}
-            <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-xl transition-transform duration-200 transform hover:scale-[1.02] will-change-transform">
               <div className="relative h-64 sm:h-80 overflow-hidden">
                 {/* Slide effect on hover */}
                 <div className="absolute inset-0 transition-transform duration-700 ease-in-out group-hover:translate-x-full">
@@ -3233,7 +3233,7 @@ Please enter your zip code to continue.
             </div>
             
             {/* Living Room Transformation */}
-            <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-xl transition-transform duration-200 transform hover:scale-[1.02] will-change-transform">
               <div className="relative h-64 sm:h-80 overflow-hidden">
                 {/* Slide effect on hover */}
                 <div className="absolute inset-0 transition-transform duration-700 ease-in-out group-hover:translate-x-full">
@@ -3282,7 +3282,7 @@ Please enter your zip code to continue.
             </div>
             
             {/* Commercial Office Transformation */}
-            <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+            <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-xl transition-transform duration-200 transform hover:scale-[1.02] will-change-transform">
               <div className="relative h-64 sm:h-80 overflow-hidden">
                 {/* Slide effect on hover */}
                 <div className="absolute inset-0 transition-transform duration-700 ease-in-out group-hover:translate-x-full">
