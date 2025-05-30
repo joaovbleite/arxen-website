@@ -2889,13 +2889,13 @@ Please enter your zip code to continue.
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-60"></div>
                 </div>
                 <div className={`p-3 sm:p-4 md:p-5 ${service.bgColor} flex flex-col flex-grow text-white`}>
-                  <h3 className="text-sm sm:text-base md:text-lg font-bold mb-1 sm:mb-2 group-hover:text-blue-100 transition-colors">
+                  <h3 className="text-sm sm:text-base md:text-lg font-bold mb-1 sm:mb-2 group-hover:text-white transition-colors">
                     {service.title}
                   </h3>
-                  <p className="text-blue-100 text-xs sm:text-sm mb-2 sm:mb-4 flex-grow">
+                  <p className="text-gray-100 text-xs sm:text-sm mb-2 sm:mb-4 flex-grow">
                     {service.description}
                   </p>
-                  <div className="mt-auto pt-2 sm:pt-3 border-t border-blue-500/50 flex justify-between items-center">
+                  <div className="mt-auto pt-2 sm:pt-3 border-t border-blue-600 flex justify-between items-center">
                     <span className="text-xs sm:text-sm font-medium text-blue-200">Learn More</span>
                     <div className="bg-blue-500 rounded-full p-1 sm:p-1.5 shadow-lg transform translate-x-0 group-hover:translate-x-1 transition-transform">
                       <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
@@ -3035,7 +3035,7 @@ Please enter your zip code to continue.
               <div className="md:w-2/3 p-8">
                 <TestimonialSlider testimonials={testimonials} />
                 <div className="text-center mt-8">
-                  <Link to="/testimonials" className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-400 transition-colors shadow-md hover:shadow-lg">
+                  <Link to="/testimonials" className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors shadow-md hover:shadow-lg">
                     Read More Testimonials
                   </Link>
                 </div>
@@ -3224,7 +3224,7 @@ Please enter your zip code to continue.
                 </p>
                 <Link 
                   to="/portfolio/bathroom-transformation" 
-                  className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-medium"
+                  className="inline-flex items-center gap-1 text-blue-700 hover:text-blue-900 text-sm font-medium"
                 >
                   See Project Details
                   <ArrowRight className="w-3 h-3" />
@@ -3273,7 +3273,7 @@ Please enter your zip code to continue.
                 </p>
                 <Link 
                   to="/portfolio/living-room-transformation" 
-                  className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-medium"
+                  className="inline-flex items-center gap-1 text-blue-700 hover:text-blue-900 text-sm font-medium"
                 >
                   See Project Details
                   <ArrowRight className="w-3 h-3" />
@@ -3322,7 +3322,7 @@ Please enter your zip code to continue.
                 </p>
                 <Link 
                   to="/portfolio/office-transformation" 
-                  className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-medium"
+                  className="inline-flex items-center gap-1 text-blue-700 hover:text-blue-900 text-sm font-medium"
                 >
                   See Project Details
                   <ArrowRight className="w-3 h-3" />
@@ -3378,7 +3378,7 @@ Please enter your zip code to continue.
             
             <div className="md:w-2/3 mb-6 md:mb-0">
               <h3 className="text-2xl md:text-3xl font-bold mb-3">Ready to Transform Your Space?</h3>
-              <p className="text-gray-700 md:text-blue-100 text-lg mb-6">
+              <p className="text-gray-700 md:text-white text-lg mb-6">
                 Our award-winning team has completed over 2,500 successful projects across Georgia. Let's bring your vision to life.
               </p>
               <div className="flex flex-wrap gap-4">
@@ -3447,7 +3447,7 @@ Please enter your zip code to continue.
             {/* Contact Info Card */}
             <div className="bg-blue-800/30 backdrop-blur-sm rounded-lg p-4 shadow-md border border-blue-700/50 flex flex-col">
               <h2 className="text-2xl font-bold mb-3">Quick Contact</h2>
-              <p className="text-blue-100 mb-3 text-sm">
+              <p className="text-white mb-3 text-sm">
                 Have a question? Send us a message or use our 
                 <Link to="/contact" className="font-semibold text-white hover:underline ml-1">contact page</Link>.
               </p>
@@ -3472,7 +3472,7 @@ Please enter your zip code to continue.
                   <Clock className="w-3.5 h-3.5 mr-1.5 text-blue-300" />
                   Business Hours
                 </h4>
-                <div className="grid grid-cols-2 gap-x-2 text-xs text-blue-100">
+                <div className="grid grid-cols-2 gap-x-2 text-xs text-white">
                   <span>Monday - Friday</span>
                   <span className="text-right">8AM - 6PM</span>
                   <span>Saturday - Sunday</span>
@@ -3510,7 +3510,7 @@ Please enter your zip code to continue.
                           className={`text-center py-1.5 px-1 rounded-md transition-all duration-200 text-xs ${
                             homeContactMessage.includes(`Regarding: ${purpose}`) 
                               ? 'bg-blue-600 text-white' 
-                              : 'bg-blue-700/50 text-blue-100 hover:bg-blue-700'
+                              : 'bg-blue-700/50 text-white hover:bg-blue-700'
                           }`}
                         >
                           {purpose}
