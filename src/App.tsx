@@ -2167,15 +2167,15 @@ function App() {
         <div className="container mx-auto px-3 sm:px-4">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 sm:mb-6 md:mb-12">Explore Our Services</h2>
                 <div className="relative overflow-hidden group">
-                  {/* Scroll hint for mobile - only shown initially until user swipes */}
+                  {/* Scroll hint for mobile - only shown initially until user swipes, hidden on desktop */}
                   {!hasSwipedServices && (
-                    <div className="relative z-20 mb-2 px-4 transition-opacity duration-300">
+                    <div className="relative z-20 mb-2 px-4 transition-opacity duration-300 md:hidden">
                       <div className="flex items-center justify-start">
                         <div className="flex items-center text-xs text-blue-600">
                           <svg className="w-3.5 h-3.5 mr-1 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                           </svg>
-                          <span className="sm:inline">Swipe to explore</span>
+                          <span>Swipe to explore</span>
                         </div>
                       </div>
                     </div>
@@ -2421,7 +2421,6 @@ function App() {
                         <div className="flex items-center mt-auto text-sm font-light">
                           <Clock className="w-4 h-4 mr-2" />
                           <span>Offer ends 5/31/24.</span>
-                          <button className="ml-2 underline hover:text-blue-200 transition-colors">View Details</button>
           </div>
         </div>
       </div>
@@ -2670,7 +2669,6 @@ Please enter your zip code to continue.
           <div className="text-center mb-10 sm:mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 relative inline-block">
               Commercial Services
-              <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 sm:w-24 h-1 sm:h-1.5 bg-white rounded-full"></span>
             </h2>
             <p className="text-gray-100 text-base sm:text-lg max-w-2xl mx-auto mt-3 sm:mt-4 px-3 sm:px-0">
               Explore our comprehensive range of commercial services tailored to meet your business needs.
@@ -3186,7 +3184,7 @@ Please enter your zip code to continue.
           {/* More Transformations - 3 Column Grid */}
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             {/* Bathroom Transformation */}
-            <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow">
+            <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
               <div className="relative h-64 sm:h-80 overflow-hidden">
                 {/* Slide effect on hover */}
                 <div className="absolute inset-0 transition-transform duration-700 ease-in-out group-hover:translate-x-full">
@@ -3235,7 +3233,7 @@ Please enter your zip code to continue.
             </div>
             
             {/* Living Room Transformation */}
-            <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow">
+            <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
               <div className="relative h-64 sm:h-80 overflow-hidden">
                 {/* Slide effect on hover */}
                 <div className="absolute inset-0 transition-transform duration-700 ease-in-out group-hover:translate-x-full">
@@ -3284,7 +3282,7 @@ Please enter your zip code to continue.
             </div>
             
             {/* Commercial Office Transformation */}
-            <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-2xl transition-shadow">
+            <div className="bg-white rounded-xl shadow-xl overflow-hidden group hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
               <div className="relative h-64 sm:h-80 overflow-hidden">
                 {/* Slide effect on hover */}
                 <div className="absolute inset-0 transition-transform duration-700 ease-in-out group-hover:translate-x-full">
