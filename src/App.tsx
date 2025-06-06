@@ -1156,56 +1156,7 @@ function App() {
       ]
     },
     // --- NEW: Commercial Construction Category ---
-    {
-      category: "Commercial Construction",
-      services: [
-        {
-          title: "Commercial Renovations", 
-          path: "/services/commercial-renovations", 
-          description: "Complete renovation services for commercial buildings and spaces.", 
-          image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&q=80",
-          features: ["Structural modifications", "Space reconfiguration", "Code compliance updates", "Full-service construction"],
-          benefits: ["Modernized facilities", "Improved functionality", "Enhanced value", "Minimal business disruption"],
-          processSteps: [
-            { title: "Assessment", description: "Evaluate existing structure and needs" },
-            { title: "Planning", description: "Create detailed renovation plans" },
-            { title: "Construction", description: "Execute renovations with expert teams" },
-            { title: "Completion", description: "Final inspections and project handover" }
-          ],
-          galleryImages: []
-        },
-        {
-          title: "Warehouse Construction", 
-          path: "/services/warehouse-construction", 
-          description: "New construction and renovation of warehouse and storage facilities.", 
-          image: "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&q=80",
-          features: ["High-bay construction", "Loading dock design", "Concrete flooring", "Column spacing optimization"],
-          benefits: ["Maximized storage space", "Efficient operations", "Durable construction", "Custom to your needs"],
-          processSteps: [
-            { title: "Needs Analysis", description: "Determine storage and operational requirements" },
-            { title: "Site Planning", description: "Design optimal facility layout" },
-            { title: "Construction", description: "Build according to specifications" },
-            { title: "Completion", description: "Final inspections and handover" }
-          ],
-          galleryImages: []
-        },
-        {
-          title: "Tenant Build-outs", 
-          path: "/services/tenant-build-outs", 
-          description: "Custom construction for new commercial tenants in existing buildings.", 
-          image: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&q=80",
-          features: ["Lease requirement compliance", "Custom floor plans", "Fixtures and finishes", "Systems integration"],
-          benefits: ["Fast occupancy timelines", "Customized to your business", "Landlord requirement compliance", "Turn-key solutions"],
-          processSteps: [
-            { title: "Requirements Review", description: "Analyze lease and business needs" },
-            { title: "Design Development", description: "Create custom space plans" },
-            { title: "Permitting", description: "Secure necessary approvals" },
-            { title: "Construction", description: "Build to your specifications" }
-          ],
-          galleryImages: []
-        }
-      ]
-    }
+
   ];
 
   useEffect(() => {
@@ -1391,7 +1342,7 @@ function App() {
     return services.filter(category => {
       // Check if category name matches filter or contains services with matching type
       const isMatchingCategory = 
-        (serviceFilterType === 'commercial' && ['Commercial Services', 'Commercial Construction', 'Office Services', 'Retail Solutions'].some(term => category.category.includes(term))) ||
+        (serviceFilterType === 'commercial' && ['Commercial Services', 'Office Services', 'Retail Solutions'].some(term => category.category.includes(term))) ||
         (serviceFilterType === 'residential' && ['Remodeling', 'Flooring', 'Interior', 'Wood Services', 'Painting & Finishing', 'Exterior & Construction'].some(term => category.category.includes(term)));
       
       // If category matches directly, keep it
@@ -2013,8 +1964,14 @@ function App() {
                                       : category.category === "Smart Home Basics" 
                                         ? "https://i.postimg.cc/yxHNL03P/image.png" 
                                         : category.category === "Retail Services" 
-                                          ? "https://i.postimg.cc/gkwgdRxs/image.png" 
-                                          : category.services[0]?.image || 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=600&q=80'
+                                          ? "https://i.postimg.cc/gkwgdRxs/image.png"
+                                          : category.category === "Commercial Services"
+                                            ? "https://i.postimg.cc/zDt7bs0D/image.png"
+                                            : category.category === "Interior & Drywall"
+                                              ? "https://i.postimg.cc/nc1dk3KM/image.png"
+                                              : category.category === "Remodeling"
+                                                ? "https://i.postimg.cc/X73WqD7v/image.png"
+                                                : category.services[0]?.image || 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=600&q=80'
                             } 
                             className="absolute inset-0 h-full w-full object-cover opacity-60 group-hover:opacity-40 transition-opacity"
                           />
