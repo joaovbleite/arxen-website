@@ -10,16 +10,26 @@ interface CommercialServicePageProps {
   title?: string;
 }
 
+// Define a type for SVG and HTML elements that can accept className
+type IconElementProps = {
+  className?: string;
+  size?: number | string;
+  [key: string]: any;
+};
+
+// Element type that can be cloned and accept className
+type IconElement = React.ReactElement<IconElementProps>;
+
 interface Service {
   title: string;
   path: string;
   description: string;
   image: string;
-  icon: React.ReactNode;
+  icon: IconElement;
 }
 
 interface GroupedServiceData {
-  icon: React.ReactNode;
+  icon: IconElement;
   services: Service[];
 }
 
@@ -27,7 +37,7 @@ interface GroupedServiceData {
 interface BuildingType {
   id: string;
   name: string;
-  icon: React.ReactNode;
+  icon: IconElement;
   description: string;
   category: string; // Added category field
   searchOnly?: boolean;
@@ -46,9 +56,9 @@ const CommercialServicePage: React.FC<CommercialServicePageProps> = ({ title }) 
   // Determine if this is the main commercial page or a specific service page
   const isMainCommercialPage = location.pathname === '/commercial' || location.pathname === '/commercial-service';
   
-  // State for modal
+  // State for modal - update type to match ServiceListModal props
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalContent, setModalContent] = useState<{ title: string; services: Service[]; icon?: React.ReactNode }>({ title: '', services: [], icon: undefined });
+  const [modalContent, setModalContent] = useState<{ title: string; services: Service[]; icon?: IconElement }>({ title: '', services: [], icon: undefined });
 
   // Building type selection state
   const [searchQuery, setSearchQuery] = useState('');
@@ -88,56 +98,56 @@ const CommercialServicePage: React.FC<CommercialServicePageProps> = ({ title }) 
       path: "/services/office-renovation",
       description: "Transform your workspace with modern, efficient layouts and designs.",
       image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80",
-      icon: <Building2 className="w-6 h-6" />
+      icon: <Building2 className="w-6 h-6" /> as IconElement
     },
     {
       title: "Office Fit-Out",
       path: "/services/office-fit-out",
       description: "Tailored fit-out solutions for new or existing office spaces.",
       image: "https://images.unsplash.com/photo-1600880292203-94d56c436f16?auto=format&fit=crop&q=80",
-      icon: <Building2 className="w-6 h-6" />
+      icon: <Building2 className="w-6 h-6" /> as IconElement
     },
     {
       title: "Office Expansion",
       path: "/services/office-expansion",
       description: "Expand your current office space seamlessly.",
       image: "https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?auto=format&fit=crop&q=80",
-      icon: <Building2 className="w-6 h-6" />
+      icon: <Building2 className="w-6 h-6" /> as IconElement
     },
     {
       title: "Office Design Consult",
       path: "/services/office-design",
       description: "Consulting services for optimal office layout and design.",
       image: "https://images.unsplash.com/photo-1542744095-291d1f67b221?auto=format&fit=crop&q=80",
-      icon: <Building2 className="w-6 h-6" />
+      icon: <Building2 className="w-6 h-6" /> as IconElement
     },
     {
       title: "Retail Fit-Outs",
       path: "/services/retail-fit-out",
       description: "Comprehensive buildouts designed to attract customers and maximize sales.",
       image: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?auto=format&fit=crop&q=80",
-      icon: <Store className="w-6 h-6" />
+      icon: <Store className="w-6 h-6" /> as IconElement
     },
     {
       title: "Restaurant Renovation",
       path: "/services/restaurant-renovation",
       description: "Specialized renovation and design for restaurants, cafes, and food service.",
       image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80",
-      icon: <UtensilsCrossed className="w-6 h-6" />
+      icon: <UtensilsCrossed className="w-6 h-6" /> as IconElement
     },
     {
       title: "Healthcare Facilities",
       path: "/services/healthcare-facilities",
       description: "Custom construction for medical offices, clinics, and healthcare spaces.",
       image: "https://images.unsplash.com/photo-1580281658223-9b93f18ae9ae?auto=format&fit=crop&q=80",
-      icon: <Stethoscope className="w-6 h-6" />
+      icon: <Stethoscope className="w-6 h-6" /> as IconElement
     },
     {
       title: "Warehouse & Industrial",
       path: "/services/warehouse-industrial",
       description: "Custom solutions for warehouses, manufacturing, and industrial facilities.",
       image: "https://images.unsplash.com/photo-1587019158091-1a123c84796e?auto=format&fit=crop&q=80",
-      icon: <Warehouse className="w-6 h-6" />
+      icon: <Warehouse className="w-6 h-6" /> as IconElement
     }
   ];
 
@@ -172,77 +182,77 @@ const CommercialServicePage: React.FC<CommercialServicePageProps> = ({ title }) 
   // Building types data with *tags* added to some examples
   const buildingTypes: BuildingType[] = [
     // Professional Services
-    { id: 'office', name: 'Office Buildings', icon: <Building2 />, description: 'Corporate offices, coworking spaces', category: 'Professional', tags: ['renovation', 'fit-out'] },
-    { id: 'bank', name: 'Banks & Financial', icon: <Library />, description: 'Banks, credit unions, financial institutions', category: 'Professional', tags: ['renovation', 'new_construction'] },
-    { id: 'law', name: 'Law Firms', icon: <Scale />, description: 'Legal offices and related services', category: 'Professional', tags: ['fit-out'] },
-    { id: 'funeral', name: 'Funeral Homes', icon: <HandHeart />, description: 'Funeral parlors and related services', category: 'Professional', tags: ['renovation'] },
-    { id: 'real_estate', name: 'Real Estate Agencies', icon: <Handshake />, description: 'Real estate brokerages and offices', category: 'Professional', tags: ['renovation'] },
-    { id: 'insurance', name: 'Insurance Agencies', icon: <Shield />, description: 'Insurance brokers and agencies', category: 'Professional', tags: ['renovation'] },
-    { id: 'accounting', name: 'Accounting Firms', icon: <Calculator />, description: 'CPA offices and accounting services', category: 'Professional', tags: ['renovation'] },
+    { id: 'office', name: 'Office Buildings', icon: <Building2 /> as IconElement, description: 'Corporate offices, coworking spaces', category: 'Professional', tags: ['renovation', 'fit-out'] },
+    { id: 'bank', name: 'Banks & Financial', icon: <Library /> as IconElement, description: 'Banks, credit unions, financial institutions', category: 'Professional', tags: ['renovation', 'new_construction'] },
+    { id: 'law', name: 'Law Firms', icon: <Scale /> as IconElement, description: 'Legal offices and related services', category: 'Professional', tags: ['fit-out'] },
+    { id: 'funeral', name: 'Funeral Homes', icon: <HandHeart /> as IconElement, description: 'Funeral parlors and related services', category: 'Professional', tags: ['renovation'] },
+    { id: 'real_estate', name: 'Real Estate Agencies', icon: <Handshake /> as IconElement, description: 'Real estate brokerages and offices', category: 'Professional', tags: ['renovation'] },
+    { id: 'insurance', name: 'Insurance Agencies', icon: <Shield /> as IconElement, description: 'Insurance brokers and agencies', category: 'Professional', tags: ['renovation'] },
+    { id: 'accounting', name: 'Accounting Firms', icon: <Calculator /> as IconElement, description: 'CPA offices and accounting services', category: 'Professional', tags: ['renovation'] },
     
     // Healthcare
-    { id: 'healthcare', name: 'Healthcare Facilities', icon: <Stethoscope />, description: 'Medical offices, clinics, hospitals', category: 'Healthcare', tags: ['new_construction', 'renovation'] },
-    { id: 'dental', name: 'Dental Offices', icon: <Smile />, description: 'Dental clinics and practices', category: 'Healthcare', tags: ['renovation'] }, 
-    { id: 'vet', name: 'Veterinary Clinics', icon: <Dog />, description: 'Animal hospitals and clinics', category: 'Healthcare', tags: ['renovation'] }, 
-    { id: 'pharmacy', name: 'Pharmacies', icon: <Pill />, description: 'Drug stores and pharmacies', category: 'Healthcare', tags: ['renovation'] },
+    { id: 'healthcare', name: 'Healthcare Facilities', icon: <Stethoscope /> as IconElement, description: 'Medical offices, clinics, hospitals', category: 'Healthcare', tags: ['new_construction', 'renovation'] },
+    { id: 'dental', name: 'Dental Offices', icon: <Smile /> as IconElement, description: 'Dental clinics and practices', category: 'Healthcare', tags: ['renovation'] }, 
+    { id: 'vet', name: 'Veterinary Clinics', icon: <Dog /> as IconElement, description: 'Animal hospitals and clinics', category: 'Healthcare', tags: ['renovation'] }, 
+    { id: 'pharmacy', name: 'Pharmacies', icon: <Pill /> as IconElement, description: 'Drug stores and pharmacies', category: 'Healthcare', tags: ['renovation'] },
     
     // Hospitality
-    { id: 'restaurant', name: 'Restaurants & Cafes', icon: <Coffee />, description: 'Dining establishments, cafeterias, food service', category: 'Hospitality', tags: ['renovation', 'fit-out'] },
-    { id: 'hotel', name: 'Hotels & Resorts', icon: <Hotel />, description: 'Hotels, motels, resorts, lodging', category: 'Hospitality', tags: ['renovation'] },
-    { id: 'event_venue', name: 'Event Venues', icon: <CalendarDays />, description: 'Conference centers, banquet halls, arenas', category: 'Hospitality', tags: ['renovation'] },
-    { id: 'bar_club', name: 'Bars & Nightclubs', icon: <Beer />, description: 'Bars, pubs, nightclubs', category: 'Hospitality', tags: ['renovation'] },
-    { id: 'convention', name: 'Convention Centers', icon: <Presentation />, description: 'Large meeting and exhibition halls', category: 'Hospitality', tags: ['renovation'] },
+    { id: 'restaurant', name: 'Restaurants & Cafes', icon: <Coffee /> as IconElement, description: 'Dining establishments, cafeterias, food service', category: 'Hospitality', tags: ['renovation', 'fit-out'] },
+    { id: 'hotel', name: 'Hotels & Resorts', icon: <Hotel /> as IconElement, description: 'Hotels, motels, resorts, lodging', category: 'Hospitality', tags: ['renovation'] },
+    { id: 'event_venue', name: 'Event Venues', icon: <CalendarDays /> as IconElement, description: 'Conference centers, banquet halls, arenas', category: 'Hospitality', tags: ['renovation'] },
+    { id: 'bar_club', name: 'Bars & Nightclubs', icon: <Beer /> as IconElement, description: 'Bars, pubs, nightclubs', category: 'Hospitality', tags: ['renovation'] },
+    { id: 'convention', name: 'Convention Centers', icon: <Presentation /> as IconElement, description: 'Large meeting and exhibition halls', category: 'Hospitality', tags: ['renovation'] },
 
     // Retail
-    { id: 'retail', name: 'Retail Stores', icon: <Store />, description: 'Shops, boutiques, general retail', category: 'Retail', tags: ['fit-out', 'renovation'] },
-    { id: 'grocery', name: 'Grocery & Supermarkets', icon: <ShoppingCart />, description: 'Food markets, supermarkets', category: 'Retail', tags: ['renovation'] },
-    { id: 'dealership', name: 'Auto Dealerships', icon: <Car />, description: 'Car showrooms, service centers', category: 'Retail', tags: ['renovation'] },
-    { id: 'car_wash', name: 'Car Washes', icon: <ShowerHead />, description: 'Automated and manual car wash facilities', category: 'Retail', tags: ['renovation'] },
-    { id: 'shopping_mall', name: 'Shopping Malls', icon: <ShoppingCart />, description: 'Large enclosed shopping centers', category: 'Retail', tags: ['renovation'] },
+    { id: 'retail', name: 'Retail Stores', icon: <Store /> as IconElement, description: 'Shops, boutiques, general retail', category: 'Retail', tags: ['fit-out', 'renovation'] },
+    { id: 'grocery', name: 'Grocery & Supermarkets', icon: <ShoppingCart /> as IconElement, description: 'Food markets, supermarkets', category: 'Retail', tags: ['renovation'] },
+    { id: 'dealership', name: 'Auto Dealerships', icon: <Car /> as IconElement, description: 'Car showrooms, service centers', category: 'Retail', tags: ['renovation'] },
+    { id: 'car_wash', name: 'Car Washes', icon: <ShowerHead /> as IconElement, description: 'Automated and manual car wash facilities', category: 'Retail', tags: ['renovation'] },
+    { id: 'shopping_mall', name: 'Shopping Malls', icon: <ShoppingCart /> as IconElement, description: 'Large enclosed shopping centers', category: 'Retail', tags: ['renovation'] },
 
     // Education
-    { id: 'school', name: 'Schools & Universities', icon: <School />, description: 'K-12 schools, colleges, universities', category: 'Education', tags: ['new_construction', 'renovation'] },
-    { id: 'childcare', name: 'Childcare Centers', icon: <Home />, description: 'Daycares, preschools, learning centers', category: 'Education', tags: ['renovation'] },
-    { id: 'library', name: 'Libraries', icon: <BookOpen />, description: 'Public and institutional libraries', category: 'Education', tags: ['renovation'] }, 
-    { id: 'museum', name: 'Museums & Galleries', icon: <Landmark />, description: 'Art galleries, science museums, cultural centers', category: 'Education', tags: ['renovation'] }, 
+    { id: 'school', name: 'Schools & Universities', icon: <School /> as IconElement, description: 'K-12 schools, colleges, universities', category: 'Education', tags: ['new_construction', 'renovation'] },
+    { id: 'childcare', name: 'Childcare Centers', icon: <Home /> as IconElement, description: 'Daycares, preschools, learning centers', category: 'Education', tags: ['renovation'] },
+    { id: 'library', name: 'Libraries', icon: <BookOpen /> as IconElement, description: 'Public and institutional libraries', category: 'Education', tags: ['renovation'] }, 
+    { id: 'museum', name: 'Museums & Galleries', icon: <Landmark /> as IconElement, description: 'Art galleries, science museums, cultural centers', category: 'Education', tags: ['renovation'] }, 
 
     // Industrial
-    { id: 'warehouse', name: 'Warehouses', icon: <Warehouse />, description: 'Storage facilities, distribution centers', category: 'Industrial', tags: ['new_construction'] },
-    { id: 'manufacturing', name: 'Manufacturing Plants', icon: <Factory />, description: 'Manufacturing, processing facilities', category: 'Industrial', tags: ['renovation'] },
-    { id: 'mixed-use', name: 'Mixed-Use Industrial', icon: <Building />, description: 'Combined office/warehouse/light industrial', category: 'Industrial', tags: ['renovation'] },
-    { id: 'workshop', name: 'Workshops & Repair', icon: <Wrench />, description: 'Repair shops, fabrication workshops', category: 'Industrial', tags: ['renovation'] },
+    { id: 'warehouse', name: 'Warehouses', icon: <Warehouse /> as IconElement, description: 'Storage facilities, distribution centers', category: 'Industrial', tags: ['new_construction'] },
+    { id: 'manufacturing', name: 'Manufacturing Plants', icon: <Factory /> as IconElement, description: 'Manufacturing, processing facilities', category: 'Industrial', tags: ['renovation'] },
+    { id: 'mixed-use', name: 'Mixed-Use Industrial', icon: <Building /> as IconElement, description: 'Combined office/warehouse/light industrial', category: 'Industrial', tags: ['renovation'] },
+    { id: 'workshop', name: 'Workshops & Repair', icon: <Wrench /> as IconElement, description: 'Repair shops, fabrication workshops', category: 'Industrial', tags: ['renovation'] },
 
     // Civic
-    { id: 'public', name: 'Government Buildings', icon: <Building />, description: 'City halls, federal buildings', category: 'Civic', tags: ['renovation'] },
-    { id: 'church', name: 'Churches & Religious', icon: <Church />, description: 'Places of worship, religious centers', category: 'Civic', tags: ['new_construction', 'renovation'] },
-    { id: 'community_center', name: 'Community Centers', icon: <Drama />, description: 'Community halls, recreational centers', category: 'Civic', tags: ['renovation'] },
-    { id: 'post_office', name: 'Post Offices', icon: <Mailbox />, description: 'Postal service facilities', category: 'Civic', tags: ['renovation'] },
-    { id: 'courthouse', name: 'Courthouses', icon: <Gavel />, description: 'Judicial buildings and court facilities', category: 'Civic', tags: ['renovation'] },
-    { id: 'emergency_services', name: 'Police/Fire Stations', icon: <Siren />, description: 'Emergency service buildings', category: 'Civic', tags: ['renovation'] },
+    { id: 'public', name: 'Government Buildings', icon: <Building /> as IconElement, description: 'City halls, federal buildings', category: 'Civic', tags: ['renovation'] },
+    { id: 'church', name: 'Churches & Religious', icon: <Church /> as IconElement, description: 'Places of worship, religious centers', category: 'Civic', tags: ['new_construction', 'renovation'] },
+    { id: 'community_center', name: 'Community Centers', icon: <Drama /> as IconElement, description: 'Community halls, recreational centers', category: 'Civic', tags: ['renovation'] },
+    { id: 'post_office', name: 'Post Offices', icon: <Mailbox /> as IconElement, description: 'Postal service facilities', category: 'Civic', tags: ['renovation'] },
+    { id: 'courthouse', name: 'Courthouses', icon: <Gavel /> as IconElement, description: 'Judicial buildings and court facilities', category: 'Civic', tags: ['renovation'] },
+    { id: 'emergency_services', name: 'Police/Fire Stations', icon: <Siren /> as IconElement, description: 'Emergency service buildings', category: 'Civic', tags: ['renovation'] },
 
     // Recreation
-    { id: 'fitness', name: 'Fitness Centers', icon: <Dumbbell />, description: 'Gyms, studios, wellness centers', category: 'Recreation', tags: ['fit-out', 'renovation'] },
-    { id: 'spa_salon', name: 'Spas & Salons', icon: <Scissors />, description: 'Beauty salons, day spas, wellness centers', category: 'Recreation', tags: ['renovation'] }, 
-    { id: 'movie_theater', name: 'Movie Theaters', icon: <Film />, description: 'Cinemas, multiplexes', category: 'Recreation', tags: ['renovation'] },
-    { id: 'sports_complex', name: 'Sports Complexes', icon: <Goal />, description: 'Stadiums, arenas, sports fields', category: 'Recreation', tags: ['renovation'] },
-    { id: 'brewery', name: 'Breweries & Wineries', icon: <Beer />, description: 'Craft breweries, wineries, tasting rooms', category: 'Recreation', tags: ['renovation'] },
-    { id: 'bowling', name: 'Bowling Alleys', icon: <Target />, description: 'Bowling centers and entertainment venues', category: 'Recreation', tags: ['renovation'] },
-    { id: 'amusement', name: 'Amusement Parks', icon: <FerrisWheel />, description: 'Theme parks and amusement centers', category: 'Recreation', tags: ['renovation'] },
+    { id: 'fitness', name: 'Fitness Centers', icon: <Dumbbell /> as IconElement, description: 'Gyms, studios, wellness centers', category: 'Recreation', tags: ['fit-out', 'renovation'] },
+    { id: 'spa_salon', name: 'Spas & Salons', icon: <Scissors /> as IconElement, description: 'Beauty salons, day spas, wellness centers', category: 'Recreation', tags: ['renovation'] }, 
+    { id: 'movie_theater', name: 'Movie Theaters', icon: <Film /> as IconElement, description: 'Cinemas, multiplexes', category: 'Recreation', tags: ['renovation'] },
+    { id: 'sports_complex', name: 'Sports Complexes', icon: <Goal /> as IconElement, description: 'Stadiums, arenas, sports fields', category: 'Recreation', tags: ['renovation'] },
+    { id: 'brewery', name: 'Breweries & Wineries', icon: <Beer /> as IconElement, description: 'Craft breweries, wineries, tasting rooms', category: 'Recreation', tags: ['renovation'] },
+    { id: 'bowling', name: 'Bowling Alleys', icon: <Target /> as IconElement, description: 'Bowling centers and entertainment venues', category: 'Recreation', tags: ['renovation'] },
+    { id: 'amusement', name: 'Amusement Parks', icon: <FerrisWheel /> as IconElement, description: 'Theme parks and amusement centers', category: 'Recreation', tags: ['renovation'] },
 
     // Basic Technology (removed advanced technology facilities)
-    { id: 'lab', name: 'Laboratories', icon: <FlaskConical />, description: 'Research labs, testing facilities', category: 'Specialized', tags: ['renovation'] },
+    { id: 'lab', name: 'Laboratories', icon: <FlaskConical /> as IconElement, description: 'Research labs, testing facilities', category: 'Specialized', tags: ['renovation'] },
 
     // Transportation
-    { id: 'logistics', name: 'Logistics Hubs', icon: <Truck />, description: 'Transportation and logistics facilities', category: 'Transportation', tags: ['renovation'] },
-    { id: 'airport', name: 'Airports', icon: <Plane />, description: 'Airport terminals and facilities', category: 'Transportation', tags: ['renovation', 'new_construction'] },
-    { id: 'gas_station', name: 'Gas Stations', icon: <Fuel />, description: 'Fueling stations and convenience stores', category: 'Transportation', tags: ['renovation'] },
-    { id: 'parking_garage', name: 'Parking Garages', icon: <ParkingSquare />, description: 'Multi-level parking structures', category: 'Transportation', tags: ['renovation'] },
-    { id: 'train_station', name: 'Train Stations', icon: <TrainTrack />, description: 'Railway stations and terminals', category: 'Transportation', tags: ['renovation'] },
-    { id: 'bus_depot', name: 'Bus Depots', icon: <Bus />, description: 'Bus terminals and maintenance depots', category: 'Transportation', tags: ['renovation'] },
+    { id: 'logistics', name: 'Logistics Hubs', icon: <Truck /> as IconElement, description: 'Transportation and logistics facilities', category: 'Transportation', tags: ['renovation'] },
+    { id: 'airport', name: 'Airports', icon: <Plane /> as IconElement, description: 'Airport terminals and facilities', category: 'Transportation', tags: ['renovation', 'new_construction'] },
+    { id: 'gas_station', name: 'Gas Stations', icon: <Fuel /> as IconElement, description: 'Fueling stations and convenience stores', category: 'Transportation', tags: ['renovation'] },
+    { id: 'parking_garage', name: 'Parking Garages', icon: <ParkingSquare /> as IconElement, description: 'Multi-level parking structures', category: 'Transportation', tags: ['renovation'] },
+    { id: 'train_station', name: 'Train Stations', icon: <TrainTrack /> as IconElement, description: 'Railway stations and terminals', category: 'Transportation', tags: ['renovation'] },
+    { id: 'bus_depot', name: 'Bus Depots', icon: <Bus /> as IconElement, description: 'Bus terminals and maintenance depots', category: 'Transportation', tags: ['renovation'] },
 
     // --- Search-Only Types --- 
-    { id: 'apartments', name: 'Apartment Complexes', icon: <LandPlot />, description: 'Multi-family residential buildings (managed)', category: 'Professional', searchOnly: true, tags: ['renovation'] }, 
-    { id: 'self_storage', name: 'Self-Storage Facilities', icon: <Package />, description: 'Personal and business storage units', category: 'Industrial', searchOnly: true, tags: ['renovation'] },
+    { id: 'apartments', name: 'Apartment Complexes', icon: <LandPlot /> as IconElement, description: 'Multi-family residential buildings (managed)', category: 'Professional', searchOnly: true, tags: ['renovation'] }, 
+    { id: 'self_storage', name: 'Self-Storage Facilities', icon: <Package /> as IconElement, description: 'Personal and business storage units', category: 'Industrial', searchOnly: true, tags: ['renovation'] },
   ];
 
   // Filter building types based on search query (Uses ALL types)
@@ -488,7 +498,7 @@ const CommercialServicePage: React.FC<CommercialServicePageProps> = ({ title }) 
                         onClick={() => handleBuildingTypeSelect(type)}
                       >
                         <div className="mr-2 p-1.5 bg-blue-100 rounded-full text-blue-600 flex-shrink-0">
-                          {React.cloneElement(type.icon as React.ReactElement<IconProps>, { size: 14 })}
+                          <div className="w-5 h-5">{type.icon}</div>
                         </div>
                         <div className="flex-1 truncate">
                           <div className="font-medium text-sm text-gray-800">{type.name}</div>
@@ -507,7 +517,7 @@ const CommercialServicePage: React.FC<CommercialServicePageProps> = ({ title }) 
               <div className="px-4 py-3 bg-white border-b border-gray-200 animate-fade-in">
                 <div className="flex items-center gap-3">
                   <div className="flex-shrink-0 p-2 bg-blue-100 text-blue-600 rounded">
-                    {React.cloneElement(buildingType.icon as React.ReactElement<IconProps>, { size: 20 })}
+                    <div className="w-5 h-5">{buildingType.icon}</div>
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-base font-semibold text-gray-800 mb-0.5 truncate">{buildingType.name}</h3>
@@ -595,7 +605,7 @@ const CommercialServicePage: React.FC<CommercialServicePageProps> = ({ title }) 
                       ? 'bg-blue-100 text-blue-600' 
                       : 'bg-gray-100 text-gray-600 group-hover:bg-blue-50 group-hover:text-blue-500'
                   } transition-colors duration-200`}>
-                    {React.cloneElement(type.icon as React.ReactElement<IconProps>, { size: 18 })}
+                    <div className="w-5 h-5">{type.icon}</div>
                   </div>
                   <h3 className={`text-xs font-medium text-center ${
                     buildingType?.id === type.id 
@@ -626,7 +636,7 @@ const CommercialServicePage: React.FC<CommercialServicePageProps> = ({ title }) 
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center">
                       <div className="bg-blue-100 p-2 rounded-full mr-3"> 
-                         {React.cloneElement(categoryData.icon as React.ReactElement<IconProps>, { className: "w-5 h-5 text-blue-700" })} 
+                         <div className="w-5 h-5 text-blue-700">{categoryData.icon}</div>
                       </div>
                       <h2 className="text-xl font-semibold text-gray-800">{categoryName}</h2>
                     </div>
@@ -647,7 +657,7 @@ const CommercialServicePage: React.FC<CommercialServicePageProps> = ({ title }) 
                          className={`relative flex items-start p-4 rounded-lg border cursor-pointer transition-all duration-300 h-full bg-white border-gray-200 hover:border-blue-300 hover:shadow-sm group`}
                        >
                          <div className="mr-4 flex-shrink-0 text-blue-600">
-                           {React.cloneElement(service.icon as React.ReactElement<IconProps>, { className: "w-6 h-6" })}
+                           <div className="w-6 h-6">{service.icon}</div>
                          </div>
                          <div className="flex-grow">
                            <h3 className="font-medium mb-1 text-gray-800 group-hover:text-blue-700 transition-colors">{service.title}</h3>
