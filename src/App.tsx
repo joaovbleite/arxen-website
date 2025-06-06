@@ -2600,7 +2600,7 @@ Please enter your zip code to continue.
               {
                 title: 'Kitchen Remodeling',
                 description: 'Transform your home kitchen into a modern, functional space.',
-                icon: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=800&auto=format",
+                icon: "https://i.postimg.cc/J7Ykwjph/image.png",
                 path: '/services/kitchen-remodeling',
                 type: 'Residential',
                 bgColor: 'bg-blue-600'
@@ -2608,7 +2608,7 @@ Please enter your zip code to continue.
               {
                 title: 'Bathroom Renovation',
                 description: 'Upgrade your personal oasis with stylish fixtures and finishes.',
-                icon: "https://images.unsplash.com/photo-1586798271654-0471bb1b0184?q=80&w=800&auto=format",
+                icon: "https://i.postimg.cc/J0S3RXcS/image.png",
                 path: '/services/bathroom-remodeling',
                 type: 'Residential',
                 bgColor: 'bg-blue-600'
@@ -2616,7 +2616,7 @@ Please enter your zip code to continue.
               {
                 title: 'Office Renovations',
                 description: 'Modernize your workspace for improved productivity and aesthetics.',
-                icon: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?q=80&w=800&auto=format",
+                icon: "https://i.postimg.cc/B6SfCLDW/image.png",
                 path: '/services/office-renovation',
                 type: 'Commercial',
                 bgColor: 'bg-blue-700'
@@ -2624,7 +2624,7 @@ Please enter your zip code to continue.
               {
                 title: 'Retail Fit-Outs',
                 description: 'Create inviting and functional retail spaces that attract customers.',
-                icon: "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?q=80&w=800&auto=format",
+                icon: "https://i.postimg.cc/SR4d9Cz8/image.png",
                 path: '/services/retail-fit-out',
                 type: 'Commercial',
                 bgColor: 'bg-blue-700'
