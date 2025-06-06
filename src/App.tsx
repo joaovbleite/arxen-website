@@ -3000,7 +3000,7 @@ Please enter your zip code to continue.
                 {/* Slide effect on hover */}
                 <div className="absolute inset-0 transition-transform duration-700 ease-in-out group-hover:translate-x-full">
                   <img 
-                    src="https://images.unsplash.com/photo-1589459072535-550f4ea42174?auto=format&fit=crop&q=80" 
+                    src="https://i.postimg.cc/CKsrNwb9/image.png" 
                     alt="Before Living Room Renovation" 
                     className="w-full h-full object-cover"
                     loading="lazy"
@@ -3021,7 +3021,7 @@ Please enter your zip code to continue.
                 </div>
                 
                 <img 
-                  src="https://images.unsplash.com/photo-1618220179428-22790b461013?auto=format&fit=crop&q=80" 
+                  src="https://i.postimg.cc/fWmCjzZC/image.png" 
                   alt="After Living Room Renovation" 
                   className="w-full h-full object-cover"
                   loading="lazy" 
