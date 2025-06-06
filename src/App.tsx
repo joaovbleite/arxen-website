@@ -2179,7 +2179,7 @@ function App() {
                         
                         <div className="flex items-center mt-auto text-sm font-light">
                           <Clock className="w-4 h-4 mr-2" />
-                          <span>Offer ends 5/31/24.</span>
+                          <span>Offer ends 6/30/25.</span>
           </div>
         </div>
       </div>
