@@ -2001,9 +2001,21 @@ function App() {
                           </div>
                           <img
                             alt={category.category}
-                            src={category.category === "Wood Services" 
-                              ? "https://images.unsplash.com/photo-1540638349517-3abd5afc5847?auto=format&fit=crop&q=80" 
-                              : category.services[0]?.image || 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=600&q=80'} 
+                            src={
+                              category.category === "Wood Services" 
+                                ? "https://i.postimg.cc/xdRdCXXp/image.png" 
+                                : category.category === "Flooring" 
+                                  ? "https://i.postimg.cc/pryMPTjj/image.png" 
+                                  : category.category === "Exterior & Construction" 
+                                    ? "https://i.postimg.cc/zfSkGFSm/image.png" 
+                                    : category.category === "Painting & Finishing" 
+                                      ? "https://i.postimg.cc/yYRKrDyg/image.png" 
+                                      : category.category === "Smart Home Basics" 
+                                        ? "https://i.postimg.cc/yxHNL03P/image.png" 
+                                        : category.category === "Retail Services" 
+                                          ? "https://i.postimg.cc/gkwgdRxs/image.png" 
+                                          : category.services[0]?.image || 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=600&q=80'
+                            } 
                             className="absolute inset-0 h-full w-full object-cover opacity-60 group-hover:opacity-40 transition-opacity"
                           />
                           <div className="relative p-4 sm:p-6 lg:p-8 flex flex-col justify-end h-full">
