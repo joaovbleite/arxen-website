@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, Suspense, lazy } from 'react';
+import './marquee.css';
 import { Hammer, CheckCircle, Phone, Mail, MapPin, Clock, Shield, ArrowRight, Star, ChevronRight, Check, Camera, Box, ClipboardList, ArrowLeft, Home, ChevronDown, DollarSign, Users, Clipboard, Building2, Settings, Search, X, FileText, ShoppingBag, Factory, UtensilsCrossed, Stethoscope, Package, Heart, MessageSquare, Award, Tag, Scan, Calendar } from 'lucide-react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
@@ -2061,7 +2062,7 @@ function App() {
               <div className="relative w-full flex overflow-hidden">
                 <div className="flex animate-marquee whitespace-nowrap text-white">
                   {[
-                    { icon: <Hammer className="w-5 h-5" />, text: '20+ Years Experience' },
+                    { icon: <Hammer className="w-5 h-5" />, text: '10+ Years Experience' },
                     { icon: <CheckCircle className="w-5 h-5" />, text: 'Full-Service Solutions' },
                     { icon: <Shield className="w-5 h-5" />, text: 'Licensed & Insured' },
                     { icon: <Clock className="w-5 h-5" />, text: 'On-Time Completion' },
@@ -2071,7 +2072,7 @@ function App() {
                     { icon: <MessageSquare className="w-5 h-5" />, text: 'Free Consultations' }, // New Item
                     { icon: <Award className="w-5 h-5" />, text: 'Workmanship Warranty' }, // New Item
                     // Duplicate items for seamless looping
-                    { icon: <Hammer className="w-5 h-5" />, text: '20+ Years Experience' },
+                    { icon: <Hammer className="w-5 h-5" />, text: '10+ Years Experience' },
                     { icon: <CheckCircle className="w-5 h-5" />, text: 'Full-Service Solutions' },
                     { icon: <Shield className="w-5 h-5" />, text: 'Licensed & Insured' },
                     { icon: <Clock className="w-5 h-5" />, text: 'On-Time Completion' },
@@ -2092,7 +2093,7 @@ function App() {
                 {/* Duplicate the above div for seamless animation */}
                 <div className="absolute top-0 flex animate-marquee2 whitespace-nowrap text-white">
                   {[
-                    { icon: <Hammer className="w-5 h-5" />, text: '20+ Years Experience' },
+                    { icon: <Hammer className="w-5 h-5" />, text: '10+ Years Experience' },
                     { icon: <CheckCircle className="w-5 h-5" />, text: 'Full-Service Solutions' },
                     { icon: <Shield className="w-5 h-5" />, text: 'Licensed & Insured' },
                     { icon: <Clock className="w-5 h-5" />, text: 'On-Time Completion' },
@@ -2102,7 +2103,7 @@ function App() {
                     { icon: <MessageSquare className="w-5 h-5" />, text: 'Free Consultations' },
                     { icon: <Award className="w-5 h-5" />, text: 'Workmanship Warranty' },
                     // Duplicate items for seamless looping
-                    { icon: <Hammer className="w-5 h-5" />, text: '20+ Years Experience' },
+                    { icon: <Hammer className="w-5 h-5" />, text: '10+ Years Experience' },
                     { icon: <CheckCircle className="w-5 h-5" />, text: 'Full-Service Solutions' },
                     { icon: <Shield className="w-5 h-5" />, text: 'Licensed & Insured' },
                     { icon: <Clock className="w-5 h-5" />, text: 'On-Time Completion' },
@@ -3134,7 +3135,7 @@ Please enter your zip code to continue.
                     <div className="text-gray-700 text-xs">Satisfied Clients</div>
                   </div>
                   <div className="flex-shrink-0 w-[150px] p-3 text-center">
-                    <div className="text-2xl font-bold mb-1">20+</div>
+                    <div className="text-2xl font-bold mb-1">10+</div>
                     <div className="text-gray-700 text-xs">Years Experience</div>
                   </div>
                   <div className="flex-shrink-0 w-[150px] p-3 text-center">
@@ -3179,7 +3180,7 @@ Please enter your zip code to continue.
                 <div className="text-gray-700 md:text-blue-200 text-sm">Satisfied Clients</div>
               </div>
               <div className="bg-white/80 md:bg-blue-800/50 backdrop-blur-sm p-4 rounded-lg text-center">
-                <div className="text-3xl font-bold mb-1">20+</div>
+                <div className="text-3xl font-bold mb-1">10+</div>
                 <div className="text-gray-700 md:text-blue-200 text-sm">Years Experience</div>
               </div>
               <div className="bg-white/80 md:bg-blue-800/50 backdrop-blur-sm p-4 rounded-lg text-center">
