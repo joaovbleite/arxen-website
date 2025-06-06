@@ -1384,7 +1384,7 @@ function App() {
       const initialLoadTimer = setTimeout(() => {
         console.log('Initial load complete');
         setIsPageLoading(false);
-      }, 1000); // Ensure loading shows for at least 1 second for better UX
+      }, 800); // Reduced from 1000ms to 800ms for better UX
       
       return () => clearTimeout(initialLoadTimer);
     }
@@ -1399,13 +1399,22 @@ function App() {
       
       // Store navigation start timestamp to ensure minimum display time
       window.navigationStartTime = Date.now();
+      
+      // Add a safety timeout to ensure loading indicator is hidden
+      if (window.navigationTimer) {
+        clearTimeout(window.navigationTimer);
+      }
+      window.navigationTimer = setTimeout(() => {
+        console.log('Navigation safety timeout reached, hiding indicator');
+        setIsPageLoading(false);
+      }, 5000); // 5 seconds max loading time
     };
     
     const handleNavigationEnd = () => {
       console.log('Navigation completed');
-      // Ensure loading indicator stays visible for at least 800ms for better UX
+      // Ensure loading indicator stays visible for at least 500ms for better UX
       const elapsedTime = Date.now() - (window.navigationStartTime || 0);
-      const minDisplayTime = 800;
+      const minDisplayTime = 500; // Reduced from 800ms
       
       if (elapsedTime < minDisplayTime) {
         setTimeout(() => {
@@ -1414,12 +1423,23 @@ function App() {
       } else {
         setIsPageLoading(false);
       }
+      
+      // Clear any existing navigation timer
+      if (window.navigationTimer) {
+        clearTimeout(window.navigationTimer);
+        window.navigationTimer = undefined;
+      }
     };
     
     // Handle errors during navigation
     const handleNavigationError = () => {
       console.error('Navigation error detected');
       setIsPageLoading(false);
+      // Clear any existing navigation timer
+      if (window.navigationTimer) {
+        clearTimeout(window.navigationTimer);
+        window.navigationTimer = undefined;
+      }
     };
     
     // Improved link click handler with better event capturing
@@ -1445,7 +1465,7 @@ function App() {
         lastKnownPath = currentPath;
         handleNavigationStart();
         // Set a timeout to ensure navigation end is called if something goes wrong
-        setTimeout(handleNavigationEnd, 5000);
+        setTimeout(handleNavigationEnd, 3000); // Reduced from 5000ms
       }
     };
     
@@ -1458,10 +1478,15 @@ function App() {
     // Create a fallback to reset loading state if it gets stuck
     const loadingResetTimer = setInterval(() => {
       if (isPageLoading) {
-        console.warn('Loading indicator was stuck for 10s, forcing reset');
+        console.warn('Loading indicator was stuck for 5s, forcing reset');
         setIsPageLoading(false);
+        // Clear any existing navigation timer
+        if (window.navigationTimer) {
+          clearTimeout(window.navigationTimer);
+          window.navigationTimer = undefined;
+        }
       }
-    }, 10000);
+    }, 5000); // Reduced from 10000ms to 5000ms
     
     // Listen for various navigation events
     window.addEventListener('popstate', handleNavigationStart);
@@ -1495,6 +1520,14 @@ function App() {
       document.removeEventListener('DOMContentLoaded', handleNavigationEnd);
       window.removeEventListener('error', handleNavigationError);
       clearInterval(loadingResetTimer);
+      
+      // Ensure loading state is reset when component unmounts
+      setIsPageLoading(false);
+      if (window.navigationTimer) {
+        clearTimeout(window.navigationTimer);
+        window.navigationTimer = undefined;
+      }
+      
       observer.disconnect();
     };
   }, [isPageLoading]);
@@ -4041,11 +4074,17 @@ if (typeof document !== 'undefined') {
         // Hide error boundary if visible
         errorBoundary.style.display = 'none';
         
+        // Clear any existing timer
+        if (window.navigationTimer) {
+          clearTimeout(window.navigationTimer);
+        }
+        
         // Safety timeout in case page load doesn't complete
         window.navigationTimer = setTimeout(() => {
+          console.log('Secondary safety timeout reached, hiding loader');
           loadingIndicator.style.opacity = '0';
           loadingIndicator.style.pointerEvents = 'none';
-        }, 8000);
+        }, 5000); // Reduced from 8000ms to 5000ms
       };
       
       // Handle page load complete
@@ -4061,7 +4100,15 @@ if (typeof document !== 'undefined') {
           // Smooth transition to hide loader
           loadingIndicator.style.opacity = '0';
           loadingIndicator.style.pointerEvents = 'none';
-        }, 300);
+        }, 200); // Reduced from 300ms for faster display
+        
+        // Add a backup timer to ensure loader hides even if the above fails
+        const backupTimer = setTimeout(() => {
+          loadingIndicator.style.opacity = '0';
+          loadingIndicator.style.pointerEvents = 'none';
+        }, 2000);
+        
+        return () => clearTimeout(backupTimer);
       };
       
       // Handle errors
@@ -4174,12 +4221,27 @@ const strongBackgroundAnimations = `
 const loadingBarAnimation = `
   @keyframes loading-bar {
     0% { width: 0; left: 0; }
+    25% { width: 40%; left: 0; }
     50% { width: 70%; left: 15%; }
+    75% { width: 40%; left: 60%; }
     100% { width: 0; left: 100%; }
   }
   
+  @keyframes progress-bar {
+    0% { width: 0%; }
+    15% { width: 20%; }
+    25% { width: 40%; }
+    50% { width: 65%; }
+    75% { width: 85%; }
+    100% { width: 100%; }
+  }
+  
   .animate-loading-bar {
-    animation: loading-bar 2s ease-in-out infinite;
+    animation: loading-bar 1.5s ease-in-out infinite;
+  }
+  
+  .animate-progress-bar {
+    animation: progress-bar 3s ease-in-out forwards;
   }
 `;
 

@@ -5,7 +5,7 @@ interface LoadingIndicatorProps {
 }
 
 const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({ isLoading }) => {
-  // Safety timeout - if loading takes too long, auto-hide after 10 seconds
+  // Safety timeout - if loading takes too long, auto-hide after 5 seconds (reduced from 10)
   useEffect(() => {
     if (isLoading) {
       console.log('LoadingIndicator: Loading started');
@@ -18,19 +18,32 @@ const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({ isLoading }) => {
       }
       
       const timeoutId = setTimeout(() => {
-        // Add a class to fade out the loader if it's still visible after 10 seconds
+        // Add a class to fade out the loader if it's still visible after 5 seconds
         const loaderElement = document.getElementById('safety-timeout-loader');
         if (loaderElement) {
           console.log('LoadingIndicator: Safety timeout reached, hiding loader');
           loaderElement.classList.add('opacity-0');
           loaderElement.style.pointerEvents = 'none';
         }
-      }, 10000); // 10 seconds timeout
+      }, 5000); // 5 seconds timeout (reduced from 10)
       
       return () => {
         clearTimeout(timeoutId);
+        // Ensure loader is hidden when component unmounts
+        const loaderElement = document.getElementById('safety-timeout-loader');
+        if (loaderElement) {
+          loaderElement.classList.add('opacity-0');
+          loaderElement.style.pointerEvents = 'none';
+        }
         console.log('LoadingIndicator: Loading ended or component unmounted');
       };
+    } else {
+      // Ensure loader is hidden when isLoading changes to false
+      const loaderElement = document.getElementById('safety-timeout-loader');
+      if (loaderElement) {
+        loaderElement.classList.add('opacity-0');
+        loaderElement.style.pointerEvents = 'none';
+      }
     }
   }, [isLoading]);
 
