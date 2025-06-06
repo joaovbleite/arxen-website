@@ -2120,9 +2120,9 @@ function App() {
           </div>
         </div>
 
-                  {/* Routes for all pages - wrapped in Suspense for better loading handling */}
-          <Suspense fallback={<LoadingIndicator isLoading={true} />}>
-            <Routes>
+        {/* Routes for all pages - wrapped in Suspense for better loading handling */}
+        <Suspense fallback={<LoadingIndicator isLoading={true} />}>
+        <Routes>
           {/* Redirect from /quote to /free-estimate for legacy links */}
           <Route path="/quote" element={<Navigate to="/free-estimate" replace />} />
           
@@ -2135,7 +2135,7 @@ function App() {
               {/* Hero Section - Enhanced with professional gradient overlay */}
               <div 
                 className="relative h-[50vh] sm:h-[60vh] flex items-center justify-center text-center bg-cover bg-center z-[5]" 
-                style={{ backgroundImage: `url('https://images.unsplash.com/photo-1543286386-71314a40aac6?auto=format&fit=crop&q=80')` }}
+                style={{ backgroundImage: `url('https://i.postimg.cc/V5PtMvhn/532-DAFC0-2337-4-D95-969-F-773-A6053-B8-F7-4-5005-c.jpg')` }}
               >
                 {/* Professional gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 via-black/70 to-blue-900/80"></div>
@@ -2168,9 +2168,9 @@ function App() {
         <div className="container mx-auto px-3 sm:px-4">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 sm:mb-6 md:mb-12">Explore Our Services</h2>
                 <div className="relative overflow-hidden group">
-                  {/* Scroll hint for mobile - only shown initially until user swipes, hidden on desktop */}
+                  {/* Scroll hint for mobile - only shown initially until user swipes, hidden on desktop and larger screens */}
                   {!hasSwipedServices && (
-                    <div className="relative z-20 mb-2 px-4 transition-opacity duration-300 md:hidden">
+                    <div className="relative z-20 mb-2 px-4 transition-opacity duration-300 sm:hidden">
                       <div className="flex items-center justify-start">
                         <div className="flex items-center text-xs text-blue-600">
                           <svg className="w-3.5 h-3.5 mr-1 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2734,8 +2734,7 @@ Please enter your zip code to continue.
                         </div>
                 ))}
               </div>
-                  <div className="mt-4 pt-4 border-t border-blue-800 flex justify-between items-center">
-                    <span className="text-sm font-medium text-blue-300">View Details</span>
+                  <div className="mt-4 pt-4 border-t border-blue-800 flex justify-end items-center">
                     <div className="bg-blue-700 rounded-full p-2 shadow-md transform translate-x-0 group-hover:translate-x-1 transition-transform">
                       <ArrowRight className="w-4 h-4 text-white" />
             </div>
