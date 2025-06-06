@@ -174,9 +174,7 @@ function App() {
   const [visible, setVisible] = useState(true);
   const [isHomePage, setIsHomePage] = useState(true);
   const location = window.location.pathname;
-  const [showSearch, setShowSearch] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState<Service[]>([]);
+
   const sliderRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLDivElement>(null);
   const touchStartXRef = useRef<number | null>(null);
@@ -1288,86 +1286,7 @@ function App() {
     }
   };
 
-  // Add new function to handle search
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!searchTerm.trim()) return;
-    
-    // Search through services
-    const results: Service[] = [];
-    
-    // Search in service categories and service titles
-    services.forEach(category => {
-      // Add category if it matches
-      if (category.category.toLowerCase().includes(searchTerm.toLowerCase())) {
-        results.push({
-          type: 'category',
-          title: category.category,
-          path: `/services/category/${category.category.toLowerCase().replace(/\s+/g, '-')}`,
-          description: `All ${category.category} services`
-        });
-      }
-      
-      // Add services if they match
-      category.services.forEach(service => {
-        if (
-          service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (service.description && service.description.toLowerCase().includes(searchTerm.toLowerCase()))
-        ) {
-          results.push({
-            type: 'service',
-            title: service.title,
-            path: service.path,
-            category: category.category,
-            description: service.description
-          });
-        }
-      });
-    });
-    
-    // Add other common pages
-    const commonPages = [
-      { title: 'About Us', path: '/about', description: 'Learn about our company' },
-      { title: 'Contact', path: '/contact', description: 'Get in touch with us' },
-      { title: 'Free Estimate', path: '/free-estimate', description: 'Request a free project estimate' },
-      { title: 'Portfolio', path: '/portfolio', description: 'View our work portfolio' },
-      { title: 'Testimonials', path: '/testimonials', description: 'Read client testimonials' },
-      { title: 'Financing', path: '/financing', description: 'Financing options for your project' }
-    ];
-    
-    commonPages.forEach(page => {
-      if (page.title.toLowerCase().includes(searchTerm.toLowerCase())) {
-        results.push({
-          type: 'page',
-          title: page.title,
-          path: page.path,
-          description: page.description
-        });
-      }
-    });
-    
-    setSearchResults(results);
-  };
-  
-  // Function to close search
-  const closeSearch = () => {
-    setShowSearch(false);
-    setSearchTerm('');
-    setSearchResults([]);
-  };
-  
-  // Add keyboard events for the search overlay
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && showSearch) {
-        closeSearch();
-      }
-    };
-    
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [showSearch]);
+
 
   // Generate the link for the homepage quote form button
   const freeEstimateLink = () => {
@@ -1767,23 +1686,6 @@ function App() {
         </div>
 
                 {/* Add missing navigation links */}
-                {/* Add search box to desktop nav (moved to left side) */}
-                <div className="relative flex items-center border border-gray-300 rounded-md overflow-hidden mr-2 hover:border-blue-400 transition-colors duration-200">
-                  <button
-                    onClick={() => setShowSearch(true)}
-                    className="text-gray-600 hover:text-blue-600 transition-colors duration-200 p-1.5 pl-2"
-                    aria-label="Search"
-                  >
-                    <Search className="w-4 h-4" />
-                  </button>
-                  <input
-                    type="text"
-                    placeholder="Search..."
-                    onClick={() => setShowSearch(true)}
-                    className="w-32 p-1 text-sm bg-transparent focus:outline-none text-gray-700 cursor-pointer"
-                    readOnly
-                  />
-                </div>
                 
                 <Link to="/residential" className="text-gray-800 hover:text-blue-600 font-medium relative">
                   Residential
@@ -1813,17 +1715,6 @@ function App() {
               
               {/* Mobile buttons */}
               <div className="flex items-center lg:hidden">
-                {/* Search button for mobile - updated style */}
-                <div className="relative flex items-center border border-gray-300 rounded-md overflow-hidden mr-2 hover:border-blue-400 transition-colors duration-200">
-                  <button 
-                    className="flex items-center p-1.5 text-gray-600 hover:text-blue-600" 
-                    onClick={() => setShowSearch(true)}
-                    aria-label="Search"
-                  >
-                    <Search className="w-4 h-4 mr-1" />
-                    <span className="text-sm pr-2">Search</span>
-                  </button>
-                </div>
                 
                 {/* Existing mobile menu button */}
                 <button 
@@ -1840,107 +1731,7 @@ function App() {
           </div>
         </div>
 
-        {/* Search Overlay */}
-        {showSearch && (
-          <div className="fixed inset-0 bg-black bg-opacity-70 z-[2000] flex items-start justify-center pt-24 px-4">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-3xl animate-slide-in-up">
-              <div className="p-4 border-b">
-                <form onSubmit={handleSearch} className="flex items-center">
-                  <Search className="w-5 h-5 text-gray-700 mr-2" />
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search for services, projects, and more..."
-                    className="flex-grow border-none text-lg focus:outline-none focus:ring-0"
-                    autoFocus
-                  />
-                  <button
-                    type="button"
-                    onClick={closeSearch}
-                    className="text-gray-500 hover:text-gray-700 p-1"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </form>
-            </div>
-              
-              <div className="max-h-[70vh] overflow-y-auto p-2">
-                {searchResults.length > 0 ? (
-                  <div className="space-y-2 p-2">
-                    {searchResults.map((result, index) => (
-                      <Link
-                  key={index}
-                        to={result.path}
-                        className="block p-3 hover:bg-gray-100 rounded-lg transition-colors"
-                        onClick={closeSearch}
-                      >
-                        <div className="flex items-start">
-                          <div className="flex-shrink-0 mt-1">
-                            {result.type === 'service' && (
-                              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
-                                <Hammer className="w-4 h-4" />
-          </div>
-                            )}
-                            {result.type === 'category' && (
-                              <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center text-purple-600">
-                                <Box className="w-4 h-4" />
-        </div>
-                            )}
-                            {result.type === 'page' && (
-                              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600">
-                                <FileText className="w-4 h-4" />
-            </div>
-                            )}
-                          </div>
-                          <div className="ml-3">
-                            <h3 className="font-medium text-gray-900">{result.title}</h3>
-                            {result.category && (
-                              <p className="text-xs text-blue-600 mb-1">
-                                {result.category}
-                              </p>
-                            )}
-                            <p className="text-sm text-gray-600">{result.description}</p>
-                          </div>
-                        </div>
-                      </Link>
-              ))}
-            </div>
-                ) : searchTerm.length > 0 ? (
-                  <div className="text-center py-8 text-gray-500">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-4">
-                      <Search className="w-8 h-8 text-gray-700" />
-          </div>
-                    <p>No results found for "{searchTerm}"</p>
-                    <p className="text-sm mt-2">Try different keywords or check our services menu</p>
-        </div>
-                ) : (
-                  <div className="py-4 px-4">
-                    <h3 className="font-medium mb-2">Popular Searches</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {['Kitchen Remodeling', 'Bathroom', 'Flooring', 'Hardwood', 'Custom Cabinetry', 'Free Estimate'].map((term, i) => (
-                        <button
-                          key={i}
-                          className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm"
-                          onClick={() => {
-                            setSearchTerm(term);
-                            handleSearch({ preventDefault: () => {} } as React.FormEvent);
-                          }}
-                        >
-                          {term}
-              </button>
-                      ))}
-              </div>
-            </div>
-                )}
-          </div>
-              
-              <div className="p-4 border-t text-xs text-gray-500 text-center">
-                Press ESC to close or Enter to search
-        </div>
-            </div>
-          </div>
-        )}
+
         
         {/* Mobile Menu Panel */}
         {isMobileMenuOpen && (
