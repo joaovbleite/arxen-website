@@ -1767,6 +1767,24 @@ function App() {
         </div>
 
                 {/* Add missing navigation links */}
+                {/* Add search box to desktop nav (moved to left side) */}
+                <div className="relative flex items-center border border-gray-300 rounded-md overflow-hidden mr-2 hover:border-blue-400 transition-colors duration-200">
+                  <button
+                    onClick={() => setShowSearch(true)}
+                    className="text-gray-600 hover:text-blue-600 transition-colors duration-200 p-1.5 pl-2"
+                    aria-label="Search"
+                  >
+                    <Search className="w-4 h-4" />
+                  </button>
+                  <input
+                    type="text"
+                    placeholder="Search..."
+                    onClick={() => setShowSearch(true)}
+                    className="w-32 p-1 text-sm bg-transparent focus:outline-none text-gray-700 cursor-pointer"
+                    readOnly
+                  />
+                </div>
+                
                 <Link to="/residential" className="text-gray-800 hover:text-blue-600 font-medium relative">
                   Residential
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 transition-transform duration-300 hover:scale-x-100 origin-left"></span>
@@ -1791,27 +1809,21 @@ function App() {
                   <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
                   <span className="relative">Free Estimate</span>
                 </Link>
-                
-                {/* Add search button to desktop nav */}
-                <button
-                  onClick={() => setShowSearch(true)}
-                  className="text-gray-800 hover:text-blue-600 transition-colors duration-200 p-2 rounded-full hover:bg-gray-100"
-                  aria-label="Search"
-                >
-                  <Search className="w-5 h-5" />
-                </button>
               </div>
               
               {/* Mobile buttons */}
               <div className="flex items-center lg:hidden">
-                {/* Search button for mobile */}
-                <button 
-                  className="p-2 text-gray-800 hover:text-blue-600 transition-colors duration-200 mr-2" 
-                  onClick={() => setShowSearch(true)}
-                  aria-label="Search"
-                >
-                  <Search className="w-5 h-5" />
-                </button>
+                {/* Search button for mobile - updated style */}
+                <div className="relative flex items-center border border-gray-300 rounded-md overflow-hidden mr-2 hover:border-blue-400 transition-colors duration-200">
+                  <button 
+                    className="flex items-center p-1.5 text-gray-600 hover:text-blue-600" 
+                    onClick={() => setShowSearch(true)}
+                    aria-label="Search"
+                  >
+                    <Search className="w-4 h-4 mr-1" />
+                    <span className="text-sm pr-2">Search</span>
+                  </button>
+                </div>
                 
                 {/* Existing mobile menu button */}
                 <button 
