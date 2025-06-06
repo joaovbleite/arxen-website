@@ -289,10 +289,8 @@ const ServiceSelection: React.FC<ServiceSelectionProps> = ({
     // Insurance & Professional
     { id: 'insurance-agency', categoryId: 'fit-out', title: 'Insurance Agency Offices', description: 'Professional office spaces for insurance providers.', icon: <ShieldCheck /> },
     
-    // Technology
-    { id: 'network-infrastructure', categoryId: 'fit-out', title: 'Network Infrastructure', description: 'Data cabling, telecom rooms, and communications pathways.', icon: <Server /> },
+    // Basic Technology
     { id: 'av-integration', categoryId: 'fit-out', title: 'AV Integration', description: 'Audio-visual systems for conference rooms and presentation spaces.', icon: <Tv /> },
-    { id: 'telecom-facilities', categoryId: 'new-construction', title: 'Telecom Facilities', description: 'Construction for telecommunications equipment and data centers.', icon: <Antenna /> },
     
     // Sustainable Building
     { id: 'green-building', categoryId: 'new-construction', title: 'Green Building & LEED', description: 'Sustainable construction practices and certification support.', icon: <Leaf /> },

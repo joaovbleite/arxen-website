@@ -229,11 +229,8 @@ const CommercialServicePage: React.FC<CommercialServicePageProps> = ({ title }) 
     { id: 'bowling', name: 'Bowling Alleys', icon: <Target />, description: 'Bowling centers and entertainment venues', category: 'Recreation', tags: ['renovation'] },
     { id: 'amusement', name: 'Amusement Parks', icon: <FerrisWheel />, description: 'Theme parks and amusement centers', category: 'Recreation', tags: ['renovation'] },
 
-    // Technology
-    { id: 'data_center', name: 'Data Centers', icon: <Server />, description: 'Server facilities, IT infrastructure hubs', category: 'Technology', tags: ['new_construction'] },
-    { id: 'lab', name: 'Laboratories', icon: <FlaskConical />, description: 'Research labs, testing facilities', category: 'Technology', tags: ['renovation'] },
-    { id: 'telecom', name: 'Telecom Facilities', icon: <TowerControl />, description: 'Telecommunication hubs and centers', category: 'Technology', tags: ['renovation'] },
-    { id: 'rnd', name: 'R&D Centers', icon: <Microscope />, description: 'Research and development facilities', category: 'Technology', tags: ['renovation'] },
+    // Basic Technology (removed advanced technology facilities)
+    { id: 'lab', name: 'Laboratories', icon: <FlaskConical />, description: 'Research labs, testing facilities', category: 'Specialized', tags: ['renovation'] },
 
     // Transportation
     { id: 'logistics', name: 'Logistics Hubs', icon: <Truck />, description: 'Transportation and logistics facilities', category: 'Transportation', tags: ['renovation'] },

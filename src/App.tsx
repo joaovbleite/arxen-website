@@ -921,37 +921,22 @@ function App() {
         // Add other commercial services from CommercialServicePage.tsx here if needed
       ]
     },
-    // --- NEW: Technology Services Category --- 
+    // --- Basic Smart Home Integration (keeping only simple options) --- 
     {
-      category: "Technology Services",
+      category: "Smart Home Basics",
       services: [
         {
-          title: "Data Center Construction", 
-          path: "/services/data-center-construction", 
-          description: "Specialized construction services for data centers and server facilities.", 
-          image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80",
-          features: ["Precision cooling systems", "Redundant power infrastructure", "Advanced fire suppression", "Security integration"],
-          benefits: ["Optimal equipment performance", "Maximized uptime", "Energy efficiency", "Scalable design"],
-          processSteps: [
-            { title: "Requirements Analysis", description: "Determine technical and capacity needs" },
-            { title: "Infrastructure Design", description: "Plan power, cooling, and network systems" },
-            { title: "Construction & Installation", description: "Build to exact specifications" },
-            { title: "Testing & Certification", description: "Verify all systems meet requirements" }
-          ],
-          galleryImages: []
-        },
-        {
-          title: "Smart Building Integration", 
-          path: "/services/smart-building-integration", 
-          description: "Transform commercial spaces with advanced automation and IoT systems.", 
+          title: "Smart Hub Installation", 
+          path: "/services/smart-hub-installation", 
+          description: "Basic setup for controlling smart home devices.", 
           image: "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&q=80",
-          features: ["Building automation systems", "Energy management", "Access control integration", "Monitoring solutions"],
-          benefits: ["Reduced operational costs", "Improved energy efficiency", "Enhanced security", "Better occupant comfort"],
+          features: ["Central control system", "Voice assistant compatibility", "Mobile app access", "Device connection"],
+          benefits: ["Simplified home control", "Energy monitoring", "Enhanced convenience", "Future expandability"],
           processSteps: [
-            { title: "System Assessment", description: "Evaluate current infrastructure and needs" },
-            { title: "Solution Design", description: "Create integrated smart building plan" },
-            { title: "Installation & Programming", description: "Implement hardware and software systems" },
-            { title: "Training & Handover", description: "Ensure staff can manage new systems" }
+            { title: "Needs Assessment", description: "Determine which smart features you need" },
+            { title: "Hub Selection", description: "Choose the right smart hub for your home" },
+            { title: "Installation & Setup", description: "Professional installation and configuration" },
+            { title: "User Training", description: "Learn how to use your new smart home system" }
           ],
           galleryImages: []
         },
@@ -2008,7 +1993,7 @@ function App() {
                     }}
                   >
                     {services.map((category, index) => (
-                      <div key={index} className="w-[70%] sm:w-[60%] md:w-[70%] lg:w-[40%] flex-shrink-0 px-1.5 sm:px-2 snap-start first:pl-4 last:pr-8">
+                      <div key={index} className="w-[85%] sm:w-[70%] md:w-[50%] lg:w-[33%] flex-shrink-0 px-1.5 sm:px-2 snap-start first:pl-4 last:pr-8">
                         <div className="relative group block bg-black rounded-2xl overflow-hidden shadow-lg h-[240px] sm:h-[280px] md:h-[400px] hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
                           {/* Category index badge */}
                           <div className="absolute top-3 left-3 z-10 bg-white/30 backdrop-blur-md text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center border border-white/40">
