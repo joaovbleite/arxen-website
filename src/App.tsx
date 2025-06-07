@@ -3851,8 +3851,14 @@ const keyframes = {
   `
 };
 
-// Add CSS for hiding scrollbar
+// Add CSS for hiding scrollbar and preventing global swipe navigation
 const customScrollbarCSS = `
+  /* Global setting to prevent swipe navigation */
+  html, body {
+    overscroll-behavior-x: none; /* Prevent horizontal overscroll on the entire page */
+    touch-action: pan-y; /* Only allow vertical scrolling, disable horizontal swipe navigation */
+  }
+  
   .services-slider-track {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
@@ -3968,6 +3974,58 @@ if (typeof document !== 'undefined') {
     }
   `;
   document.head.appendChild(style);
+  
+  // Add event listeners to prevent horizontal swipe navigation
+  let startX = 0;
+  let startY = 0;
+  
+  // Handle touch start
+  document.addEventListener('touchstart', function(e: TouchEvent) {
+    // Store initial touch position
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: false });
+  
+  // Handle touch move - prevent horizontal swipe navigation
+  document.addEventListener('touchmove', function(e: TouchEvent) {
+    // Skip if we don't have start coordinates
+    if (!startX || !startY) return;
+    
+    const moveX = e.touches[0].clientX;
+    const moveY = e.touches[0].clientY;
+    
+    // Calculate distance
+    const xDiff = startX - moveX;
+    const yDiff = startY - moveY;
+    
+    // If horizontal swipe is significantly greater than vertical movement
+    if (Math.abs(xDiff) > Math.abs(yDiff) * 1.5) {
+      // Check if we're inside a scrollable element like our slider
+      let targetElement = e.target as HTMLElement;
+      let isInScrollableContainer = false;
+      
+      // Walk up the DOM tree looking for scrollable containers
+      while (targetElement && targetElement !== document.body) {
+        if (targetElement.classList?.contains('services-slider-track') || 
+            targetElement.classList?.contains('swiper-container')) {
+          isInScrollableContainer = true;
+          break;
+        }
+        targetElement = targetElement.parentElement as HTMLElement;
+      }
+      
+      // If not in a scrollable container, prevent the swipe
+      if (!isInScrollableContainer) {
+        e.preventDefault();
+      }
+    }
+  }, { passive: false });
+  
+  // Clear variables on touch end
+  document.addEventListener('touchend', function() {
+    startX = 0;
+    startY = 0;
+  }, { passive: true });
 }
 
 // Add new keyframes for the enhanced backgrounds
