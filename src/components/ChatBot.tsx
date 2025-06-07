@@ -2296,13 +2296,9 @@ const ChatBot: React.FC = () => {
       case 'question-do-you-offer-financing-':
         userMessage.text = "Do you offer financing?";
         botResponse = {
-          text: "Yes, we offer several financing options through our trusted partners. These include home improvement loans, lines of credit, and special promotional terms. We can guide you through the application process.",
+          text: "We don't currently offer financing options. We accept checks, bank transfers, and major credit cards for payment.",
           isUser: false,
-          timestamp: Date.now(),
-          type: 'link',
-          options: [
-            { text: "Financing Details", action: "/financing" }
-          ]
+          timestamp: Date.now()
         };
         break;
       
@@ -2349,13 +2345,13 @@ const ChatBot: React.FC = () => {
       case 'financing-specialist':
         userMessage.text = "I'd like to speak with a financing specialist";
         botResponse = {
-          text: "I'll connect you with our financing team who can explain all available options and help find the best solution for your project. You can reach them directly at:",
+          text: "We don't currently offer financing options. If you have questions about payment methods and schedules, our team would be happy to discuss them with you.",
           isUser: false,
           timestamp: Date.now(),
           type: 'contact',
           options: [
-            { text: "Call Financing Team: 404-934-9458", action: "tel:404-934-9458" },
-            { text: "Email: financing@arxenconstruction.com", action: "mailto:financing@arxenconstruction.com" }
+            { text: "Call Us: 404-934-9458", action: "tel:404-934-9458" },
+            { text: "Email: teamarxen@gmail.com", action: "mailto:teamarxen@gmail.com" }
           ]
         };
         break;

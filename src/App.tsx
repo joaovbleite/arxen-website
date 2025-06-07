@@ -29,7 +29,7 @@ const CategoryServices = lazy(() => import('./pages/CategoryServices'));
 const CommercialServicePage = lazy(() => import('./pages/CommercialServicePage'));
 const CustomCabinetryPage = lazy(() => import('./pages/CustomCabinetryPage'));
 const FlooringServicesPage = lazy(() => import('./pages/FlooringServicesPage'));
-const Financing = lazy(() => import('./pages/Financing'));
+// Financing component removed
 const FreeEstimate = lazy(() => import('./pages/FreeEstimate/FreeEstimate'));
 import Footer from './components/Footer';
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
@@ -1796,12 +1796,7 @@ function App() {
                   Commercial
                 </span>
               </Link>
-              <Link to="/financing" className="block text-gray-800 hover:text-blue-600 transition-colors duration-200 py-2 border-b border-gray-200 flex items-center" onClick={toggleMobileMenu}>
-                <span className="transform transition-transform duration-200 hover:translate-x-1 flex items-center">
-                  <DollarSign className="w-5 h-5 mr-2" />
-                  Financing
-                </span>
-              </Link>
+              {/* Financing link removed */}
               <Link to="/about" className="block text-gray-800 hover:text-blue-600 transition-colors duration-200 py-2 border-b border-gray-200 flex items-center" onClick={toggleMobileMenu}>
                 <span className="transform transition-transform duration-200 hover:translate-x-1 flex items-center">
                   <Users className="w-5 h-5 mr-2" />
@@ -1905,13 +1900,22 @@ function App() {
               {/* Add HomeSEO component for improved search engine optimization */}
               <HomeSEO />
               
-              {/* Hero Section - Enhanced with professional gradient overlay */}
+              {/* Hero Section - Enhanced with parallax effect and professional gradient overlay */}
               <div 
-                className="relative h-[50vh] sm:h-[60vh] flex items-center justify-center text-center bg-cover bg-center z-[5]" 
-                style={{ backgroundImage: `url('https://i.postimg.cc/V5PtMvhn/532-DAFC0-2337-4-D95-969-F-773-A6053-B8-F7-4-5005-c.jpg')` }}
+                className="relative h-[60vh] sm:h-[70vh] md:h-[80vh] flex items-center justify-center text-center z-[5] overflow-hidden"
               >
+                {/* Parallax background image with fixed attachment */}
+                <div 
+                  className="absolute inset-0 bg-cover bg-center bg-fixed" 
+                  style={{ 
+                    backgroundImage: `url('https://i.postimg.cc/V5PtMvhn/532-DAFC0-2337-4-D95-969-F-773-A6053-B8-F7-4-5005-c.jpg')`,
+                    transform: 'translateZ(0)', /* Helps with mobile rendering */
+                  }}
+                ></div>
+                
                 {/* Professional gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 via-black/70 to-blue-900/80"></div>
+                
                 <div className="relative z-[10] text-white px-4">
                   <h1 className="text-3xl sm:text-5xl md:text-7xl font-bold mb-3 md:mb-4">Build Your Dream</h1>
                   <p className="text-lg sm:text-xl md:text-2xl mb-6 md:mb-8 max-w-3xl mx-auto">Expert construction and remodeling services for residential and commercial properties.</p>
@@ -1926,8 +1930,8 @@ function App() {
                   >
                     Get a Free Estimate
                   </Link>
-          </div>
-        </div>
+                </div>
+              </div>
 
               {/* Services Category Slider Section - Subtle wave background */}
               <div className="py-10 sm:py-12 md:py-16 relative z-[2] overflow-hidden">
@@ -3664,7 +3668,7 @@ Please enter your zip code to continue.
         <Route path="/services/hardwood" element={<HardwoodService />} />
         <Route path="/services/custom-cabinetry" element={<CustomCabinetryPage />} />
         <Route path="/services/flooring" element={<FlooringServicesPage />} />
-        <Route path="/financing" element={<Financing />} />
+        {/* Financing route removed */}
         <Route path="/contact" element={<Contact />} />
         {/* Removed duplicate route - redirected in main Routes section */}
         <Route path="/commercial-quote" element={<CommercialQuote />} />
@@ -4214,6 +4218,20 @@ const strongBackgroundAnimations = `
   .animate-slow-pulse-delayed {
     animation: slow-pulse-delayed 8s ease-in-out infinite;
     animation-delay: 2s;
+  }
+  
+  /* Parallax Hero Banner - Enhanced for cross-browser compatibility */
+  .bg-fixed {
+    background-attachment: fixed;
+  }
+  
+  /* Fix for iOS where background-attachment: fixed doesn't work */
+  @supports (-webkit-overflow-scrolling: touch) {
+    .bg-fixed {
+      background-attachment: scroll; /* Fallback to scroll on iOS */
+      background-position: center center;
+      background-size: cover;
+    }
   }
 `;
 

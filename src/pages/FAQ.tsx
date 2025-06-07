@@ -473,8 +473,8 @@ const FAQ: React.FC = () => {
       category: "payment"
     },
     {
-      question: "Do you offer financing options?",
-      answer: "Yes, we partner with reputable financing companies to offer various payment plans. Please visit our Financing page for more details on the options available.",
+      question: "What payment methods do you accept?",
+      answer: "We accept checks, bank transfers, and major credit cards. Payment schedules are outlined in our contract and typically include an initial deposit, progress payments, and a final payment upon completion.",
       category: "payment"
     },
     {
@@ -512,11 +512,7 @@ const FAQ: React.FC = () => {
       answer: "We occasionally offer specialized pricing programs including: seasonal discounts during our traditionally slower periods (typically late fall and winter), multi-project discounts for clients undertaking several improvements simultaneously, referral incentives for existing clients, special programs for veterans and first responders, and community initiatives for non-profit organizations. While our base pricing reflects our commitment to quality materials and craftsmanship, we're happy to discuss any current promotions that might apply to your specific project during your consultation.",
       category: "payment"
     },
-    {
-      question: "What financing options do you offer or recommend?",
-      answer: "We offer several financing solutions to make your project affordable: partnerships with specialized home improvement lenders offering competitive rates, assistance with construction loan applications and draw management, connections to HELOC and home equity loan providers, information on renovation-specific mortgage products (like FHA 203k loans), manufacturer financing for specific product lines, and guidance on qualified tax-advantaged financing when applicable. During your initial consultation, we can review options best suited to your specific financial situation and project scope.",
-      category: "payment"
-    },
+    // Financing options question removed
     {
       question: "How do allowances work in your contracts?",
       answer: "Allowances represent budgeted amounts for items you'll select during the project, such as fixtures, finishes, and appliances. Each allowance specifies both the budgeted amount and what it covers (materials only or materials and installation). We establish allowance amounts based on your quality expectations and preferences. As you make specific selections, we track the actual costs against these allowances, notifying you of any overages or savings. You maintain complete control over selection decisions and associated costs, with complete transparency throughout the process.",

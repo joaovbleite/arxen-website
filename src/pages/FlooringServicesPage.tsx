@@ -887,57 +887,51 @@ const FlooringServicesPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Financing Options Section */}
+      {/* Affordable Flooring Section */}
       <div className="bg-white py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Flexible Financing Options</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">Affordable Quality Flooring</h2>
           <div className="max-w-4xl mx-auto bg-gray-50 p-8 rounded-lg shadow-md border border-gray-200">
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-xl font-semibold mb-4">We Make Flooring Affordable</h3>
                 <p className="text-gray-700 mb-4">
-                  Transform your home with beautiful new flooring without straining your budget. Our flexible financing options make it easy to get the floors you want now and pay over time.
+                  Transform your home with beautiful new flooring at competitive prices. We offer various options to suit your budget without compromising on quality.
                 </p>
                 <ul className="space-y-2 mb-6">
                   <li className="flex items-center">
                     <Check className="w-5 h-5 text-green-600 mr-2" />
-                    <span className="text-gray-700">No interest options available</span>
+                    <span className="text-gray-700">Competitive pricing</span>
                   </li>
                   <li className="flex items-center">
                     <Check className="w-5 h-5 text-green-600 mr-2" />
-                    <span className="text-gray-700">Low monthly payments</span>
+                    <span className="text-gray-700">Transparent cost estimates</span>
                   </li>
                   <li className="flex items-center">
                     <Check className="w-5 h-5 text-green-600 mr-2" />
-                    <span className="text-gray-700">Quick application process</span>
+                    <span className="text-gray-700">Options for every budget</span>
                   </li>
                   <li className="flex items-center">
                     <Check className="w-5 h-5 text-green-600 mr-2" />
-                    <span className="text-gray-700">Decisions within minutes</span>
+                    <span className="text-gray-700">No hidden fees</span>
                   </li>
                 </ul>
-                <Link 
-                  to="/financing" 
-                  className="inline-flex items-center text-blue-700 hover:text-blue-900 font-medium"
-                >
-                  Learn More About Financing <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
               </div>
               <div className="bg-white p-6 rounded-lg border border-gray-200">
                 <h3 className="text-xl font-semibold mb-4 text-center">Current Special Offer</h3>
                 <div className="bg-blue-900 text-white p-4 rounded-lg mb-4 text-center">
-                  <p className="text-lg font-bold">12 MONTHS</p>
-                  <p className="text-2xl font-bold mb-2">NO INTEREST</p>
-                  <p className="text-sm">On purchases over $1,500</p>
+                  <p className="text-lg font-bold">SUMMER SPECIAL</p>
+                  <p className="text-2xl font-bold mb-2">25% OFF</p>
+                  <p className="text-sm">Selected flooring options</p>
                 </div>
                 <p className="text-sm text-gray-600 mb-4 text-center">
-                  *Subject to credit approval. Limited time offer.
+                  *Limited time offer. Restrictions apply.
                 </p>
                 <Link 
-                  to={getQuoteUrl("/quote?service=Flooring&offer=12MONTHS")} 
+                  to={getQuoteUrl("/quote?service=Flooring&offer=SUMMER")} 
                   className="block text-center bg-blue-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-800 transition-colors"
                 >
-                  Apply Now
+                  Get Quote Now
                 </Link>
               </div>
             </div>

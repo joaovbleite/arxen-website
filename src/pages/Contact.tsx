@@ -924,8 +924,8 @@ const Contact: React.FC = () => {
                   answer: "The best way to get a quote is to fill out the contact form on this page with as much detail as possible. We'll review your request and get back to you within 24 hours to discuss the next steps, which usually involve a free consultation."
                 },
                 {
-                  question: "Do you offer financing options?",
-                  answer: "Yes, we offer flexible financing options to help make your project more affordable. Please visit our [Financing Page](/financing) or contact us for more details."
+                        question: "What payment methods do you accept?",
+      answer: "We accept various payment methods including checks, bank transfers, and all major credit cards. We also offer flexible payment schedules for larger projects."
                 },
                 {
                   question: "What types of projects do you handle?",
