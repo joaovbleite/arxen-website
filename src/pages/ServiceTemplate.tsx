@@ -345,37 +345,7 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
               </div>
             )}
 
-            {/* Pricing Information */}
-            {pricingInfo && (
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-8 mb-8 border border-blue-200 shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in">
-                <h3 className="text-xl font-bold mb-6 relative inline-block after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-gradient-to-r after:from-blue-500 after:to-blue-800 after:rounded-full">
-                  Investment & Pricing
-                </h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                  <div className="bg-white p-4 rounded-lg shadow-sm border border-blue-100 hover:border-blue-300 transition-all">
-                    <div className="text-sm text-blue-600 font-medium mb-1">Starting At</div>
-                    <div className="text-2xl font-bold text-gray-800">{pricingInfo.startingAt}</div>
-                  </div>
-                  
-                  <div className="bg-white p-4 rounded-lg shadow-sm border border-blue-100 hover:border-blue-300 transition-all">
-                    <div className="text-sm text-blue-600 font-medium mb-1">Average Range</div>
-                    <div className="text-2xl font-bold text-gray-800">{pricingInfo.averageRange}</div>
-                  </div>
-                  
-                  <div className="bg-white p-4 rounded-lg shadow-sm border border-blue-100 hover:border-blue-300 transition-all">
-                    <div className="text-sm text-blue-600 font-medium mb-1">Premium Options</div>
-                    <div className="text-2xl font-bold text-gray-800">{pricingInfo.highEnd}</div>
-                  </div>
-                </div>
-                
-                <p className="text-gray-700">{pricingInfo.description}</p>
-                
-                <div className="mt-4 text-sm text-gray-600 bg-white p-3 rounded-lg border border-blue-100">
-                  <strong>Note:</strong> Prices may vary based on specific requirements, material selections, and project complexity. Contact us for a free consultation and personalized quote.
-                </div>
-              </div>
-            )}
+            {/* Pricing Information section removed */}
 
             {/* FAQ Section */}
             <div className="mt-16 animate-on-scroll" id="faq-section">
