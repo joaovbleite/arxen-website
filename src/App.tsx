@@ -2528,7 +2528,7 @@ Please enter your zip code to continue.
                 to={service.path}
                 className="group relative rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-transform duration-200 transform hover:-translate-y-1 will-change-transform"
               >
-                <div className="h-64 relative overflow-hidden">
+                <div className="h-48 md:h-64 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-b from-blue-900/70 to-black/80 opacity-70 group-hover:opacity-60 transition-opacity duration-300"></div>
                   <img 
                     src={service.icon} 
@@ -2544,20 +2544,29 @@ Please enter your zip code to continue.
                     </p>
                       </div>
                     </div>
-                <div className={`p-6 ${service.bgColor} border-t-4 border-blue-400`}>
-                  <div className="space-y-3">
+                <div className={`p-6 pb-3 md:pb-6 ${service.bgColor} border-t-4 border-blue-400`}>
+                  <div className="space-y-2 md:space-y-3">
                     {service.features.map((feature, i) => (
-                      <div key={i} className="flex items-center text-gray-200">
+                      <div key={i} className={`flex items-center text-gray-200 ${i === service.features.length - 1 ? 'mb-0 md:mb-0' : 'mb-0'}`}>
                         <div className="w-1.5 h-1.5 rounded-full bg-blue-300 mr-2"></div>
                         <span className="text-sm">{feature}</span>
-                        </div>
-                ))}
-              </div>
-                  <div className="mt-4 pt-4 border-t border-blue-800 flex justify-end items-center">
+                        {/* Add the arrow button directly next to the last bullet point on mobile */}
+                        {i === service.features.length - 1 && (
+                          <div className="ml-auto md:hidden">
+                            <div className="bg-blue-700 rounded-full p-2 shadow-md transform translate-x-0 group-hover:translate-x-1 transition-transform">
+                              <ArrowRight className="w-3 h-3 text-white" />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="hidden md:flex justify-between items-center">
+                    <div className="hidden md:block">{/* Empty div for desktop layout */}</div>
                     <div className="bg-blue-700 rounded-full p-2 shadow-md transform translate-x-0 group-hover:translate-x-1 transition-transform">
                       <ArrowRight className="w-4 h-4 text-white" />
-            </div>
-          </div>
+                    </div>
+                  </div>
         </div>
               </Link>
             ))}
