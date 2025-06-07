@@ -1953,7 +1953,7 @@ function App() {
                 
         <div className="container mx-auto px-3 sm:px-4">
                 <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 sm:mb-6 md:mb-12">Explore Our Services</h2>
-                <div className="relative overflow-hidden group">
+                <div className="relative overflow-hidden group" onTouchMove={(e) => e.stopPropagation()}>
                   {/* Scroll hint for mobile - only shown initially until user swipes, hidden on desktop and larger screens */}
                   {!hasSwipedServices && (
                     <div className="relative z-20 mb-2 px-4 transition-opacity duration-300 sm:hidden">
@@ -1976,17 +1976,32 @@ function App() {
                     onScroll={handleScroll} // Add scroll handler
                     onTouchStart={(e) => {
                       touchStartXRef.current = e.touches[0].clientX;
+                      // No need to prevent default on touchstart
                     }}
                     onTouchMove={(e) => {
                       if (touchStartXRef.current !== null) {
                         const touchDiff = touchStartXRef.current - e.touches[0].clientX;
+                        // Mark as swiped for the hint animation
                         if (Math.abs(touchDiff) > 20 && !hasSwipedServices) {
                           setHasSwipedServices(true);
                           localStorage.setItem('arxen_has_swiped_services', 'true');
                         }
+                        
+                        // Prevent horizontal swipes from affecting the page
+                        if (Math.abs(touchDiff) > 10) {
+                          e.preventDefault();
+                        }
                       }
                     }}
-                    onTouchEnd={() => {
+                    onTouchEnd={(e) => {
+                      // Prevent click events from bubbling if we were swiping
+                      if (touchStartXRef.current !== null) {
+                        const touchEndX = e.changedTouches[0].clientX;
+                        const touchDiff = touchStartXRef.current - touchEndX;
+                        if (Math.abs(touchDiff) > 10) {
+                          e.preventDefault();
+                        }
+                      }
                       touchStartXRef.current = null;
                     }}
                   >
@@ -3843,6 +3858,8 @@ const customScrollbarCSS = `
     scrollbar-width: none;  /* Firefox */
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch; /* Better touch scrolling on iOS */
+    overscroll-behavior-x: contain; /* Prevent page from moving when swiping the slider */
+    touch-action: pan-x; /* Optimize for horizontal swiping */
   }
   .services-slider-track::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Opera */
