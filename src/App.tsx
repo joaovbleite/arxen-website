@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, useMemo, Suspense, lazy } from 'react';
+import React, { useState, useEffect, useRef, useMemo, Suspense, lazy, FC } from 'react';
 import './marquee.css';
 import { Hammer, CheckCircle, Phone, Mail, MapPin, Clock, Shield, ArrowRight, Star, ChevronRight, Check, Camera, Box, ClipboardList, ArrowLeft, Home, ChevronDown, DollarSign, Users, Clipboard, Building2, Settings, Search, X, FileText, ShoppingBag, Factory, UtensilsCrossed, Stethoscope, Package, Heart, MessageSquare, Award, Tag, Scan, Calendar } from 'lucide-react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { Loader2, ChevronsRight, Send } from 'lucide-react';
@@ -62,6 +62,14 @@ interface Service {
   benefits?: string[]; // Optional
   processSteps?: { title: string; description: string }[]; // Optional
   galleryImages?: string[]; // Optional
+}
+
+// Extend Window interface to add our custom properties
+declare global {
+  interface Window {
+    navigationStartTime?: number;
+    navigationTimer?: ReturnType<typeof setTimeout>;
+  }
 }
 
 // ScrollToTop component - scrolls to top on route change
@@ -171,6 +179,7 @@ function App() {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [currentCategorySlide, setCurrentCategorySlide] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
   const [isHomePage, setIsHomePage] = useState(true);
@@ -1368,11 +1377,7 @@ function App() {
     });
   }, [services, serviceFilterType]);
 
-  // Extend Window interface to add our custom properties
-  interface Window {
-    navigationStartTime?: number;
-    navigationTimer?: ReturnType<typeof setTimeout>;
-  }
+  // Window interface already defined at the top of the file
   
   // Add navigation detection with improved handling
   useEffect(() => {
@@ -1719,69 +1724,73 @@ function App() {
               <div className="relative py-2 border-b border-gray-200">
                 <button 
                   className="flex items-center justify-between w-full text-gray-800 hover:text-blue-600 transition-colors duration-200 py-2"
-                  // Removed the toggle functionality to keep services always visible
+                  onClick={() => setIsMobileServicesOpen(!isMobileServicesOpen)}
                 >
                   <span className="flex items-center">
                     <Settings className="w-5 h-5 mr-2" />
                     Services
                   </span>
-                  <ChevronDown className="w-5 h-5" />
+                  <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${isMobileServicesOpen ? 'rotate-180' : ''}`} />
                 </button>
                 
-                {/* Add Service Type Filter Tabs - Updated to a more compact design */}
-                <div className="mt-2 mb-4 flex justify-center">
-                  <div className="bg-gray-100 p-1 rounded-full flex items-center shadow-sm">
-                    {[
-                      { id: 'all', label: 'All' },
-                      { id: 'commercial', label: 'Commercial' },
-                      { id: 'residential', label: 'Residential' }
-                    ].map((option) => (
-                      <button
-                        key={option.id}
-                        className={`px-3 py-1 text-xs font-medium rounded-full transition-all duration-200 ${
-                          serviceFilterType === option.id 
-                            ? 'bg-white text-blue-700 shadow-sm' 
-                            : 'text-gray-600 hover:text-gray-800'
-                        }`}
-                        onClick={() => setServiceFilterType(option.id as 'all' | 'commercial' | 'residential')}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                
-                <div id="mobile-services-dropdown" className="mt-2 space-y-1 pl-7 animate-fade-in">
-                  {filteredServices.map((category, index) => (
-                    <div key={index} className="py-1">
-                      <div className="flex items-center font-medium text-gray-700 mb-1">
-                        <span className="relative after:absolute after:w-0 after:h-0.5 after:bg-blue-600 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300">
-                          {category.category}
-                        </span>
-                      </div>
-                      <div className="pl-3 space-y-1">
-                        {category.services.slice(0, 3).map((service, serviceIndex) => (
-                          <Link 
-                            key={serviceIndex}
-                            to={service.path}
-                            className="block text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm py-1 transform transition-transform duration-200 hover:translate-x-1 flex items-center"
-                            onClick={toggleMobileMenu}
+                {isMobileServicesOpen && (
+                  <>
+                    {/* Add Service Type Filter Tabs - Updated to a more compact design */}
+                    <div className="mt-2 mb-4 flex justify-center">
+                      <div className="bg-gray-100 p-1 rounded-full flex items-center shadow-sm">
+                        {[
+                          { id: 'all', label: 'All' },
+                          { id: 'commercial', label: 'Commercial' },
+                          { id: 'residential', label: 'Residential' }
+                        ].map((option) => (
+                          <button
+                            key={option.id}
+                            className={`px-3 py-1 text-xs font-medium rounded-full transition-all duration-200 ${
+                              serviceFilterType === option.id 
+                                ? 'bg-white text-blue-700 shadow-sm' 
+                                : 'text-gray-600 hover:text-gray-800'
+                            }`}
+                            onClick={() => setServiceFilterType(option.id as 'all' | 'commercial' | 'residential')}
                           >
-                            <ChevronRight className="w-3 h-3 mr-1 text-gray-500" />
-                            {service.title}
-                          </Link>
+                            {option.label}
+                          </button>
                         ))}
-                        <Link 
-                          to={`/services/category/${category.category.toLowerCase().replace(/\s+/g, '-')}`}
-                          className="block text-blue-600 hover:text-blue-800 transition-colors duration-200 text-sm py-1 italic"
-                          onClick={toggleMobileMenu}
-                        >
-                          View all {category.category}...
-                        </Link>
                       </div>
                     </div>
-                  ))}
-                </div>
+                    
+                    <div id="mobile-services-dropdown" className="mt-2 space-y-1 pl-7 animate-fade-in">
+                      {filteredServices.map((category, index) => (
+                        <div key={index} className="py-1">
+                          <div className="flex items-center font-medium text-gray-700 mb-1">
+                            <span className="relative after:absolute after:w-0 after:h-0.5 after:bg-blue-600 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300">
+                              {category.category}
+                            </span>
+                          </div>
+                          <div className="pl-3 space-y-1">
+                            {category.services.slice(0, 3).map((service, serviceIndex) => (
+                              <Link 
+                                key={serviceIndex}
+                                to={service.path}
+                                className="block text-gray-600 hover:text-blue-600 transition-colors duration-200 text-sm py-1 transform transition-transform duration-200 hover:translate-x-1 flex items-center"
+                                onClick={toggleMobileMenu}
+                              >
+                                <ChevronRight className="w-3 h-3 mr-1 text-gray-500" />
+                                {service.title}
+                              </Link>
+                            ))}
+                            <Link 
+                              to={`/services/category/${category.category.toLowerCase().replace(/\s+/g, '-')}`}
+                              className="block text-blue-600 hover:text-blue-800 transition-colors duration-200 text-sm py-1 italic"
+                              onClick={toggleMobileMenu}
+                            >
+                              View all {category.category}...
+                            </Link>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
               
               <Link to="/residential" className="block text-gray-800 hover:text-blue-600 transition-colors duration-200 py-2 border-b border-gray-200 flex items-center" onClick={toggleMobileMenu}>
@@ -4048,13 +4057,7 @@ const enhancedBackgroundCSS = `
   }
 `;
 
-// Extend Window interface to include our custom properties
-declare global {
-  interface Window {
-    navigationStartTime?: number;
-    navigationTimer?: ReturnType<typeof setTimeout>;
-  }
-}
+// Window interface already defined at the top of the file
 
 // Add the enhanced animations to the document
 if (typeof document !== 'undefined') {
