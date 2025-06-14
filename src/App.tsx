@@ -4356,3 +4356,7 @@ if (typeof document !== 'undefined') {
   strongBgStyle.innerHTML = strongBackgroundAnimations + loadingBarAnimation;
   document.head.appendChild(strongBgStyle);
 }
+
+<div className="text-center text-4xl font-bold text-pink-600 bg-yellow-200 p-4">
+  Test
+</div>
