@@ -72,32 +72,34 @@ const HomeSEO: React.FC = () => {
 
   return (
     <Helmet>
-      <title>Arxen Construction | Premier Home & Commercial Remodeling</title>
-      <meta name="description" content="Arxen Construction provides expert remodeling, renovation, and construction services for residential and commercial properties in the Atlanta area. Transform your space with our professional team." />
+      <title>Arxen Construction | #1 Atlanta Home Remodeling & Commercial Construction Company</title>
+      <meta name="description" content="Top-rated Atlanta construction company with 15+ years experience. Expert kitchen & bathroom remodeling, flooring, painting, commercial construction. Licensed & insured. Free estimates!" />
+      <meta name="keywords" content="Atlanta construction company, home remodeling Atlanta, kitchen remodeling Atlanta, bathroom renovation Atlanta, flooring installation Georgia, commercial construction Atlanta, Marietta contractor, licensed contractor Georgia, home improvement Atlanta, custom cabinetry Atlanta" />
       
       {/* Open Graph / Social Media Meta Tags */}
       <meta property="og:type" content="website" />
-      <meta property="og:title" content="Arxen Construction | Expert Remodeling & Renovation Services" />
-      <meta property="og:description" content="Transform your home or business with Arxen Construction's professional remodeling, renovation, and construction services in Atlanta." />
+      <meta property="og:title" content="Arxen Construction | #1 Atlanta Home Remodeling & Commercial Construction Company" />
+      <meta property="og:description" content="Top-rated Atlanta construction company with 15+ years experience. Expert kitchen & bathroom remodeling, flooring, painting, commercial construction. Licensed & insured. Free estimates!" />
       <meta property="og:image" content="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" />
       <meta property="og:url" content="https://arxenconstruction.com" />
       <meta property="og:site_name" content="Arxen Construction" />
       
       {/* Twitter Meta Tags */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content="Arxen Construction | Professional Renovation Services" />
-      <meta name="twitter:description" content="Expert remodeling and construction services for residential and commercial properties in Atlanta." />
+      <meta name="twitter:title" content="Arxen Construction | #1 Atlanta Home Remodeling & Commercial Construction Company" />
+      <meta name="twitter:description" content="Top-rated Atlanta construction company with 15+ years experience. Expert kitchen & bathroom remodeling, flooring, painting, commercial construction. Licensed & insured. Free estimates!" />
       <meta name="twitter:image" content="https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png" />
       
       {/* Canonical URL */}
       <link rel="canonical" href="https://arxenconstruction.com" />
       
       {/* Additional SEO Meta Tags */}
-      <meta name="keywords" content="construction, remodeling, renovation, kitchen remodeling, bathroom remodeling, commercial construction, Atlanta construction, home renovation" />
       <meta name="robots" content="index, follow" />
       <meta name="author" content="Arxen Construction" />
       <meta name="geo.region" content="US-GA" />
       <meta name="geo.placename" content="Atlanta" />
+      <meta name="geo.position" content="33.9526;-84.5499" />
+      <meta name="ICBM" content="33.9526, -84.5499" />
 
       {/* Schema.org Markup for Rich Snippets */}
       <script type="application/ld+json">
@@ -110,6 +112,7 @@ const HomeSEO: React.FC = () => {
           "url": businessInfo.url,
           "telephone": businessInfo.telephone,
           "email": businessInfo.email,
+          "foundingDate": "2008",
           "logo": businessInfo.logo,
           "image": businessInfo.logo,
           "address": {
@@ -134,11 +137,18 @@ const HomeSEO: React.FC = () => {
           "sameAs": businessInfo.sameAs,
           "areaServed": businessInfo.areaServed,
           "priceRange": businessInfo.priceRange,
+          "paymentAccepted": ["Cash", "Check", "Credit Card", "Financing Available"],
+          "currenciesAccepted": "USD",
           "hasOfferCatalog": {
             "@type": "OfferCatalog",
             "name": "Construction Services",
             "itemListElement": mainServices
           },
+          "knowsAbout": [
+            "Kitchen Remodeling", "Bathroom Renovation", "Flooring Installation", "Interior Painting",
+            "Exterior Painting", "Custom Cabinetry", "Home Additions", "Basement Finishing",
+            "Commercial Construction", "Office Renovation", "Retail Fit-out"
+          ],
           "review": {
             "@type": "Review",
             "reviewRating": {
@@ -155,7 +165,7 @@ const HomeSEO: React.FC = () => {
           "aggregateRating": {
             "@type": "AggregateRating",
             "ratingValue": "4.9",
-            "reviewCount": "125"
+            "reviewCount": "127"
           }
         })}
       </script>

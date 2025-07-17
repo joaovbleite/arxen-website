@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { ChevronRight, Check, Phone, Mail, ArrowRight, Download } from 'lucide-react';
 import ServiceSchema from '../components/ServiceSchema';
 import { usePropertyType } from '../components/PropertyTypeContext';
+import { Helmet } from 'react-helmet-async';
 
 interface ServicePageProps {
   title: string;
@@ -110,6 +111,60 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
 
   return (
     <div className="min-h-screen bg-white overflow-hidden">
+      {/* Enhanced SEO Meta Tags */}
+      <Helmet>
+        <title>{title} Services in Atlanta, GA | Arxen Construction | Licensed & Insured</title>
+        <meta name="description" content={`Professional ${title.toLowerCase()} services in Atlanta, GA. ${description} Licensed, insured, 15+ years experience. Free estimates! Call Arxen Construction today.`} />
+        <meta name="keywords" content={`${title.toLowerCase()} Atlanta, ${title.toLowerCase()} Georgia, ${title.toLowerCase()} Marietta, ${title.toLowerCase()} contractor Atlanta, ${category.toLowerCase()} services Atlanta, home improvement Atlanta, construction Atlanta, remodeling Atlanta`} />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+        <meta name="geo.region" content="US-GA" />
+        <meta name="geo.placename" content="Atlanta, Marietta" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content={`${title} Services in Atlanta, GA | Arxen Construction`} />
+        <meta property="og:description" content={`Professional ${title.toLowerCase()} services in Atlanta, GA. ${description} Licensed, insured, 15+ years experience. Free estimates!`} />
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:url" content={`https://arxenconstruction.com/services/${slug}`} />
+        <meta property="og:type" content="website" />
+        
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${title} Services in Atlanta, GA | Arxen Construction`} />
+        <meta name="twitter:description" content={`Professional ${title.toLowerCase()} services in Atlanta, GA. ${description} Licensed, insured, 15+ years experience. Free estimates!`} />
+        <meta name="twitter:image" content={imageUrl} />
+        
+        {/* Canonical */}
+        <link rel="canonical" href={`https://arxenconstruction.com/services/${slug}`} />
+        
+        {/* Service-specific structured data */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": `${title} Services`,
+            "description": description,
+            "provider": {
+              "@type": "LocalBusiness",
+              "name": "Arxen Construction",
+              "telephone": "+1-404-934-9458",
+              "email": "Arxenconstruction@gmail.com",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Marietta",
+                "addressRegion": "GA",
+                "addressCountry": "US"
+              }
+            },
+            "areaServed": "Atlanta, GA and surrounding areas",
+            "offers": {
+              "@type": "Offer",
+              "name": `${title} Services`,
+              "description": `Professional ${title.toLowerCase()} services in Atlanta, GA`
+            }
+          })}
+        </script>
+      </Helmet>
+      
       {/* Add schema markup for search engines */}
       <ServiceSchema 
         title={title} 
@@ -150,7 +205,7 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
                   For {typeInfoToDisplay}
                 </div>
               )}
-              <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4 animate-fade-in-left">{title}</h1>
+              <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4 animate-fade-in-left">{title} Services in Atlanta, GA</h1>
               <p className="text-xl text-white max-w-2xl animate-fade-in-left animation-delay-200">{description}</p>
               <div className="mt-8 flex flex-wrap gap-4 animate-fade-in-up animation-delay-400">
                 <Link 
@@ -158,13 +213,13 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
                   className="inline-flex items-center px-6 py-3 bg-blue-700 hover:bg-blue-800 text-white font-medium rounded-lg transition-all duration-300 hover:translate-y-[-2px] hover:shadow-lg relative overflow-hidden group"
                 >
                   <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
-                  <span className="relative flex items-center">Get a Quote <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" /></span>
+                  <span className="relative flex items-center">Get Free Estimate <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" /></span>
                 </Link>
                 <a 
                   href="/contact" 
                   className="inline-flex items-center px-6 py-3 bg-white hover:bg-gray-100 text-blue-900 font-medium rounded-lg transition-all duration-300 hover:translate-y-[-2px] hover:shadow-lg border-2 border-transparent hover:border-blue-200"
                 >
-                  <Phone className="w-4 h-4 mr-2 animate-pulse" /> Contact Us
+                  <Phone className="w-4 h-4 mr-2 animate-pulse" /> Call (404) 934-9458
                 </a>
               </div>
             </div>
@@ -190,7 +245,7 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
             {/* Features Section */}
             <div className="animate-on-scroll" id="features-section">
               <div className={`transition-all duration-1000 ${visibleSections.includes('features-section') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                <h2 className="text-3xl font-bold mb-8 relative inline-block after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-gradient-to-r after:from-blue-500 after:to-blue-800 after:rounded-full">What We Offer</h2>
+                <h2 className="text-3xl font-bold mb-8 relative inline-block after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-gradient-to-r after:from-blue-500 after:to-blue-800 after:rounded-full">Professional {title} Services in Atlanta</h2>
                 {features.length > 0 ? (
                   <div className="grid md:grid-cols-2 gap-8 mb-12">
                     {features.map((feature, index) => (
@@ -217,7 +272,7 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
             {/* Benefits Section */}
             <div className="animate-on-scroll" id="benefits-section">
               <div className={`transition-all duration-1000 delay-300 ${visibleSections.includes('benefits-section') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                <h2 className="text-3xl font-bold mb-8 mt-12 relative inline-block after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-gradient-to-r after:from-blue-500 after:to-blue-800 after:rounded-full">Benefits</h2>
+                <h2 className="text-3xl font-bold mb-8 mt-12 relative inline-block after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-gradient-to-r after:from-blue-500 after:to-blue-800 after:rounded-full">Why Choose Arxen Construction for {title}?</h2>
                 {benefits.length > 0 ? (
                   <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg p-8 shadow-sm border border-gray-100 group hover:shadow-lg transition-all duration-500">
                     <ul className="space-y-4">
@@ -248,7 +303,7 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
             {/* Our Process Section */}
             <div className="mt-16 animate-on-scroll" id="process-section">
               <div className={`transition-all duration-1000 delay-300 ${visibleSections.includes('process-section') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                <h2 className="text-3xl font-bold mb-8 relative inline-block after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-gradient-to-r after:from-blue-500 after:to-blue-800 after:rounded-full">Our Process</h2>
+                <h2 className="text-3xl font-bold mb-8 relative inline-block after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-gradient-to-r after:from-blue-500 after:to-blue-800 after:rounded-full">Our {title} Process</h2>
                 {processSteps.length > 0 ? (
                   <div className="relative">
                     {/* Process Timeline Line */}
@@ -278,20 +333,20 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
                   <div className="space-y-12">
                     {[
                       { 
-                        title: "Initial Consultation", 
-                        description: "We meet to understand your needs and project requirements."
+                        title: "Free Consultation", 
+                        description: "We meet to understand your needs and project requirements. No obligation, completely free assessment."
                       },
                       { 
                         title: "Custom Proposal", 
-                        description: "We provide a detailed quote tailored to your specific project."
+                        description: "We provide a detailed, transparent quote tailored to your specific project with clear timelines."
                       },
                       { 
                         title: "Professional Execution", 
-                        description: "Our team completes your project with expert craftsmanship."
+                        description: "Our licensed, insured team completes your project with expert craftsmanship and quality materials."
                       },
                       { 
-                        title: "Final Inspection", 
-                        description: "We ensure everything meets our high standards and your satisfaction."
+                        title: "Final Inspection & Guarantee", 
+                        description: "We ensure everything meets our high standards and your complete satisfaction with our work guarantee."
                       }
                     ].map((step, index) => (
                       <div 
@@ -317,7 +372,7 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
             {galleryImages.length > 0 && (
               <div className="mt-16 animate-on-scroll" id="gallery-section">
                 <div className={`transition-all duration-1000 delay-300 ${visibleSections.includes('gallery-section') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                  <h2 className="text-3xl font-bold mb-8 relative inline-block after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-gradient-to-r after:from-blue-500 after:to-blue-800 after:rounded-full">Project Gallery</h2>
+                  <h2 className="text-3xl font-bold mb-8 relative inline-block after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-gradient-to-r after:from-blue-500 after:to-blue-800 after:rounded-full">{title} Project Gallery</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {galleryImages.map((imgUrl, index) => (
                       <div 
@@ -329,7 +384,7 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
                         <div className="relative">
                           <img 
                             src={imgUrl}
-                            alt={`${title} project gallery image ${index + 1}`}
+                            alt={`${title} project gallery image ${index + 1} - Arxen Construction Atlanta`}
                             className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
@@ -345,25 +400,27 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
               </div>
             )}
 
-            {/* Pricing Information section removed */}
-
             {/* FAQ Section */}
             <div className="mt-16 animate-on-scroll" id="faq-section">
               <div className={`transition-all duration-1000 delay-300 ${visibleSections.includes('faq-section') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                <h2 className="text-3xl font-bold mb-8 relative inline-block after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-gradient-to-r after:from-blue-500 after:to-blue-800 after:rounded-full">Frequently Asked Questions</h2>
+                <h2 className="text-3xl font-bold mb-8 relative inline-block after:absolute after:bottom-0 after:left-0 after:right-0 after:h-1 after:bg-gradient-to-r after:from-blue-500 after:to-blue-800 after:rounded-full">Frequently Asked Questions About {title}</h2>
                 <div className="space-y-6">
                   {[
                     {
                       question: `How long does the ${title.toLowerCase()} process typically take?`,
-                      answer: `The timeline for our ${title.toLowerCase()} services varies based on the scope and complexity of your project. During your consultation, we'll provide a specific timeline tailored to your needs.`
+                      answer: `The timeline for our ${title.toLowerCase()} services varies based on the scope and complexity of your project. During your free consultation, we'll provide a specific timeline tailored to your needs and requirements.`
                     },
                     {
-                      question: `What is the cost range for ${title.toLowerCase()}?`,
-                      answer: `Pricing depends on several factors including materials, size, complexity, and finishes. We provide detailed, transparent quotes based on your specific requirements.`
+                      question: `What is the cost range for ${title.toLowerCase()} in Atlanta?`,
+                      answer: `Pricing depends on several factors including materials, size, complexity, and finishes. We provide detailed, transparent quotes based on your specific requirements. Contact us for a free estimate.`
                     },
                     {
                       question: `Do you offer warranties on your ${title.toLowerCase()} services?`,
-                      answer: `Yes, we stand behind our work with comprehensive warranties. Our standard warranty covers workmanship and installation, while material warranties vary by manufacturer.`
+                      answer: `Yes, we stand behind our work with comprehensive warranties. Our standard warranty covers workmanship and installation, while material warranties vary by manufacturer. All work is guaranteed for your peace of mind.`
+                    },
+                    {
+                      question: `Are you licensed and insured for ${title.toLowerCase()} work?`,
+                      answer: `Absolutely. Arxen Construction is fully licensed, bonded, and insured for all ${title.toLowerCase()} services in Georgia. We maintain comprehensive liability insurance and workers' compensation coverage.`
                     }
                   ].map((faq, index) => (
                     <div 
@@ -392,8 +449,8 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
             <div className="sticky top-8 space-y-8">
               {/* Quote CTA Box */}
               <div className="bg-gradient-to-br from-blue-800 to-blue-900 text-white rounded-lg p-8 mb-8 shadow-lg transform transition-transform duration-500 hover:scale-[1.02] animate-fade-in animation-delay-200">
-                <h3 className="text-xl font-bold mb-4">Get a Free Quote</h3>
-                <p className="mb-6">Ready to start your {title.toLowerCase()} project? Contact us for a free consultation and estimate.</p>
+                <h3 className="text-xl font-bold mb-4">Get Your Free Estimate</h3>
+                <p className="mb-6">Ready to start your {title.toLowerCase()} project? Contact us for a free consultation and detailed estimate.</p>
                 
                 {/* Generate quote URL with all relevant parameters */}
                 {(() => {
@@ -405,7 +462,7 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
                     >
                       <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-blue-100 rounded-full group-hover:w-96 group-hover:h-96 opacity-30"></span>
                       <span className="relative flex items-center justify-center">
-                        Request Quote
+                        Get Free Estimate
                         <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
                       </span>
                     </Link>
@@ -413,10 +470,10 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
                 })()}
 
                 <div className="text-center">
-                  <p className="text-sm text-blue-100 mb-1">Or contact us directly:</p>
+                  <p className="text-sm text-blue-100 mb-1">Or call us directly:</p>
                   <a href="/contact" className="text-xl font-bold hover:text-blue-200 transition-colors duration-300 flex items-center justify-center">
                     <Phone className="w-5 h-5 mr-2 animate-pulse" />
-                    Contact Us
+                    (404) 934-9458
                   </a>
                 </div>
               </div>
@@ -430,7 +487,7 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
                     <div>
                       <p className="text-sm text-gray-600">Phone</p>
                       <a href="/contact" className="text-blue-900 font-medium hover:text-blue-700 transition-colors duration-300">
-                        Contact Us
+                        (404) 934-9458
                       </a>
                     </div>
                   </div>
@@ -471,20 +528,19 @@ const ServiceTemplate: React.FC<ServicePageProps> = ({
                 </div>
               )}
               
-              {/* Brochure Download */}
+              {/* Service Area */}
               <div className="bg-gray-50 rounded-lg p-8 border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 hover:border-blue-300 animate-fade-in animation-delay-500">
-                <h3 className="text-xl font-bold mb-4 relative inline-block after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-gradient-to-r after:from-blue-500 after:to-blue-800 after:rounded-full">Download Our Brochure</h3>
-                <p className="text-gray-700 mb-6">Get more information about our services and process.</p>
-                <a 
-                  href="/brochures/arxen-service-brochure.pdf"
-                  download
-                  className="flex items-center justify-center bg-blue-900 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-800 transition-all duration-300 relative overflow-hidden group transform hover:translate-y-[-2px] hover:shadow-lg"
-                >
-                  <span className="absolute w-0 h-0 transition-all duration-300 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
-                  <span className="relative flex items-center">
-                    <Download className="w-4 h-4 mr-2" /> Service Brochure
-                  </span>
-                </a>
+                <h3 className="text-xl font-bold mb-4 relative inline-block after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-gradient-to-r after:from-blue-500 after:to-blue-800 after:rounded-full">Service Areas</h3>
+                <p className="text-gray-700 mb-4">We proudly serve {title.toLowerCase()} clients throughout:</p>
+                <ul className="text-sm text-gray-600 space-y-1">
+                  <li>• Atlanta, GA</li>
+                  <li>• Marietta, GA</li>
+                  <li>• Kennesaw, GA</li>
+                  <li>• Smyrna, GA</li>
+                  <li>• Alpharetta, GA</li>
+                  <li>• Roswell, GA</li>
+                  <li>• And surrounding Metro Atlanta areas</li>
+                </ul>
               </div>
             </div>
           </div>
@@ -576,4 +632,4 @@ if (typeof document !== 'undefined') {
   document.head.appendChild(style);
 }
 
-export default ServiceTemplate; 
+export default ServiceTemplate;

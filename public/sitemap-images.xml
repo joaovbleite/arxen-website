@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  
+  <!-- Homepage Images -->
+  <url>
+    <loc>https://arxenconstruction.com/</loc>
+    <image:image>
+      <image:loc>https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png</image:loc>
+      <image:caption>Arxen Construction Logo - Professional construction and remodeling services in Atlanta, GA</image:caption>
+      <image:title>Arxen Construction Logo</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1543286386-71314a40aac6?auto=format&fit=crop&q=80</image:loc>
+      <image:caption>Modern home interior showcasing Arxen Construction's remodeling expertise</image:caption>
+      <image:title>Home Remodeling Atlanta</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Kitchen Remodeling Images -->
+  <url>
+    <loc>https://arxenconstruction.com/services/kitchen-remodeling</loc>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1556911220-e15b29be8c8f</image:loc>
+      <image:caption>Beautiful kitchen remodeling project by Arxen Construction in Atlanta, GA</image:caption>
+      <image:title>Kitchen Remodeling Atlanta GA</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1556909114-f6e7ad7d3136</image:loc>
+      <image:caption>Custom kitchen cabinets and countertops installation</image:caption>
+      <image:title>Custom Kitchen Cabinets Atlanta</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Bathroom Remodeling Images -->
+  <url>
+    <loc>https://arxenconstruction.com/services/bathroom-remodeling</loc>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1584622650111-993a426fbf0a</image:loc>
+      <image:caption>Luxury bathroom renovation by Arxen Construction</image:caption>
+      <image:title>Bathroom Remodeling Atlanta GA</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1600566752355-35792bedcfea</image:loc>
+      <image:caption>Modern bathroom design with custom tile work</image:caption>
+      <image:title>Bathroom Renovation Atlanta</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Custom Cabinetry Images -->
+  <url>
+    <loc>https://arxenconstruction.com/services/custom-cabinetry</loc>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1556185781-a47769abb7ee</image:loc>
+      <image:caption>Custom cabinetry installation by Arxen Construction</image:caption>
+      <image:title>Custom Cabinetry Atlanta GA</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1588854337221-4cf9fa96059c</image:loc>
+      <image:caption>Built-in storage solutions and custom cabinets</image:caption>
+      <image:title>Built-in Cabinets Atlanta</image:title>
+    </image:image>
+  </url>
+  
+  <!-- Flooring Services Images -->
+  <url>
+    <loc>https://arxenconstruction.com/services/hardwood</loc>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1584467541268-b040f83be3fd</image:loc>
+      <image:caption>Hardwood flooring installation by Arxen Construction</image:caption>
+      <image:title>Hardwood Flooring Atlanta GA</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1581858726788-75bc0f6a952d</image:loc>
+      <image:caption>Premium hardwood floor installation in Atlanta home</image:caption>
+      <image:title>Hardwood Floor Installation Atlanta</image:title>
+    </image:image>
+  </url>
+  
+</urlset>

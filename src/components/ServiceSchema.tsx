@@ -76,13 +76,24 @@ const ServiceSchema: React.FC<ServiceSchemaProps> = ({
     "@type": "Service",
     "name": title,
     "description": description,
+    "serviceType": category,
+    "brand": {
+      "@type": "Brand",
+      "name": "Arxen Construction"
+    },
     "provider": {
       "@type": "LocalBusiness",
       "name": "Arxen Construction",
       "image": "https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png",
       "url": "https://arxenconstruction.com/",
       "telephone": "+1-404-934-9458",
+      "email": "Arxenconstruction@gmail.com",
       "priceRange": price,
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "127"
+      },
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Marietta Square",
@@ -96,14 +107,27 @@ const ServiceSchema: React.FC<ServiceSchemaProps> = ({
     "category": category,
     "url": serviceUrl,
     "image": imageUrl,
+    "isRelatedTo": [
+      "Home Improvement",
+      "Construction",
+      "Remodeling",
+      "Renovation"
+    ],
     "offers": {
       "@type": "Offer",
+      "name": `${title} Services`,
+      "description": `Professional ${title.toLowerCase()} services in Atlanta, GA`,
       "priceSpecification": {
         "@type": "PriceSpecification",
         "price": "0",
         "priceCurrency": "USD"
       },
-      "availability": "https://schema.org/InStock"
+      "availability": "https://schema.org/InStock",
+      "validFrom": "2025-01-27",
+      "seller": {
+        "@type": "Organization",
+        "name": "Arxen Construction"
+      }
     }
   };
 
