@@ -19,7 +19,7 @@ export const sendContactEmail = async (templateParams: any) => {
     // Ensure to_email parameter is used
     const completeParams = {
       ...templateParams,
-      to_email: templateParams.to_email || 'sustenablet@gmail.com' // Default to sustenablet@gmail.com if not provided
+      to_email: templateParams.to_email || 'Arxenconstruction@gmail.com' // Default to Arxenconstruction@gmail.com if not provided
     };
     
     const result = await emailjs.send(
@@ -41,7 +41,7 @@ export const sendEstimateEmail = async (templateParams: any) => {
     // Ensure to_email parameter is used
     const completeParams = {
       ...templateParams,
-      to_email: templateParams.to_email || 'sustenablet@gmail.com' // Default to sustenablet@gmail.com if not provided
+      to_email: templateParams.to_email || 'Arxenconstruction@gmail.com' // Default to Arxenconstruction@gmail.com if not provided
     };
     
     const result = await emailjs.send(
@@ -55,4 +55,4 @@ export const sendEstimateEmail = async (templateParams: any) => {
     console.error('Error sending estimate email:', error);
     throw error;
   }
-}; 
+};

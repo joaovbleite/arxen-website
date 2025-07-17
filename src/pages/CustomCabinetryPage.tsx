@@ -522,8 +522,8 @@ const CustomCabinetryPage: React.FC = () => {
                     <Mail className="w-5 h-5 text-blue-900 mt-1 mr-3 transform transition-transform duration-300 group-hover:scale-110" />
                     <div>
                       <p className="text-sm text-gray-600">Email</p>
-                      <a href="mailto:teamarxen@gmail.com" className="text-blue-900 font-medium hover:text-blue-700 transition-colors duration-300">
-                        teamarxen@gmail.com
+                      <a href="mailto:Arxenconstruction@gmail.com" className="text-blue-900 font-medium hover:text-blue-700 transition-colors duration-300">
+                        Arxenconstruction@gmail.com
                       </a>
                     </div>
                   </div>

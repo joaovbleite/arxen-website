@@ -91,7 +91,7 @@ const PrivacyPolicy = () => {
             If you have any questions about this Privacy Policy, please contact us at:
           </p>
           <div className="bg-gray-100 p-4 rounded-lg">
-            <p className="text-gray-700">Email: teamarxen@gmail.com</p>
+            <p className="text-gray-700">Email: Arxenconstruction@gmail.com</p>
             <p className="text-gray-700">Phone: 404-934-9458</p>
           </div>
         </section>

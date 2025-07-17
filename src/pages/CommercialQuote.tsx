@@ -298,8 +298,8 @@ const CommercialQuote: React.FC = () => {
                   <Mail className="w-6 h-6 text-blue-900 mt-1" />
                   <div className="ml-4">
                     <p className="font-semibold">Email</p>
-                    <a href="mailto:teamarxen@gmail.com" className="text-blue-900 hover:text-blue-700">
-                      teamarxen@gmail.com
+                    <a href="mailto:Arxenconstruction@gmail.com" className="text-blue-900 hover:text-blue-700">
+                      Arxenconstruction@gmail.com
                     </a>
                   </div>
                 </div>

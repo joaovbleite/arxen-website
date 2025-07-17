@@ -9,7 +9,7 @@ const HomeSEO: React.FC = () => {
     logo: "https://i.postimg.cc/SNx9NN2x/Chat-GPT-Image-May-13-2025-12-34-23-PM-removebg-preview.png",
     url: "https://arxenconstruction.com", // Replace with actual URL when live
     telephone: "404-934-9458",
-    email: "teamarxen@gmail.com",
+    email: "Arxenconstruction@gmail.com",
     address: {
       streetAddress: "123 Construction Way", // Replace with actual address
       addressLocality: "Atlanta",
